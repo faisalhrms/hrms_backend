@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tax Certificate</title>
+  <style type="text/css">
+      .title-text{
+          text-align: center;
+          font-size: 24px;
+      }
+      td {
+          font-size: 18px;
+      }
+      .a {
+          border-bottom: 2px solid black;
+      }
+      .bold{
+          font-weight: bold;
+      }
+      .table-selected{
+          border: 1px solid black;
+          border-collapse: collapse;
+          text-align: center;
+      }
+      body {
+          border: 3px solid black;
+          padding: 5px 15px 10px 15px;
+      }
+  </style>
+</head>
+<body>
+<div>
+  <table width="100%">
+    <tr>
+      <td class="title-text">Certificate of Collection or Deduction of Income Tax (including salary)</td>
+    </tr>
+    <tr>
+      <td class="title-text"><b>(under rule 42)</b></td>
+    </tr>
+  </table>
+</div><br>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 10%">S.No.</td>
+      <td style="text-align: center; width: 20%"><%= params[:sr_number] %></td>
+      <td style="text-align: center; width: 20%">Orignal/Duplicate.</td>
+      <td style="text-align: right; width: 20%">S.No.</td>
+      <td style="text-align: right; width: 30%" class="a"><%= Date.parse(params[:date_of_issue]).strftime("%B %d, %Y") %></td>
+    </tr>
+  </table>
+</div><br>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%">Certified that the sum of Rupees</td>
+      <td style="text-align: center; width: 40%" class="a"><%= @employee_tax_detail.sum(:monthly_tax_amount) %></td>
+      <td style="text-align: right; width: 30%; font-size: 10px">(Amount of tax collected/deducted in figures)</td>
+   </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style=" width: 20%"></td>
+      <td style="text-align: center; width: 60%" class="a"><%= @employee_tax_detail.sum(:monthly_tax_amount).humanize.titleize %></td>
+      <td style="width: 20%"></td>
+    </tr>
+  </table>
+</div>
+<div><br>
+  <table width="100%">
+    <tr>
+      <td style=" width: 20%"></td>
+      <td style="text-align: center; width: 60%" class="a"></td>
+      <td style="text-align: left; width: 30%; font-size: 10px">(Amount in words)</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 45%">on account of income tax has been</td>
+      <td style="text-align: center; width: 55%" class="a"></td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 45%">deducted/collected from (Name and Address of the</td>
+      <td style="text-align: center; width: 55%" class="a"><%= @employee.first_name %> <%= @employee.last_name %></td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 45%">person from whom tax deducted/collected</td>
+      <td style="text-align: center; width: 55%" class="a"><%= @employee.current_address %></td>
+    </tr>
+    <tr>
+      <td style="text-align: left; width: 45%"></td>
+      <td style="text-align: left; width: 55%; font-size: 10px">in case of an individual, his/her name in full and in case of an association of persons/company, name and style of the association of persons/company</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%">having National Tax Number</td>
+      <td style="text-align: center; width: 40%" class="a"><%= @employee.ntn_number %></td>
+      <td style="text-align: left; width: 30%; font-size: 10px">(if any) and</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%">holder of CNIC No.</td>
+      <td style="text-align: center; width: 40%" class="a"><%= @employee.cnic_number %></td>
+      <td style="text-align: left; width: 30%; font-size: 10px">(in case of an individual)</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%">on</td>
+      <td style="text-align: center; width: 40%" class="a"></td>
+      <td style="text-align: left; width: 30%; font-size: 10px">(Date of collection/deduction)</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%">Or during the period</td>
+      <td style="text-align: right; width: 5%">From</td>
+      <td style="text-align: center; width: 15%" class="a">1-Jul-20</td>
+      <td style="text-align: right; width: 5%">To</td>
+      <td style="text-align: center; width: 15%" class="a">30-Jun-21</td>
+      <td style="text-align: left; width: 30%; font-size: 10px">(Period of collection/deduction)</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%">under section </td>
+      <td style="text-align: center; width: 40%" class="a">149</td>
+      <td style="text-align: left; width: 30%; font-size: 10px">(specify the section of income tax Ordinance.2001)</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%">On account of </td>
+      <td style="text-align: center; width: 40%" class="a">Salary</td>
+      <td style="text-align: left; width: 30%; font-size: 10px">(specify nature)</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%">vibe </td>
+      <td style="text-align: center; width: 40%" class="a"></td>
+      <td style="text-align: left; width: 30%; font-size: 10px">(Particulars of LC, control etc)</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%">on the value/amount of Rupee </td>
+      <td style="text-align: center; width: 40%" class="a"><%= @employee_tax_detail.last.total_taxable_amount %></td>
+      <td style="text-align: left; width: 30%; font-size: 10px">(gross account on which tax deducted/collected in figures)</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 30%"></td>
+      <td style="text-align: center; width: 40%; font-size: 18px" class="a"><%= @employee_tax_detail.last.total_taxable_amount.humanize.titleize %></td>
+      <td style="text-align: right; width: 30%; font-size: 10px"></td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; font-size: 20px">This is to certified that the tax collected/deducted has ben deposited in the Fedral Governmant as per following details</td>
+    </tr>
+  </table>
+</div><br>
+<div>
+  <table style="width: 100%;" class="table-selected">
+    <tr class="table-selected">
+      <td class="bold table-selected">Date of deposit.</td>
+      <td class="bold table-selected">SBP/NBP/<br>Treasury.</td>
+      <td class="bold table-selected">Branch/City.</td>
+      <td class="bold table-selected">Account<br>(Rupees)</td>
+      <td class="bold table-selected">Challan/Treasury No/<br>CPR No.</td>
+    </tr>
+    <% @employee_tax_detail.each do |tax_detail| %>
+      <tr class="table-selected">
+        <td class="table-selected"><%= tax_detail.cpr_date.present? ? tax_detail.cpr_date.strftime("%B %d, %Y") : '' %></td>
+        <td class="table-selected">SBP</td>
+        <td class="table-selected">SBP/LAHORE</td>
+        <td class="table-selected"><%= tax_detail.monthly_tax_amount %></td>
+        <td class="table-selected"><%= tax_detail.cpr_number %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left">Company / office etc. collecting/deducting the tax:</td>
+    </tr>
+  </table>
+</div><br><br>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 20%">Name </td>
+      <td style="text-align: center; width: 35%" class="a"><%= @company.name %></td>
+      <td style="text-align: center; width: 20%;">Signature</td>
+      <td style="text-align: center; width: 25%" class="a"></td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 20%"> </td>
+      <td style="text-align: center; width: 35%" class="a"></td>
+      <td style="text-align: center; width: 20%;">Name</td>
+      <td style="text-align: center; width: 25%" class="a">Munir Ahmed</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 20%">Address</td>
+      <td style="text-align: center; width: 35%; font-size: 18px" class="a"><%= @company.address %></td>
+      <td style="text-align: center; width: 20%;"></td>
+      <td style="text-align: center; width: 25%" class="a"></td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 20%"> </td>
+      <td style="text-align: center; width: 35%" class="a"></td>
+      <td style="text-align: center; width: 20%;">Designation</td>
+      <td style="text-align: center; width: 25%" class="a">General Manager Accounts</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 20%">NTN (if any) </td>
+      <td style="text-align: center; width: 35%" class="a"><%= @company.ntn_number %></td>
+      <td style="text-align: center; width: 20%;">Seal</td>
+      <td style="text-align: center; width: 25%" class="a"></td>
+    </tr>
+  </table>
+</div>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="text-align: left; width: 20%">Date </td>
+      <td style="text-align: center; width: 35%" class="a"><%= Date.parse(params[:date_of_issue]).strftime("%B %d, %Y") %></td>
+      <td style="text-align: center; width: 20%;"></td>
+      <td style="text-align: center; width: 25%" class="a"></td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

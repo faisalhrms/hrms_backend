@@ -1,0 +1,30 @@
+json.employees @employees.each do |employee|
+	json.employee_code 					employee.employee_code
+	json.full_name 							employee.full_name
+	json.salutation							employee.salutation
+	json.first_name							employee.first_name
+	json.last_name							employee.last_name
+	json.father_name 						employee.father_name
+	json.location_name 					employee.location_name
+	json.branch_name 						employee.branch_name
+	json.salary_unit_name 			employee.salary_unit_name
+	json.department_name 				employee.department_name
+	json.grade_name 						employee.grade_name
+	json.designation_name 			employee.designation_name
+	json.cost_center_name 			employee.cost_center_name
+	json.employee_type_name 		employee.employee_type_name	
+	json.joining_date 					ReportFormat.date_format(employee.joining_date)	
+	json.previous_experince 		ReportFormat.employee_previous_experince(employee)
+	json.current_experince 			ReportFormat.employee_current_experince(employee)
+	json.religion_name					employee.religion_name	
+	json.gender									employee.gender
+	json.blood_group						employee.blood_group
+	json.martial_status					employee.martial_status
+	json.date_of_birth 					ReportFormat.date_format(employee.date_of_birth)
+	json.employee_age						ReportFormat.employee_age(employee.date_of_birth)
+	json.cnic_number 						ReportFormat.cnic_format(employee.cnic_number)
+	json.cnic_expiry_date 			ReportFormat.date_format(employee.cnic_expiry_date)	
+	json.confimration_due_date 	ReportFormat.date_format(employee.confimration_due_date)	
+	json.line_manager 					employee.line_manager_name
+	json.ntn_number	 						employee.ntn_number
+end

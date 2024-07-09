@@ -1,0 +1,17 @@
+json.provident_fund do
+  json.id												@provident_fund.try(:id)
+  json.company_id	 							@provident_fund.try(:company_id)
+	json.name 										@provident_fund.try(:name)
+	json.is_active 								@provident_fund.try(:is_active)
+	json.employee_value 					@provident_fund.try(:employee_value)
+	json.employee_fixed_amount 		@provident_fund.try(:employee_fixed_amount)
+	json.employee_percentage 			@provident_fund.try(:employee_percentage)
+	json.employee_pay_item_id 		@provident_fund.try(:employee_pay_item_id)
+	json.employer_value 					@provident_fund.try(:employer_value)
+	json.employer_fixed_amount 		@provident_fund.try(:employer_fixed_amount)
+	json.employer_percentage 			@provident_fund.try(:employer_percentage)
+	json.employer_pay_item_id 		@provident_fund.try(:employer_pay_item_id)
+	json.employer_taxable 				@provident_fund.try(:employer_taxable)
+	json.employer_amount_exceed 	@provident_fund.try(:employer_amount_exceed)
+	json.employer_tax_percentage 	@provident_fund.try(:employer_tax_percentage)
+end

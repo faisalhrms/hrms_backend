@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EOBI Report</title>
+  <style type="text/css">
+    .page-break {
+      display: block;
+      clear: both;
+      page-break-after: always;
+    }
+    .container:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+    table { page-break-inside:auto }
+    table > thead > tr > th {
+      color: #000000;
+      font-size: 12px;
+      font-weight: bolder;
+    }
+
+    table > tfoot > tr > td {
+      color: #000000;
+      font-size: 12px;
+      font-weight: bolder;
+    }
+
+    table > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 10px;
+    }
+
+    table.print > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 15px;
+    }
+
+    table.summary > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 13px;
+    }
+
+    .table td, .table th{
+      border-color: black;
+    }
+
+    .dept-detail tfoot tr {
+      border-bottom: 2px solid black;
+    }
+
+    .dept-detail tbody tr {
+      border-bottom: 2px solid black;
+    }
+
+    .summary tbody > tr:last-child {
+      border-bottom: 2px solid black;
+    }
+
+    .dept-detail thead tr {
+      border-bottom: 3px solid black;
+      border-top: 3px solid black;
+    }
+    table.print { width: 250px;height: 100%; }
+    tr { page-break-inside:avoid; page-break-after:auto }
+
+  </style>
+  <%= stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' %>
+</head>
+
+<body>
+<div>
+  <div class="container">
+    <div class="row" style="border: 2px solid black">
+      <div class="col-xs-2" style=";border-right: 2px solid black">
+        <div class="row">
+          <% if not (@company.avatar_file_name.nil? or @company.avatar_file_name.blank?) %>
+            <img src="<%= @company.avatar.url %>" style="width:220px;height:100px;margin-left: 12px;margin-top: 10px">
+          <% end %>
+        </div>
+        <% company_name = @company.name %>
+        <div class="row">
+          <p style="color:black;font-size:18px; font-weight: bolder; margin-left: 25px"><%= company_name %></p>
+        </div>
+      </div>
+      <div class="col-xs-8" >
+        <p style="color:black;text-align:center;font-size:18px; font-weight: bolder">Employees EOBI Report
+        </p>
+        <p style="color:black;text-align:center;font-size:16px"> Registration No: </p>
+        <% unless params[:location_id].blank? %>
+          <% company_name += " (#{Location.find(params[:location_id]).name})" %>
+        <% end %>
+        <p style="color:black;text-align:center;font-size:16px"> Report for: <%= company_name %></p>
+
+      </div>
+      <div class="col-xs-2" style="height: 145px;border-left: 2px solid black">
+        <table class="table print" style="">
+          <tbody>
+          <tr>
+            <td>Print date</td>
+            <td><%= DateTime.now.strftime("%d/%m/%Y") %></td>
+          </tr>
+          <tr>
+            <td>Print time</td>
+            <td><%= DateTime.now.strftime("%I:%M:%S") %></td>
+          </tr>
+          <tr>
+            <td>Pages</td>
+            <td></td>
+          </tr>
+          </tbody>
+        </table>
+        <p></p>
+      </div>
+    </div>
+  </div>
+  <table class="table borderless dept-detail" style="margin-top: 5px">
+    <thead >
+    <tr style="">
+      <th style="text-align:center;">Sr. No</th>
+      <th style="text-align:center;">Emp. ID</th>
+      <th style="text-align:center;">EmployeeName</th>
+      <th style="text-align:center;">FatherName</th>
+      <th style="text-align:center;">Designation</th>
+      <th style="text-align:center;">CNIC</th>
+      <th style="text-align:center;">DOB</th>
+      <th style="text-align:center;">DOJ</th>
+      <th style="text-align:center;">EOBI No.</th>
+      <th style="text-align:center;">Wrk. Days</th>
+      <th style="text-align:center;">Gross Salary</th>
+      <th style="text-align:center;">Gross Pay</th>
+      <th style="text-align:center;">Amount on Which Cont. is Paid</th>
+      <th style="text-align:center;">EOBI Percent (5%)</th>
+      <th style="text-align:center;">EOBI Percent (1%)</th>
+    </tr>
+    </thead>
+    <% count = 0 %>
+    <% total_gross_salary = 0 %>
+    <% total_gross_pay = 0 %>
+    <% @pay_invoices.order("employee_id ASC").each do |pay_invoice| %>
+      <% count = count + 1 %>
+      <% gross_salary = pay_invoice.actual_salary %>
+      <% gross_pay = pay_invoice.actual_salary - (pay_invoice.pay_invoice_details.where(:item_name => "Attendance Deduction").sum(:amount).round) %>
+      <% total_gross_pay += gross_pay %>
+      <% total_gross_salary += gross_salary %>
+      <% cont_amount = 13000.0 %>
+      <% if gross_pay < cont_amount %>
+        <% eobi_value = gross_pay %>
+        <% cont_amount = gross_pay %>
+      <% else %>
+        <% eobi_value = cont_amount %>
+      <% end %>
+      <tbody style="">
+      <tr>
+        <td style="text-align: center;"> <%= count %> </td>
+        <td style="text-align: center;"> <%= pay_invoice.employee.employee_code %> </td>
+        <td style="text-align: center;"> <%= pay_invoice.employee.full_name %> </td>
+        <td style="text-align: center;"> <%= pay_invoice.employee.father_name %> </td>
+        <td style="text-align: center;"> <%= pay_invoice.employee.designation_name %> </td>
+        <td style="text-align: center;"> <%= ReportFormat.cnic_format(pay_invoice.employee.cnic_number) %> </td>
+        <td style="text-align: center;"> <%= ReportFormat.date_format(pay_invoice.employee.date_of_birth) %> </td>
+        <td style="text-align: center;"> <%= ReportFormat.date_format(pay_invoice.employee.joining_date) %> </td>
+        <td style="text-align: center;"> <%= pay_invoice.employee.eobi_number %></td>
+        <td style="text-align: center;"> <%= number_with_delimiter(pay_invoice.no_of_pay_days - pay_invoice.deduction_days) %> </td>
+        <td style="text-align: center;"> <%= number_with_delimiter(gross_salary.round(2)) %> </td>
+        <td style="text-align: center;"> <%= number_with_delimiter(gross_pay.round(2)) %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(cont_amount.round(2), :precision => 2, :delimiter => ',') %></td>
+        <td style="text-align: center;"> <%= number_with_precision(((eobi_value/100)*5).round(2), :precision => 2, :delimiter => ',') %></td>
+        <td style="text-align: center;"> <%= number_with_precision(20.0, :precision => 2, :delimiter => ',') %></td>
+      </tr>
+      </tbody>
+    <% end %>
+  </table>
+  <table class="summary" style="width:100%;border-collapse: collapse;">
+    <tbody>
+    <tr style="border-bottom:2px solid black;">
+      <% for i in 0..100 %>
+        <td style="font-weight: bold;text-align:right;"> &nbsp; </td>
+      <% end %>
+      <td style="font-weight: bold;text-align:center;">Total:</td>
+      <td style="font-weight: bold;text-align:center;"><%= number_with_delimiter(total_gross_salary.round) %> </td>
+      <td style="font-weight: bold;text-align:center;"><%= number_with_delimiter(total_gross_pay.round) %> </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+
+</html>

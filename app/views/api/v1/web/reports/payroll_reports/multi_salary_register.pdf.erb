@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Salary Register</title>
+  <style type="text/css">
+    .page-break {
+      display: block;
+      clear: both;
+      page-break-after: always;
+    }
+    .container:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+    table { page-break-inside:auto }
+    tr    { page-break-inside:avoid; page-break-after:auto }
+    thead { display:table-header-group }
+    tfoot { display:table-footer-group }
+  </style>
+</head>
+
+<body>
+<div style="text-align:right;font-size:10px">
+  <%= "Extraction Date - #{DateTime.now.strftime("%B %d, %Y %I:%M %P")} "%>
+</div>
+<div style="width:1540px;padding:20px;box-sizing:border-box;position:relative;font-family:Lato,sans-serif">
+  <% if not (@company.avatar_file_name.nil? or @company.avatar_file_name.blank?) %>
+    <img src=<%= @company.avatar.url %> style="width:200px;height:75px;position:absolute">
+  <% end %>
+  <div style="height:60px;margin-top:40px;">
+    <h1 style="text-align:center;text-transform:uppercase;font-size:16.6666667px;font-weight:300;margin-bottom:0px;"><%= @company.name %></h1>
+    <h1 style="text-align:center;text-transform:uppercase;font-size:14px;font-weight:300;margin-bottom:0px;">SALARY REGISTER FOR THE MONTH OF <%= @pay_executions.last.formated_pay_month %> </h1>
+    <% if not @location_name.blank? %>
+      <h2 style="text-align:center;text-transform:uppercase;font-size:12px;font-weight:300;margin-bottom:0px;">
+        <%= @location_name %>
+        <% if not @branch_name.blank? %>
+          ; <%= @branch_name %>
+        <% end %>
+        <% if not @department_name.blank? %>
+          ; <%= @department_name %>
+        <% end %>
+        <% if not @grade_name.blank? %>
+          ; GRADE: <%= @grade_name %>
+        <% end %>
+        <% if not @salary_unit_name.blank? %>
+          ; <%= @salary_unit_name %>
+        <% end %>
+      </h2>
+    <% end %>
+    <h2 style="text-align:center;text-transform:uppercase;font-size:12px;font-weight:300;margin-bottom:0px;"> STRENGTH COUNT = <%= @pay_invoices.count %></h2>
+  </div>
+  <% department_ids = @pay_invoices.collect(&:department_id).uniq %>
+  <% departments = Department.where(:id => department_ids).order('name ASC') %>
+  <% count = 0 %>
+  <table class="main-table" style="width:100%;margin-top:20px;border-collapse:collapse">
+    <thead style="text-align:center;font-size: 10px;">
+    <tr style="background-color:#0454A9;border:2px solid #4a4a4a;border-bottom:0px;">
+      <th style="font-size: 10px;">Department</th>
+      <th style="font-size: 10px;">No of Employees</th>
+      <th style="font-size: 10px;">Gross Salary</th>
+      <th style="font-size: 10px;">Medical Allowance</th>
+      <th style="font-size: 10px;">Conveyance Allowance</th>
+      <th style="font-size: 10px;">Washing Allowance</th>
+      <th style="font-size: 10px;">Fuel Allowance</th>
+      <th style="font-size: 10px;">Gross Pay</th>
+      <th style="font-size: 10px;">Attendance Deduction</th>
+      <th style="font-size: 10px;">Electric Bill</th>
+      <th style="font-size: 10px;">Income Tax</th>
+      <th style="font-size: 10px;">EOBI</th>
+      <th style="font-size: 10px;">Loan</th>
+      <th style="font-size: 10px;">Advance Salary</th>
+      <th style="font-size: 10px;">Provident Fund</th>
+      <th style="font-size: 10px;">Deduction</th>
+      <th style="font-size: 10px;">Net Pay</th>
+    </tr>
+    </thead>
+    <% departments.each do |department| %>
+      <% depatment_wise_pay_invoice = @pay_invoices.where(:department_id => department.id).order('employee_id ASC') %>
+      <% employee_ids = depatment_wise_pay_invoice.collect(&:employee_id).uniq.map(&:to_i).sort %>
+      <% grades_ids = Employee.where(:id => employee_ids).collect(&:grade_id).uniq %>
+      <% count = count + 1 %>
+      <tbody style="text-align:center;font-size:10px">
+      <tr style="border:2px solid #ececec;border-top:0px">
+        <td> <%= department.name %> </td>
+        <% pay_invoice_ids = @pay_invoices.where(:department_id => department.id).collect(&:id) %>
+        <td> <%= pay_invoice_ids.uniq.count %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Medical Allowance (OPD)"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Fuel Allowance"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <% salary_earned = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance (OPD)", "Conveyance Allowance", "Washing Allowance", "Fuel Allowance"]).sum(:amount).round.to_f %>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(salary_earned), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Attendance Deduction"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Electric Bill"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(@pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Advance Salary"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+        <% total_deduction = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Attendance Deduction", "Loan", "Advance Salary", "EOBI", "Provident Fund", "Electric Bill"]).sum(:amount).round.to_f + @pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round %>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(total_deduction), :precision => 0, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash((salary_earned - total_deduction)), :precision => 0, :delimiter => ',') %> </td>
+      </tr>
+      </tbody>
+      <% if departments.count == count %>
+        <tbody style="text-align:center;font-size:10px">
+        <tr style="background-color:#A5D6EE;border:2px solid #4a4a4a;border-bottom:0px;">
+          <td> <%= "Grand Total" %> </td>
+          <% pay_invoice_ids = @pay_invoices.collect(&:id) %>
+          <td> <%= pay_invoice_ids.uniq.count %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Medical Allowance (OPD)"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Fuel Allowance"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <% salary_earned = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance (OPD)", "Conveyance Allowance", "Washing Allowance", "Fuel Allowance"]).sum(:amount).round.to_f %>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(salary_earned), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Attendance Deduction"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Electric Bill"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(@pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Advance Salary"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f), :precision => 0, :delimiter => ',') %> </td>
+          <% total_deduction = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Attendance Deduction", "Loan", "Advance Salary", "EOBI", "Provident Fund", "Electric Bill"]).sum(:amount).round.to_f + @pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round %>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash(total_deduction), :precision => 0, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(ReportFormat.zero_to_dash((salary_earned - total_deduction)), :precision => 0, :delimiter => ',') %> </td>
+        </tr>
+        </tbody>
+      <% end %>
+    <% end %>
+  </table>
+</div>
+</body>
+
+</html>
+<style type="text/css">
+  * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  table > thead > tr > th {
+    color: #fff;
+    font-weight: 100;
+  }
+  
+  table > thead > tr > th,
+  table > tbody > tr > td {
+    padding: 5px 0;
+  }
+  
+  table.main-table > thead > tr > th,
+  table.main-table > tbody > tr > td {
+    text-transform: uppercase;
+  }
+
+  tr.info > td {
+    font-weight: bold;
+    color: #01C7BD;
+    letter-spacing: 1px;
+  }
+  
+  .clr-green {
+    color: #7B9610 !important;
+  }
+  
+  .clr-red {
+    color: #BE2731 !important;
+  }
+  
+  .clr-yellow {
+    color: #E0BA00 !important;
+  }
+  
+  .clr-blue {
+    color: #2870BB !important;
+  }
+  
+  .clr-purple {
+    color: #F11BE9 !important;
+  }
+  
+  .side-heading {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /*position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);*/
+  }
+  @font-face {
+    font-family: Lato;
+    -fs-pdf-font-embed: embed;
+    -fs-pdf-font-encoding: Identity-H;
+  }
+  
+  body {
+    margin: 0;
+  }
+  
+  .container:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+</style>

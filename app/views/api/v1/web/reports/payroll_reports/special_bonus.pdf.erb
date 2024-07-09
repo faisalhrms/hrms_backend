@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Eid Reward 1</title>
+  <style type="text/css">
+    .page-break {
+      display: block;
+      clear: both;
+      page-break-after: always;
+    }
+    .container:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+    table { page-break-inside:auto }
+    tr    { page-break-inside:avoid; page-break-after:auto }
+    thead { display:table-header-group }
+    tfoot { display:table-footer-group }
+  </style>
+</head>
+
+<body>
+<div style="text-align:right;font-size:10px">
+  <%= "Extraction Date - #{DateTime.now.strftime("%B %d, %Y %I:%M %P")} "%>
+</div>
+<%# Setting for Bonus %>
+<%#  **************************** %>
+<% pay_month = params[:pay_month].to_date.strftime("%B %Y") %>
+<% basic_salary_month = params[:pay_month].to_date.strftime("%B %Y") %>
+<% bonus_item_name = 'Eid Reward 2' %>
+<%#  **************************** %>
+<div style="width:1970px;padding:20px;box-sizing:border-box;position:relative;font-family:Lato,sans-serif">
+  <% if not (@company.avatar_file_name.nil? or @company.avatar_file_name.blank?) %>
+    <img src=<%= @company.avatar.url %> style="width:200px;height:75px;position:absolute">
+  <% end %>
+  <div style="height:60px;margin-top:40px;">
+    <% if @salary_unit_name == "SDL" %>
+      <h1 style="text-align:center;font-size:16.6666667px;font-weight:300;margin-bottom:0px;">Sapphire Dairies Pvt Ltd</h1>
+    <% else %>
+      <h1 style="text-align:center;text-transform:uppercase;font-size:16.6666667px;font-weight:300;margin-bottom:0px;"><%= @company.name %></h1>
+    <% end %>
+    <h1 style="text-align:center;text-transform:uppercase;font-size:14px;font-weight:300;margin-bottom:0px;">EMPLOYEE BONUS REGISTER REPORT</h1>
+    <h2 style="text-align:center;text-transform:uppercase;font-size:12px;font-weight:300;margin-bottom:0px;">
+      <% if not @salary_unit_name.blank? %>
+        <%= @salary_unit_name %>
+      <% end %>
+    </h2>
+    <h2 style="text-align:center;text-transform:uppercase;font-size:12px;font-weight:300;margin-bottom:0px;"><%= params[:pay_month].to_date.strftime("%B %Y") %></h2>
+  </div>
+  <% if params[:manual_register] == "true" %>
+    <% selling_departments  = Department.where(:name => ['Marketing', 'Export', 'Marketing&Export', 'Supply Chain']) %>
+    <% admin_departments    = Department.where.not(:name => ['Marketing', 'Export', 'Marketing&Export', 'Supply Chain']) %>
+    <% admin_data           = @pay_invoices.where(pay_month: pay_month, :department_id => admin_departments.collect(&:id)).order('employee_id ASC') %>
+    <% selling_data         = @pay_invoices.where(pay_month: pay_month, :department_id => selling_departments.collect(&:id)).order('employee_id ASC') %>
+    <% basic_salaries = PayInvoice.where( :status => true, :pay_month => basic_salary_month).group(:employee_id, :actual_salary).count.keys.to_h %>
+    <% count = 1 %>
+    <% grand_earning, grand_bonus = 0, 0 %>
+    <% { administration: admin_data, selling: selling_data}.each do |name, data| %>
+      <h3><%= name.to_s.titleize %></h3>
+      <table class="main-table" style="width:100%;margin-top:20px;border-collapse:collapse">
+        <thead style="text-align:center;font-size: 10px;">
+        <tr style="background-color:#4a4a4a;border:2px solid #4a4a4a;border-bottom:0px;">
+          <th>SR NO.</th>
+          <th>Emp Code</th>
+          <th>Name</th>
+          <th>Designation</th>
+          <th>Date of Joining</th>
+          <th>Basic Salary</th>
+          <th style="color: white">Bonus</th>
+        </tr>
+        </thead>
+        <tbody style="text-align:center;font-size:10px">
+        <% data.each do |pay_invoice| %>
+          <tr style="border:2px solid #ececec;border-top:0px">
+            <td><%= count %></td>
+            <td> <%= pay_invoice.employee_code %> </td>
+            <td> <%= pay_invoice.employee_name %> </td>
+            <td> <%= pay_invoice.designation_name %> </td>
+            <td> <%= ReportFormat.date_format(pay_invoice.joining_date) %> </td>
+            <td> <%= number_with_precision((basic_salaries[pay_invoice.employee_id].to_i * 0.67), :precision => 0, :delimiter => ',') %> </td>
+            <% annual_bonus_sum = pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+            <% if pay_invoice.employee_code == "870006" %>
+              <td>4188</td>
+            <% elsif pay_invoice.employee_code == "870030" %>
+              <td>161917</td>
+            <% elsif pay_invoice.employee_code == "870012" %>
+              <td>33500</td>
+            <% else %>
+              <td> <%= number_with_precision((annual_bonus_sum), :precision => 0, :delimiter => ',') %> </td>
+            <% end %>
+            <% count = count + 1 %>
+          </tr>
+        <% end %>
+
+        <% column_no_6 = 0 %>
+        <% column_no_7 = 0 %>
+
+        <% data.each do |pay_invoice| %>
+          <% bonus_sum = pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+          <% column_no_6 += basic_salaries[pay_invoice.employee_id].to_i * 0.67 %>
+          <% column_no_7 += bonus_sum %>
+        <% end %>
+        <tr style="border:2px solid #ececec;border-top:0px">
+          <td> Sub Total </td>
+          <% 4.times do %>
+            <td> <%= "" %> </td>
+          <% end %>
+          <% [column_no_6, column_no_7].each do |column| %>
+            <td> <%= number_with_precision(column.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+          <% end %>
+          <% grand_bonus += column_no_7 %>
+          <% grand_earning += column_no_6 %>
+        </tr>
+        </tbody>
+      </table>
+    <% end %>
+    <div>
+      <h3> Grand Earning: <%= number_with_precision(grand_earning, :precision => 0, :delimiter => ',') %></h3>
+      <h3> Grand Bonus: &nbsp;&nbsp;&nbsp;<%= number_with_precision(grand_bonus, :precision => 0, :delimiter => ',') %></h3>
+    </div>
+  <% else %>
+    <% admin_cost_center_id = nil %>
+    <% selling_cost_center_id = nil %>
+    <% manufacturing_cost_center_id = nil %>
+    <% cost_center_ids = @pay_invoices.collect(&:cost_center_id).uniq %>
+    <% CostCenter.where(:id => cost_center_ids).each do |cost_center| %>
+      <% if cost_center.name == "Manufacturing" %>
+        <% manufacturing_cost_center_id = cost_center.id %>
+      <% elsif cost_center.name == "Administration" %>
+        <% admin_cost_center_id = cost_center.id %>
+      <% elsif cost_center.name == "Selling" %>
+        <% selling_cost_center_id = cost_center.id %>
+      <% elsif cost_center.name == "Sales" %>
+        <% selling_cost_center_id = cost_center.id %>
+      <% end %>
+    <% end %>
+    <% selling_cost_center_ids       = @pay_invoices.where(:cost_center => selling_cost_center_id).collect(&:cost_center_id).uniq %>
+    <% admin_cost_center_ids         = @pay_invoices.where(:cost_center => admin_cost_center_id).collect(&:cost_center_id).uniq %>
+    <% manufacturing_cost_center_ids = @pay_invoices.where(:cost_center => manufacturing_cost_center_id).collect(&:cost_center_id).uniq %>
+    <% manufacturing_data           = @pay_invoices.where(:cost_center_id => manufacturing_cost_center_ids).order('employee_id ASC') %>
+    <% admin_data                   = @pay_invoices.where(:cost_center_id => admin_cost_center_ids).order('employee_id ASC') %>
+    <% selling_data                 = @pay_invoices.where(:cost_center_id => selling_cost_center_ids).order('employee_id ASC') %>
+    <% count = 1 %>
+    <h3><%= "Manufacturing" %></h3>
+    <table class="main-table" style="width:100%;margin-top:20px;border-collapse:collapse">
+      <thead style="text-align:center;font-size: 10px;">
+      <tr style="background-color:#4a4a4a;border:2px solid #4a4a4a;border-bottom:0px;">
+        <th>SR NO.</th>
+        <th>Emp Code</th>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Date of Joining</th>
+        <th>Jan</th>
+        <th>Feb</th>
+        <th>Mar</th>
+        <th>Apr</th>
+        <th>May</th>
+        <th>June</th>
+        <th>July</th>
+        <th>Aug</th>
+        <th>Sep</th>
+        <th>Oct</th>
+        <th>Nov</th>
+        <th>Dec</th>
+        <th>Arrear</th>
+        <th>Total Earning</th>
+        <th>Bonus</th>
+        <th>Total W/Days</th>
+        <th>Deduction</th>
+        <th>Bank Charges</th>
+        <th>Net Payable</th>
+      </tr>
+      </thead>
+      <tbody style="text-align:center;font-size:10px">
+      <% manufacturing_data.each do |pay_invoice| %>
+        <tr style="border:2px solid #ececec;border-top:0px">
+          <% actual_serving_days = 0 %>
+          <% item = PayItem.find_by(:name => bonus_item_name) %>
+          <% if item.is_bonus == true %>
+            <% if not item.bonus_date.nil? %>
+              <% bonus_date = item.bonus_date %>
+              <% item_eligible_date = ReportFormat.bonus_eligibility(pay_invoice.employee, bonus_item_name) %>
+              <% if not item_eligible_date.nil? %>
+                <% if item_eligible_date <= bonus_date.to_date %>
+                  <% start_time = Time.new(item_eligible_date.to_date.year,item_eligible_date.to_date.month,item_eligible_date.to_date.day) %>
+                  <% end_time = Time.new(bonus_date.to_date.year,bonus_date.to_date.month,bonus_date.to_date.day) %>
+                  <% actual_serving_days = (TimeDifference.between(start_time, end_time).in_days) + 1 %>
+                  <% if actual_serving_days > 365 %>
+                    <% actual_serving_days = 365 %>
+                  <% end %>
+                <% else %>
+                  <% actual_serving_days = 0 %>
+                <% end %>
+              <% else %>
+                <% actual_serving_days = 0 %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <td><%= count %></td>
+          <td> <%= pay_invoice.employee_code %> </td>
+          <td> <%= pay_invoice.employee_name %> </td>
+          <td> <%= pay_invoice.designation_name %> </td>
+          <td> <%= ReportFormat.date_format(pay_invoice.joining_date) %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:jan)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:feb)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:mar)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:apr)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:may)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:june)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:july)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:aug)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:sep)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:oct)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:nov)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:dec)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((0), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:total)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((actual_serving_days), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((0), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((0), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round), :precision => 0, :delimiter => ',') %> </td>
+          <% count = count + 1 %>
+        </tr>
+      <% end %>
+      <% column_no_1 = 0 %>
+      <% column_no_2 = 0 %>
+      <% column_no_3 = 0 %>
+      <% column_no_4 = 0 %>
+      <% column_no_5 = 0 %>
+      <% column_no_6 = 0 %>
+      <% column_no_7 = 0 %>
+
+      <% manufacturing_data.each do |pay_invoice| %>
+        <% column_no_1 = column_no_1 + 0 %>
+        <% column_no_2 = column_no_2 + TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:total) %>
+        <% column_no_3 = column_no_3 + pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+        <% column_no_4 = column_no_4 + 0 %>
+        <% column_no_5 = column_no_5 + 0 %>
+        <% column_no_6 = column_no_6 + 0 %>
+        <% column_no_7 = column_no_7 + pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+      <% end %>
+      <tr style="border:2px solid #ececec;border-top:0px">
+        <td> <%= "Sub Total" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= number_with_precision(column_no_1.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_2.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_3.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_4.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_5.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_6.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_7.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+      </tr>
+      </tbody>
+    </table>
+    <h3><%= "Administration" %></h3>
+    <table class="main-table" style="width:100%;margin-top:20px;border-collapse:collapse">
+      <thead style="text-align:center;font-size: 10px;">
+      <tr style="background-color:#4a4a4a;border:2px solid #4a4a4a;border-bottom:0px;">
+        <th>SR NO.</th>
+        <th>Emp Code</th>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Date of Joining</th>
+        <th>Jan</th>
+        <th>Feb</th>
+        <th>Mar</th>
+        <th>Apr</th>
+        <th>May</th>
+        <th>June</th>
+        <th>July</th>
+        <th>Aug</th>
+        <th>Sep</th>
+        <th>Oct</th>
+        <th>Nov</th>
+        <th>Dec</th>
+        <th>Arrear</th>
+        <th>Total Earning</th>
+        <th>Bonus</th>
+        <th>Total W/Days</th>
+        <th>Deduction</th>
+        <th>Bank Charges</th>
+        <th>Net Payable</th>
+      </tr>
+      </thead>
+      <tbody style="text-align:center;font-size:10px">
+      <% admin_data.each do |pay_invoice| %>
+        <tr style="border:2px solid #ececec;border-top:0px">
+          <% actual_serving_days = 0 %>
+          <% item = PayItem.find_by(:name => bonus_item_name) %>
+          <% if item.is_bonus == true %>
+            <% if not item.bonus_date.nil? %>
+              <% bonus_date = item.bonus_date %>
+              <% item_eligible_date = ReportFormat.bonus_eligibility(pay_invoice.employee, bonus_item_name) %>
+              <% if not item_eligible_date.nil? %>
+                <% if item_eligible_date <= bonus_date.to_date %>
+                  <% start_time = Time.new(item_eligible_date.to_date.year,item_eligible_date.to_date.month,item_eligible_date.to_date.day) %>
+                  <% end_time = Time.new(bonus_date.to_date.year,bonus_date.to_date.month,bonus_date.to_date.day) %>
+                  <% actual_serving_days = (TimeDifference.between(start_time, end_time).in_days) + 1 %>
+                  <% if actual_serving_days > 365 %>
+                    <% actual_serving_days = 365 %>
+                  <% end %>
+                <% else %>
+                  <% actual_serving_days = 0 %>
+                <% end %>
+              <% else %>
+                <% actual_serving_days = 0 %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <td><%= count %></td>
+          <td> <%= pay_invoice.employee_code %> </td>
+          <td> <%= pay_invoice.employee_name %> </td>
+          <td> <%= pay_invoice.designation_name %> </td>
+          <td> <%= ReportFormat.date_format(pay_invoice.joining_date) %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:jan)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:feb)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:mar)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:apr)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:may)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:june)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:july)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:aug)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:sep)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:oct)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:nov)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:dec)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((0), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:total)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((actual_serving_days), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((0), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((0), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round), :precision => 0, :delimiter => ',') %> </td>
+          <% count = count + 1 %>
+        </tr>
+      <% end %>
+      <% column_no_1 = 0 %>
+      <% column_no_2 = 0 %>
+      <% column_no_3 = 0 %>
+      <% column_no_4 = 0 %>
+      <% column_no_5 = 0 %>
+      <% column_no_6 = 0 %>
+      <% column_no_7 = 0 %>
+
+      <% admin_data.each do |pay_invoice| %>
+        <% column_no_1 = column_no_1 + 0 %>
+        <% column_no_2 = column_no_2 + TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:total) %>
+        <% column_no_3 = column_no_3 + pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+        <% column_no_4 = column_no_4 + 0 %>
+        <% column_no_5 = column_no_5 + 0 %>
+        <% column_no_6 = column_no_6 + 0 %>
+        <% column_no_7 = column_no_7 + pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+      <% end %>
+      <tr style="border:2px solid #ececec;border-top:0px">
+        <td> <%= "Sub Total" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= number_with_precision(column_no_1.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_2.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_3.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_4.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_5.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_6.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_7.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+      </tr>
+      </tbody>
+    </table>
+    <h3><%= "Selling" %></h3>
+    <table class="main-table" style="width:100%;margin-top:20px;border-collapse:collapse">
+      <thead style="text-align:center;font-size: 10px;">
+      <tr style="background-color:#4a4a4a;border:2px solid #4a4a4a;border-bottom:0px;">
+        <th>SR NO.</th>
+        <th>Emp Code</th>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Date of Joining</th>
+        <th>Jan</th>
+        <th>Feb</th>
+        <th>Mar</th>
+        <th>Apr</th>
+        <th>May</th>
+        <th>June</th>
+        <th>July</th>
+        <th>Aug</th>
+        <th>Sep</th>
+        <th>Oct</th>
+        <th>Nov</th>
+        <th>Dec</th>
+        <th>Arrear</th>
+        <th>Total Earning</th>
+        <th>Bonus</th>
+        <th>Total W/Days</th>
+        <th>Deduction</th>
+        <th>Bank Charges</th>
+        <th>Net Payable</th>
+      </tr>
+      </thead>
+      <tbody style="text-align:center;font-size:10px">
+      <% selling_data.each do |pay_invoice| %>
+        <tr style="border:2px solid #ececec;border-top:0px">
+          <% actual_serving_days = 0 %>
+          <% item = PayItem.find_by(:name => bonus_item_name) %>
+          <% if item.is_bonus == true %>
+            <% if not item.bonus_date.nil? %>
+              <% bonus_date = item.bonus_date %>
+              <% item_eligible_date = ReportFormat.bonus_eligibility(pay_invoice.employee, bonus_item_name) %>
+              <% if not item_eligible_date.nil? %>
+                <% if item_eligible_date <= bonus_date.to_date %>
+                  <% start_time = Time.new(item_eligible_date.to_date.year,item_eligible_date.to_date.month,item_eligible_date.to_date.day) %>
+                  <% end_time = Time.new(bonus_date.to_date.year,bonus_date.to_date.month,bonus_date.to_date.day) %>
+                  <% actual_serving_days = (TimeDifference.between(start_time, end_time).in_days) + 1 %>
+                  <% if actual_serving_days > 365 %>
+                    <% actual_serving_days = 365 %>
+                  <% end %>
+                <% else %>
+                  <% actual_serving_days = 0 %>
+                <% end %>
+              <% else %>
+                <% actual_serving_days = 0 %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <td><%= count %></td>
+          <td> <%= pay_invoice.employee_code %> </td>
+          <td> <%= pay_invoice.employee_name %> </td>
+          <td> <%= pay_invoice.designation_name %> </td>
+          <td> <%= ReportFormat.date_format(pay_invoice.joining_date) %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:jan)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:feb)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:mar)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:apr)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:may)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:june)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:july)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:aug)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:sep)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:oct)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:nov)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:dec)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((0), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:total)), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((actual_serving_days), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((0), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((0), :precision => 0, :delimiter => ',') %> </td>
+          <td> <%= number_with_precision((pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round), :precision => 0, :delimiter => ',') %> </td>
+          <% count = count + 1 %>
+        </tr>
+      <% end %>
+      <% column_no_1 = 0 %>
+      <% column_no_2 = 0 %>
+      <% column_no_3 = 0 %>
+      <% column_no_4 = 0 %>
+      <% column_no_5 = 0 %>
+      <% column_no_6 = 0 %>
+      <% column_no_7 = 0 %>
+
+      <% selling_data.each do |pay_invoice| %>
+        <% column_no_1 = column_no_1 + 0 %>
+        <% column_no_2 = column_no_2 + TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:total) %>
+        <% column_no_3 = column_no_3 + pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+        <% column_no_4 = column_no_4 + 0 %>
+        <% column_no_5 = column_no_5 + 0 %>
+        <% column_no_6 = column_no_6 + 0 %>
+        <% column_no_7 = column_no_7 + pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+      <% end %>
+      <tr style="border:2px solid #ececec;border-top:0px">
+        <td> <%= "Sub Total" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= number_with_precision(column_no_1.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_2.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_3.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_4.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_5.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_6.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_7.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+      </tr>
+      <tr style="border:2px solid #ececec;border-top:0px">
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+        <td> <%= "-" %> </td>
+      </tr>
+      <% column_no_1 = 0 %>
+      <% column_no_2 = 0 %>
+      <% column_no_3 = 0 %>
+      <% column_no_4 = 0 %>
+      <% column_no_5 = 0 %>
+      <% column_no_6 = 0 %>
+      <% column_no_7 = 0 %>
+
+      <% @pay_invoices.each do |pay_invoice| %>
+        <% column_no_1 = column_no_1 + 0 %>
+        <% column_no_2 = column_no_2 + TempTblBonu.where(:emp_code => pay_invoice.employee.employee_code).sum(:total) %>
+        <% column_no_3 = column_no_3 + pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+        <% column_no_4 = column_no_4 + 0 %>
+        <% column_no_5 = column_no_5 + 0 %>
+        <% column_no_6 = column_no_6 + 0 %>
+        <% column_no_7 = column_no_7 + pay_invoice.pay_invoice_details.where(:item_name => bonus_item_name).sum(:amount).to_f.round %>
+      <% end %>
+      <tr style="border:2px solid #ececec;border-top:0px">
+        <td> <%= "Grand Total" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= "" %> </td>
+        <td> <%= number_with_precision(column_no_1.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_2.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_3.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_4.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_5.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_6.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+        <td> <%= number_with_precision(column_no_7.to_f.round, :precision => 0, :delimiter => ',') %> </td>
+      </tr>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+</body>
+
+</html>
+<style type="text/css">
+  * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  table > thead > tr > th {
+    color: #fff;
+    font-weight: 100;
+  }
+
+  table > thead > tr > th,
+  table > tbody > tr > td {
+    padding: 5px 0;
+  }
+
+  table.main-table > thead > tr > th,
+  table.main-table > tbody > tr > td {
+    text-transform: uppercase;
+  }
+  tr.info > td {
+    font-weight: bold;
+    color: #01C7BD;
+    letter-spacing: 1px;
+  }
+
+  .clr-green {
+    color: #7B9610 !important;
+  }
+
+  .clr-red {
+    color: #BE2731 !important;
+  }
+
+  .clr-yellow {
+    color: #E0BA00 !important;
+  }
+
+  .clr-blue {
+    color: #2870BB !important;
+  }
+
+  .clr-purple {
+    color: #F11BE9 !important;
+  }
+
+  .side-heading {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  @font-face {
+    font-family: Lato;
+    -fs-pdf-font-embed: embed;
+    -fs-pdf-font-encoding: Identity-H;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .container:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+</style>

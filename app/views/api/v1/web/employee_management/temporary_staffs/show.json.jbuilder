@@ -1,0 +1,34 @@
+json.temporary_staff do
+	json.id 													@temporary_staff.id
+	json.full_name										@temporary_staff.full_name
+	json.salutation  									@temporary_staff.salutation
+	json.first_name  									@temporary_staff.first_name
+	json.last_name  									@temporary_staff.last_name
+	json.father_name  								@temporary_staff.father_name
+	json.official_email  							@temporary_staff.official_email
+	json.official_mobile_number  			@temporary_staff.official_mobile_number
+	json.personal_email  							@temporary_staff.personal_email
+	json.personal_number  						@temporary_staff.personal_number
+	json.date_of_birth  							@temporary_staff.date_of_birth
+	json.gender  											@temporary_staff.gender
+	json.cnic_number  								@temporary_staff.cnic_number
+	json.blood_group  								@temporary_staff.blood_group
+	json.martial_status  							@temporary_staff.martial_status
+	json.gross_salary  								@temporary_staff.gross_salary.to_f
+	json.current_address  						@temporary_staff.current_address
+	json.company_id  									@temporary_staff.company_id
+	json.location_id  								@temporary_staff.location_id
+	json.branch_id  									@temporary_staff.branch_id
+	json.department_id  							@temporary_staff.department_id
+	json.sub_department_id  					@temporary_staff.sub_department_id
+	json.grade_id  										@temporary_staff.grade_id
+	json.designation_id  							@temporary_staff.designation_id
+	json.job_title_id  								@temporary_staff.job_title_id
+	json.salary_unit_id  							@temporary_staff.salary_unit_id
+	json.cost_center_id  							@temporary_staff.cost_center_id
+	json.joining_date  								@temporary_staff.joining_date
+	json.temporary_staff_code  				@temporary_staff.temporary_staff_code
+	json.is_active		  							@temporary_staff.is_active
+	json.is_converted		  						@temporary_staff.is_converted
+	json.current_address		  				@temporary_staff.current_address
+end

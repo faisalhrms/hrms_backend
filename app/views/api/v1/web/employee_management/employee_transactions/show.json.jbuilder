@@ -1,0 +1,2 @@
+json.employee_transaction do
+end

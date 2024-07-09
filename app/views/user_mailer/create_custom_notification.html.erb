@@ -1,0 +1,13 @@
+<html>
+
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+
+<body>
+  <% if (not @mail_text.nil?) and (not @mail_text.blank?) %>
+    <%= @mail_text.html_safe %>
+  <% end %>
+</body>
+
+</html>

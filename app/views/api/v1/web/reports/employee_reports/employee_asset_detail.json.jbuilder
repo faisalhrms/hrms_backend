@@ -1,0 +1,46 @@
+json.employees @employees.each do |employee|
+	json.employee_code 											employee.employee_code
+	json.full_name 													employee.full_name
+	json.fuel_allowed 											ReportFormat.boolean_in_text_as_allowed(employee.fuel_allowed)
+	json.fuel_impact_allowed 								ReportFormat.boolean_in_text_as_allowed(employee.fuel_impact_allowed)
+	json.fuel_eligibility 									ReportFormat.non_text_to_dash(employee.fuel_eligibility)
+	json.fuel_other_date 										ReportFormat.date_format(employee.fuel_other_date)
+	json.fuel_limit 												ReportFormat.non_text_to_dash(employee.fuel_limit)
+	json.fuel_value 												ReportFormat.non_float_to_dash(employee.fuel_value)
+	json.cell_phone_allowed 								ReportFormat.boolean_in_text_as_allowed(employee.cell_phone_allowed)
+	json.cell_phone_impact_allowed 					ReportFormat.boolean_in_text_as_allowed(employee.cell_phone_impact_allowed)
+	json.cell_phone_eligibility 						ReportFormat.non_text_to_dash(employee.cell_phone_eligibility)
+	json.cell_phone_other_date 							ReportFormat.date_format(employee.cell_phone_other_date)
+	json.cell_assignment_date 							ReportFormat.date_format(employee.cell_assignment_date)
+	json.cell_phone_name 										ReportFormat.non_text_to_dash(employee.cell_phone_name)
+	json.cell_phone_model 									ReportFormat.non_text_to_dash(employee.cell_phone_model)
+	json.cell_phone_entitlement_upto 				ReportFormat.non_float_to_dash(employee.cell_phone_entitlement_upto)
+	json.laptop_allowed 										ReportFormat.boolean_in_text_as_allowed(employee.laptop_allowed)
+	json.laptop_impact_allowed 							ReportFormat.boolean_in_text_as_allowed(employee.laptop_impact_allowed)
+	json.laptop_eligibility 								ReportFormat.non_text_to_dash(employee.laptop_eligibility)
+	json.laptop_other_date 									ReportFormat.date_format(employee.laptop_other_date)
+	json.laptop_category 										ReportFormat.non_text_to_dash(employee.laptop_category)
+	json.laptop_assignment_date 						ReportFormat.date_format(employee.laptop_assignment_date)
+	json.laptop_name 												ReportFormat.non_text_to_dash(employee.laptop_name)
+	json.laptop_model 											ReportFormat.non_text_to_dash(employee.laptop_model)
+	json.actual_laptop_value 								ReportFormat.non_float_to_dash(employee.actual_laptop_value)
+	json.velicle_allowed 										ReportFormat.boolean_in_text_as_allowed(employee.velicle_allowed)
+	json.velicle_impact_allowed 						ReportFormat.boolean_in_text_as_allowed(employee.velicle_impact_allowed)
+	json.velicle_eligibility 								ReportFormat.non_text_to_dash(employee.velicle_eligibility)
+	json.velicle_other_date 								ReportFormat.date_format(employee.velicle_other_date)
+	json.vehicle_assignment_date 						ReportFormat.date_format(employee.vehicle_assignment_date)
+	json.vehicle_name 											ReportFormat.non_text_to_dash(employee.vehicle_name)
+	json.vehicle_model 											ReportFormat.non_text_to_dash(employee.vehicle_model)
+	json.vehicle_value 											ReportFormat.non_float_to_dash(employee.vehicle_value)
+	json.velicle_two_allowed 								ReportFormat.boolean_in_text_as_allowed(employee.velicle_two_allowed)
+	json.velicle_two_eligibility 						ReportFormat.non_text_to_dash(employee.velicle_two_eligibility)
+	json.velicle_two_other_date 						ReportFormat.date_format(employee.velicle_two_other_date)
+	json.vehicle_two_assignment_date 				ReportFormat.date_format(employee.vehicle_two_assignment_date)
+	json.vehicle_two_name 									ReportFormat.non_text_to_dash(employee.vehicle_two_name)
+	json.vehicle_two_model 									ReportFormat.non_text_to_dash(employee.vehicle_two_model)
+	json.vehicle_two_value 									ReportFormat.non_float_to_dash(employee.vehicle_two_value)
+	json.cell_phone_age 										"#{ReportFormat.employee_age(employee.cell_assignment_date)} years"
+	json.laptop_age 												"#{ReportFormat.employee_age(employee.laptop_assignment_date)} years"
+	json.vehicle_age 												"#{ReportFormat.employee_age(employee.vehicle_assignment_date)} years"
+	json.vehicle_two_age 										"#{ReportFormat.employee_age(employee.vehicle_two_assignment_date)} years"
+end

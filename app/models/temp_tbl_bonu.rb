@@ -1,0 +1,2 @@
+class TempTblBonu < ApplicationRecord
+end

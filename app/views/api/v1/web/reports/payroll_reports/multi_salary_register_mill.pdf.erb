@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Salary Register</title>
+  <style type="text/css">
+    .page-break {
+      display: block;
+      clear: both;
+      page-break-after: always;
+    }
+    .container:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+    table { page-break-inside:auto }
+    table > thead > tr > th {
+      color: #000000;
+      font-size: 10px;
+      font-weight: bolder;
+    }
+
+    table > tfoot > tr > td {
+      color: #000000;
+      font-size: 12px;
+      font-weight: bolder;
+    }
+
+    table > tbody > tr > td {
+      color: #000000;
+      font-size: 8px;
+    }
+
+    table.print > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 15px;
+    }
+
+    table.summary > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 13px;
+    }
+
+    .table td, .table th{
+      border-color: black;
+    }
+
+    .dept-detail tfoot tr {
+      border-bottom: 2px solid black;
+    }
+
+    .dept-detail tbody tr {
+      border-bottom: 2px solid black;
+    }
+
+    .summary tbody > tr:last-child {
+      border-bottom: 2px solid black;
+    }
+
+    .dept-detail thead tr {
+      border-bottom: 3px solid black;
+      border-top: 3px solid black;
+    }
+    table.print { width: 250px;height: 100%; }
+
+  </style>
+  <%= stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' %>
+</head>
+
+<body>
+<div>
+
+
+  <% grade_name = "" %>
+  <% if params[:grade_id] != "" and params[:grade_id].nil? == false %>
+    <% grade_names = Grade.find(params[:grade_id].map(&:to_i)).pluck(:name) %>
+    <% if grade_names.include?("W") %>
+      <% grade_name += "Worker, " %>
+    <% end %>
+    <% if grade_names.include?("S") %>
+      <% grade_name += "Staff, " %>
+    <% end %>
+    <% if grade_names.include?("M") %>
+      <% grade_name += "Management, " %>
+    <% end %>
+    <% grade_name = grade_name.gsub(/\, $/, '') %>
+  <% end %>
+  <table style="width: 100%;">
+    <tr>
+      <td style="border: 2px solid #000; text-align: center" rowspan="2">
+        <img src="<%= @company.avatar.url %>" width="150" />
+      </td>
+      <% company_name = @company.name %>
+      <% unless params[:location_id].blank? %>
+        <% company_name += " (#{Location.find(params[:location_id]).name})" %>
+      <% end %>
+      <td style="border: 2px solid #000; text-align: center" rowspan="3">
+        <% payment_method = "ALL" %>
+        <% if params[:payment_method] == "Bank" %>
+          <% payment_method = "BANK TRANSFER" %>
+        <% elsif params[:payment_method] == "Cash" %>
+          <% payment_method = "CASH" %>
+        <% elsif params[:payment_method] == "Jazz Cash" %>
+          <% payment_method = "JAZZ CASH" %>
+        <% end %>
+        <p style="color:black;text-align:center;font-size:16px">Department wise Summary of Monthly Salary (<%= payment_method %>) </p>
+        <p style="color:black;text-align:center;font-size:16px"> For the Month of : <%= @pay_executions.last.formated_pay_month %></p>
+        <p style="color:black;text-align:center;font-size:16px"> Report For: <%= grade_name %></p>
+      </td>
+      <td style="border: 2px solid #000; text-align: right; padding: 8px 10px">
+        <span style="font-weight: 800; font-style: italic;">Print date:</span>
+      </td>
+      <td style="border: 2px solid #000; padding: 8px 10px">
+        <span><%= DateTime.now.strftime("%d/%m/%Y") %></span>
+      </td>
+    </tr>
+    <tr>
+      <td style="border: 2px solid #000; text-align: right; padding: 3px 10px">
+        <span style="font-weight: 800; font-style: italic;">Print time:</span>
+      </td>
+      <td style="border: 2px solid #000; padding: 3px 10px">
+        <span><%= DateTime.now.strftime("%I:%M:%S") %></span>
+      </td>
+    </tr>
+    <tr>
+      <td style="border: 2px solid #000; text-align: center; padding: 5px 0">
+        <span style="font-weight: 900"><%= @company.name %></span>
+      </td>
+      <td style="border: 2px solid #000; text-align: right; padding: 5px 10px">
+        <span style="font-weight: 800; font-style: italic;">Page:</span>
+      </td>
+      <td style="border: 2px solid #000; padding: 5px 10px">
+        Page 1 of 1
+      </td>
+    </tr>
+  </table>
+  <% department_ids = @pay_invoices.collect(&:department_id).uniq %>
+  <% gross_pay = 0 %>
+  <% overtime = 0 %>
+  <% total_deductions = 0 %>
+  <% net_pay = 0 %>
+  <% departments = Department.where(:id => department_ids).order('name ASC') %>
+  <% count = 0 %>
+  <table class="table borderless table-condensed dept-detail" style="margin-top: 5px">
+    <thead >
+    <tr style="">
+      <th >Department</th>
+      <th >No of Employees</th>
+      <th >Gross Pay</th>
+      <th >Conveyance Allowance</th>
+      <th >Washing Allowance</th>
+      <th >Other Allowance</th>
+      <th >Incentive</th>
+      <th >Overtime Amount</th>
+      <th >Salary Arrears</th>
+      <th >Total Earnings</th>
+      <th >Electric Bill</th>
+      <th >Income Tax</th>
+      <th >EOBI Cont.</th>
+      <th >Loan</th>
+      <th >Advance</th>
+      <th >Mess Bill</th>
+      <th >Insurance Premium GLI</th>
+      <th >Misc. Deduction</th>
+      <th >Canteen Deduction</th>
+      <th >P.Fund</th>
+      <th >Deduction</th>
+      <th >Net Pay</th>
+    </tr>
+    </thead>
+    <% if grade_name == "Worker" %>
+      <% hiring_shift_wise_employees = Employee.includes(:hire_shift).where(id: @pay_invoices.pluck(:employee_id).uniq).order("general_types.name ASC").group_by(&:hiring_shift_id) %>
+      <% hiring_shifts = GeneralType.all.group_by(&:id) %>
+      <% departments = Department.find(@pay_invoices.pluck(:department_id).uniq).group_by(&:id) %>
+      <% worker_employees = {} %>
+      <% hiring_shift_wise_employees.each do |hiring_shift_employees| %>
+        <% hiring_shift_name = hiring_shift_employees.first.nil? ? "" : hiring_shifts[hiring_shift_employees.first].last.name %>
+        <% worker_employees[hiring_shift_name] = Employee.includes(:department).where(id: hiring_shift_employees.last.pluck(:id)).order("departments.name ASC").group_by(&:department_id) %>
+      <% end %>
+      <% worker_employees.each do |worker_employee| %>
+        <% time_slot = worker_employee.first %>
+        <tbody style="">
+        <tr style="border-bottom: 2px solid white;">
+          <td style="text-align: center;font-weight: bold; width: 20%"> Shift: </td>
+          <td style="text-align: center;font-weight: bold; background-color: grey; width: 10%"> <%= time_slot %> </td>
+          <td style="text-align: center; width: 15%"> <%= "" %> </td>
+          <td style="text-align: center; width: 15%"> <%= "" %> </td>
+          <td style="text-align: center; width: 15%"> <%= "" %> </td>
+          <td style="text-align: center; width: 20%"> <%= "" %> </td>
+        </tr>
+        </tbody>
+        <% shift_employee_ids = [] %>
+        <% worker_employee[1].each do |department_employees| %>
+          <% department = departments[department_employees.first].last %>
+          <% count = count + 1 %>
+          <tbody style="">
+          <tr>
+            <td> <%= department.name %> </td>
+            <% shift_employee_ids += department_employees[1].pluck(:id) %>
+            <% pay_invoice_ids = @pay_invoices.where(:department_id => department.id, employee_id: department_employees[1].pluck(:id)).collect(&:id) %>
+            <td style="text-align: center"> <%= pay_invoice_ids.uniq.count %> </td>
+            <% salary_earned = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+            <td style="text-align: center;"> <%= number_with_precision(salary_earned, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision((PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f), :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Other Allowance').sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <% incentive = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Incentive-F').sum(:amount).round.to_f %>
+            <td style="text-align: center;"> <%= number_with_precision(incentive, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Over Time').sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(FixedPayItem.where(:is_active => true, :employee_id => department_employees[1].pluck(:id), :pay_item_id => PayItem.find_by_name("Salary Arrears").id).sum(:item_amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoice.find(pay_invoice_ids).sum(&:total_earning), :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Electric Bill"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(@pay_invoices.where(:department_id => department.id, employee_id: department_employees[1].pluck(:id)).sum(:monthly_tax).to_f.round, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Advance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Mess Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Insurance Premium GLI").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+            <% total_deduction = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", 'Miscellaneous Deduction', "Insurance Premium GLI", "Canteen Deduction"]).sum(:amount).round.to_f + @pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round %>
+            <td style="text-align: center;"> <%= number_with_precision(total_deduction, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> <%= number_with_precision((PayInvoice.find(pay_invoice_ids).sum(&:total_earning) - total_deduction), :precision => 2, :delimiter => ',') %> </td>
+          </tr>
+          </tbody>
+        <% end %>
+        <thead style="font-size: 12px; font-weight: bolder">
+        <tr style="">
+          <td> <%= "Shift Total" %> </td>
+          <% pay_invoice_ids = @pay_invoices.where(employee_id: shift_employee_ids).collect(&:id) %>
+          <td style="text-align: center"> <%= pay_invoice_ids.uniq.count %> </td>
+          <%# salary_earned = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance (OPD)", "Conveyance Allowance", "Washing Allowance", "Fuel Allowance"]).sum(:amount).round.to_f %>
+          <% salary_earned = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+          <td style="text-align: center;"> <%= number_with_precision(salary_earned, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Other Allowance').sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <% incentive = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Incentive-F').sum(:amount).round.to_f %>
+          <td style="text-align: center;"> <%= number_with_precision(incentive, :precision => 2, :delimiter => ',') %> </td>
+          <% overtime = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Over Time').sum(:amount).round.to_f %>
+          <% salary_arrears = FixedPayItem.where(:is_active => true, :employee_id => shift_employee_ids, :pay_item_id => PayItem.find_by_name("Salary Arrears").id).sum(:item_amount).round.to_f %>
+          <td style="text-align: center;"> <%= number_with_precision(overtime, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(salary_arrears, :precision => 2, :delimiter => ',') %> </td>
+          <% gross_pay = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+          <% total_earning = PayInvoice.find(pay_invoice_ids).sum(&:total_earning) %>
+          <td style="text-align: center;"> <%= number_with_precision(total_earning, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Electric Bill"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(@pay_invoices.where(employee_id: shift_employee_ids).sum(:monthly_tax).to_f.round, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Advance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Mess Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Insurance Premium GLI").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <% total_deductions = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Miscellaneous Deduction", "Insurance Premium GLI", "Canteen Deduction"]).sum(:amount).round.to_f + @pay_invoices.sum(:monthly_tax).to_f.round %>
+          <td style="text-align: center;"> <%= number_with_precision(total_deductions, :precision => 2, :delimiter => ',') %> </td>
+          <% net_pay =  total_earning - total_deductions%>
+          <td style="text-align: center;"> <%= number_with_precision((net_pay), :precision => 2, :delimiter => ',') %> </td>
+        </tr>
+        </thead>
+      <% end %>
+      <tfoot>
+      <tr style="">
+        <td> <%= "Grand Total" %> </td>
+        <% pay_invoice_ids = @pay_invoices.collect(&:id) %>
+        <td style="text-align: center"> <%= pay_invoice_ids.uniq.count %> </td>
+        <%# salary_earned = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance (OPD)", "Conveyance Allowance", "Washing Allowance", "Fuel Allowance"]).sum(:amount).round.to_f %>
+        <% salary_earned = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+        <td style="text-align: center;"> <%= number_with_precision(salary_earned, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Other Allowance').sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <% incentive = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Incentive-F').sum(:amount).round.to_f %>
+        <td style="text-align: center;"> <%= number_with_precision(incentive, :precision => 2, :delimiter => ',') %> </td>
+        <% overtime = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Over Time').sum(:amount).round.to_f %>
+        <% salary_arrears = FixedPayItem.where(:is_active => true, :employee_id => @pay_invoices.pluck(:employee_id), :pay_item_id => PayItem.find_by_name("Salary Arrears").id).sum(:item_amount).round.to_f %>
+        <td style="text-align: center;"> <%= number_with_precision(overtime, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(salary_arrears, :precision => 2, :delimiter => ',') %> </td>
+        <% gross_pay = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+        <% total_earning = PayInvoice.find(pay_invoice_ids).sum(&:total_earning) %>
+        <td style="text-align: center;"> <%= number_with_precision(total_earning, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Electric Bill"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(@pay_invoices.sum(:monthly_tax).to_f.round, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Advance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Mess Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Insurance Premium GLI").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <% total_deductions = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Miscellaneous Deduction", "Insurance Premium GLI", "Canteen Deduction"]).sum(:amount).round.to_f + @pay_invoices.sum(:monthly_tax).to_f.round %>
+        <td style="text-align: center;"> <%= number_with_precision(total_deductions, :precision => 2, :delimiter => ',') %> </td>
+        <% net_pay =  total_earning - total_deductions%>
+        <td style="text-align: center;"> <%= number_with_precision((net_pay), :precision => 2, :delimiter => ',') %> </td>
+      </tr>
+      </tfoot>
+    <% else %>
+      <% departments.each do |department| %>
+      <% count = count + 1 %>
+      <tbody style="">
+      <tr>
+        <td> <%= department.name %> </td>
+        <% pay_invoice_ids = @pay_invoices.where(:department_id => department.id).collect(&:id) %>
+        <% dept_pay_invoices = @pay_invoices.where(:department_id => department.id) %>
+        <td style="text-align: center"> <%= pay_invoice_ids.uniq.count %> </td>
+        <% salary_earned = 0 %>
+        <% dept_pay_invoices.each do |pay_invoice| %>
+          <% gross_pay = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice.id, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+          <% salary_earned += PayRollReportData.round_gross_pay(pay_invoice, gross_pay) %>
+        <% end %>
+        <td style="text-align: center;"> <%= number_with_precision(salary_earned, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision((PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f), :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Other Allowance').sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <% incentive = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Incentive-F').sum(:amount).round.to_f %>
+        <td style="text-align: center;"> <%= number_with_precision(incentive, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Over Time').sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(FixedPayItem.where(:is_active => true, :employee_id => @pay_invoices.where(:department_id => department.id).pluck(:employee_id), :pay_item_id => PayItem.find_by_name("Salary Arrears").id).sum(:item_amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoice.find(pay_invoice_ids).sum(&:total_earning), :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Electric Bill"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(@pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Advance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Mess Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Insurance Premium GLI").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+        <% total_deduction = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", 'Miscellaneous Deduction', "Canteen Deduction", "Insurance Premium GLI"]).sum(:amount).round.to_f + @pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round %>
+        <td style="text-align: center;"> <%= number_with_precision(total_deduction, :precision => 2, :delimiter => ',') %> </td>
+        <td style="text-align: center;"> <%= number_with_precision((PayInvoice.find(pay_invoice_ids).sum(&:total_earning) - total_deduction), :precision => 2, :delimiter => ',') %> </td>
+      </tr>
+      </tbody>
+      <% if departments.count == count %>
+        <tfoot>
+        <tr style="">
+          <td> <%= "Grand Total" %> </td>
+          <% pay_invoice_ids = @pay_invoices.collect(&:id) %>
+          <td style="text-align: center"> <%= pay_invoice_ids.uniq.count %> </td>
+          <% salary_earned = 0 %>
+          <% @pay_invoices.each do |pay_invoice| %>
+            <% gross_pay = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice.id, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+            <% salary_earned += PayRollReportData.round_gross_pay(pay_invoice, gross_pay) %>
+          <% end %>
+          <td style="text-align: center;"> <%= number_with_precision(salary_earned, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Other Allowance').sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <% incentive = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Incentive-F').sum(:amount).round.to_f %>
+          <td style="text-align: center;"> <%= number_with_precision(incentive, :precision => 2, :delimiter => ',') %> </td>
+          <% overtime = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => 'Over Time').sum(:amount).round.to_f %>
+          <% salary_arrears = FixedPayItem.where(:is_active => true, :employee_id => @pay_invoices.pluck(:employee_id), :pay_item_id => PayItem.find_by_name("Salary Arrears").id).sum(:item_amount).round.to_f %>
+          <td style="text-align: center;"> <%= number_with_precision(overtime, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(salary_arrears, :precision => 2, :delimiter => ',') %> </td>
+          <% gross_pay = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+          <% total_earning = PayInvoice.find(pay_invoice_ids).sum(&:total_earning) %>
+          <td style="text-align: center;"> <%= number_with_precision(total_earning, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Electric Bill"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(@pay_invoices.sum(:monthly_tax).to_f.round, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Advance"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Mess Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Insurance Premium GLI").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
+          <% total_deductions = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Miscellaneous Deduction", "Canteen Deduction", "Insurance Premium GLI"]).sum(:amount).round.to_f + @pay_invoices.sum(:monthly_tax).to_f.round %>
+          <td style="text-align: center;"> <%= number_with_precision(total_deductions, :precision => 2, :delimiter => ',') %> </td>
+          <% net_pay =  total_earning - total_deductions%>
+          <td style="text-align: center;"> <%= number_with_precision((net_pay), :precision => 2, :delimiter => ',') %> </td>
+        </tr>
+        </tfoot>
+      <% end %>
+    <% end %>
+    <% end %>
+  </table>
+  <hr>
+  <table class="summary" style="width:100%;margin-top:20px;border-collapse:collapse">
+    <tbody>
+    <tr>
+      <td style="font-weight: bold">Monthly Salary Summary for the Month of <%= @pay_invoices.last.pay_month %></td>
+    </tr>
+    <tr style="border-bottom:2px solid black">
+      <td colspan="100%"></td>
+    </tr>
+    <tr>
+      <td>(Rupees in '000)</td>
+    </tr>
+    <tr style="border-bottom:1px solid black">
+      <td colspan="100%"></td>
+    </tr>
+    </tbody>
+  </table>
+  <table class="summary" style="width:20%;margin-top:20px;border-collapse:collapse">
+    <tr>
+      <td>Gross Pay: </td>
+      <td style="text-align: right"><%= number_with_precision(gross_pay, :precision => 2, :delimiter => ',') %></td>
+    </tr>
+    <tr>
+      <td>Overtime:</td>
+      <td style="text-align: right"><%= number_with_precision(overtime, :precision => 2, :delimiter => ',') %></td>
+    </tr>
+    <tr style="border-bottom:0.5px dotted black; gap: 1px;">
+      <td colspan="20%"></td>
+    </tr>
+    <tr>
+      <td>Less: Deductions:</td>
+      <td style="text-align: right"><%= number_with_precision(total_deductions, :precision => 2, :delimiter => ',') %></td>
+    </tr>
+    <tr style="border-bottom:1px solid black">
+      <td colspan="20%"></td>
+    </tr>
+    <tr>
+      <td>Net Pay:</td>
+      <td style="text-align: right"><%= number_with_precision(net_pay, :precision => 2, :delimiter => ',') %></td>
+    </tr>
+  </table>
+</div>
+</body>
+
+</html>

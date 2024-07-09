@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PF Summary</title>
+    <style type="text/css">
+      .page-break {
+        display: block;
+        clear: both;
+        page-break-after: always;
+      }
+      .container:after{
+        content: "";
+        display: block;
+        clear: both;
+      }
+      table { page-break-inside:auto }
+      table > thead > tr > th {
+        color: #000000;
+        font-size: 12px;
+        font-weight: bolder;
+      }
+
+      table > tfoot > tr > td {
+        color: #000000;
+        font-size: 12px;
+        font-weight: bolder;
+      }
+
+      table > tbody > tr > td {
+        color: #000000;
+        font-weight: 100;
+        font-size: 10px;
+      }
+
+      table.print > tbody > tr > td {
+        color: #000000;
+        font-weight: 100;
+        font-size: 15px;
+      }
+
+      table.summary > tbody > tr > td {
+        color: #000000;
+        font-weight: 100;
+        font-size: 13px;
+      }
+
+      .table td, .table th{
+        border-color: black;
+      }
+
+      .dept-detail tfoot tr {
+        border-bottom: 2px solid black;
+      }
+
+      .dept-detail tbody tr {
+        border-bottom: 2px solid black;
+      }
+
+      .summary tbody > tr:last-child {
+        border-bottom: 2px solid black;
+      }
+
+      .dept-detail thead tr {
+        border-bottom: 3px solid black;
+        border-top: 3px solid black;
+      }
+      table.print { width: 250px;height: 100%; }
+
+    </style>
+    <%= stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' %>
+  </head>
+
+  <body>
+    <div>
+      <div class="container">
+        <div class="row" style="border: 2px solid black">
+          <div class="col-xs-2" style=";border-right: 2px solid black">
+            <div class="row">
+              <% if not (@company.avatar_file_name.nil? or @company.avatar_file_name.blank?) %>
+                <img src="<%= @company.avatar.url %>" style="width:220px;height:100px;margin-left: 12px;margin-top: 10px">
+              <% end %>
+            </div>
+            <% company_name = @company.name %>
+            <div class="row">
+              <p style="color:black;font-size:18px; font-weight: bolder; margin-left: 25px"><%= company_name %></p>
+            </div>
+          </div>
+          <div class="col-xs-8" >
+            <p style="color:black;text-align:center;font-size:18px; font-weight: bolder">Unit Wise Summary of Employees Provident Fund Contribution
+            </p>
+            <p style="color:black;text-align:center;font-size:16px"> For the Month of : <%= @pay_executions.last.formated_pay_month %></p>
+
+          </div>
+          <div class="col-xs-2" style="height: 145px;border-left: 2px solid black">
+            <table class="table print" style="">
+              <tbody>
+                <tr>
+                  <td>Print date</td>
+                  <td><%= DateTime.now.strftime("%d/%m/%Y") %></td>
+                </tr>
+                <tr>
+                  <td>Print time</td>
+                  <td><%= DateTime.now.strftime("%I:%M:%S") %></td>
+                </tr>
+                <tr>
+                  <td>Pages</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+            <p></p>
+          </div>
+        </div>
+      </div>
+      <table class="table borderless dept-detail" style="margin-top: 5px">
+        <thead >
+          <tr style="">
+            <th style="text-align:center;">Description</th>
+            <th style="text-align:center;">No. of Employees</th>
+            <th style="text-align:center;">Employee's Contribution (In PKR)</th>
+            <th style="text-align:center;">Employer's Contribution (In PKR)</th>
+            <th style="text-align:center;">Total Amount (In PKR)</th>
+          </tr>
+        </thead>
+        <% count = 0 %>
+        <% total_employee_cont_value = 0 %>
+        <% total_employer_cont_value = 0 %>
+        <% @pay_invoices.each do |pay_invoice| %>
+          <% count = count + 1 %>
+          <% employee_cont = PayRollReportData.employee_pf_value(pay_invoice) %>
+          <% employer_cont = PayRollReportData.employeer_pf_value(pay_invoice) %>
+          <% total_employee_cont_value += employee_cont %>
+          <% total_employer_cont_value += employer_cont %>
+        <% end %>
+        <tbody style="">
+          <tr>
+            <td style="text-align: center;"> <%= @company.name %> </td>
+            <td style="text-align: center;"> <%= count %> </td>
+            <td style="text-align: center;"> <%= number_with_delimiter(total_employee_cont_value) %> </td>
+            <td style="text-align: center;"> <%= number_with_delimiter(total_employer_cont_value) %> </td>
+            <td style="text-align: center;"> <%= number_with_delimiter(total_employee_cont_value + total_employer_cont_value) %> </td>
+          </tr>
+        </tbody>
+        <thead>
+          <tr style="border-bottom: 0px;border-top: 0px;">
+            <th style="text-align: right;border-bottom: 0px"> Grand Total: </th>
+            <th style="text-align: center;border-bottom: 4px solid black;"> <%= count %> </th>
+            <th style="text-align: center;border-bottom: 4px solid black;"> <%= number_with_delimiter(total_employee_cont_value) %> </th>
+            <th style="text-align: center;border-bottom: 4px solid black;"> <%= number_with_delimiter(total_employer_cont_value) %> </th>
+            <th style="text-align: center;border-bottom: 4px solid black;"> <%= number_with_delimiter(total_employee_cont_value + total_employer_cont_value) %> </th>
+          </tr>
+        </thead>
+      </table>
+      <hr>
+    </div>
+  </body>
+
+</html>

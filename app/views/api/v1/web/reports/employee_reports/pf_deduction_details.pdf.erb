@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PF Deductions</title>
+  <style type="text/css">
+    .page-break {
+      display: block;
+      clear: both;
+      page-break-after: always;
+    }
+    .container:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+    table { page-break-inside:auto }
+    table > thead > tr > th {
+      color: #000000;
+      font-size: 12px;
+      font-weight: bolder;
+    }
+    table > thead{
+      border-left: 2px solid black;
+      border-right: 2px solid black;
+    }
+
+    table > tfoot > tr > td {
+      color: #000000;
+      font-size: 12px;
+      font-weight: bolder;
+    }
+
+    table > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 10px;
+    }
+
+    table.print > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 15px;
+    }
+
+    table.summary > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 13px;
+    }
+
+    .table td, .table th{
+      border-color: black;
+    }
+
+    .dept-detail tfoot tr {
+      border-bottom: 2px solid black;
+    }
+
+    .dept-detail tbody tr {
+      border-bottom: 2px solid black; border-left: 2px solid black; border-right: 2px solid black;
+    }
+
+    .summary tbody > tr:last-child {
+      border-bottom: 2px solid black;
+    }
+
+    .dept-detail thead tr {
+      border-bottom: 3px solid black;
+      border-top: 3px solid black;
+    }
+    table.print { width: 150px;height: 100%;}
+
+  </style>
+  <%= stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' %>
+</head>
+
+<body>
+<div>
+  <% total_amount = 0 %>
+  <% @employees.each do |employee| %>
+    <div class="container" style="height: 100%;width: 75%; margin-left: 12.5%">
+      <div class="row" style="border: 2px solid black">
+        <div class="col-xs-2" style=";border-right: 2px solid black">
+          <div class="row">
+            <% if not (@company.avatar_file_name.nil? or @company.avatar_file_name.blank?) %>
+              <img src="<%= @company.avatar.url %>" style="width:150px;height:100px;margin-left: 12px;margin-top: 10px">
+            <% end %>
+          </div>
+          <% company_name = @company.name %>
+          <div class="row">
+            <p style="color:black;font-size:18px; font-weight: bolder; margin-left: 25px"><%= company_name %></p>
+          </div>
+        </div>
+        <div class="col-xs-8" >
+          <p style="color:black;text-align:center;font-size:16px"> Detail of Payment of Provident Fund Detail</p>
+
+        </div>
+        <div class="col-xs-2" style="border-left: 2px solid black">
+          <table class="table print" style="">
+            <tbody>
+            <tr>
+              <td>Print date</td>
+              <td><%= DateTime.now.strftime("%d/%m/%Y") %></td>
+            </tr>
+            <tr>
+              <td>Print time</td>
+              <td><%= DateTime.now.strftime("%I:%M:%S") %></td>
+            </tr>
+            <tr>
+              <td>Pages</td>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+          <p></p>
+        </div>
+      </div>
+    </div>
+    <table class="table borderless dept-detail" style="margin-top: 5px;width:75%; margin-left: 12.5%">
+      <thead >
+      <tr style="">
+        <th style="text-align:center;">Employee ID</th>
+        <th style="text-align:center;">Employee's Name</th>
+        <th style="text-align:center;">Account No.</th>
+        <th style="text-align:center;">Emp P.F</th>
+        <th style="text-align:center;">A Emp P.F</th>
+        <th style="text-align:center;">Empl P.F</th>
+        <th style="text-align:center;">A Empl P.F</th>
+        <th style="text-align:center;">Amount</th>
+      </tr>
+      </thead>
+      <thead>
+        <tr>
+          <th style="text-align: center;"> <%= employee.employee_code %> </th>
+          <th style="text-align: center;"> <%= employee.full_name %> </th>
+          <th style="text-align: center;"> <%= employee.bank_account_number %> </th>
+          <th style="text-align: center;"> </th>
+          <th style="text-align: center;"> </th>
+          <th style="text-align: center;"> </th>
+          <th style="text-align: center;"> </th>
+          <th style="text-align: center;"> </th>
+        </tr>
+      </thead>
+      <tbody style="">
+      <% total_emp_pf = 0 %>
+      <% total_empl_pf = 0 %>
+      <% if not params[:start_date].blank? %>
+        <% if not params[:end_date].blank? %>
+          <% pay_invoices = PayInvoice.includes(:employee).where(employee_id: employee.id, status: true).where('actual_pay_month >= ? AND actual_pay_month <= ?', params[:start_date].to_date.beginning_of_month, params[:end_date].to_date.end_of_month)%>
+        <% else %>
+          <% pay_invoices = PayInvoice.includes(:employee).where(employee_id: employee.id, status: true) %>
+        <% end %>
+      <% else %>
+        <% pay_invoices = PayInvoice.includes(:employee).where(employee_id: employee.id, status: true) %>
+      <% end %>
+      <% pay_invoices.each do |pay_invoice| %>
+        <% emp_pf = PayRollReportData.employee_pf_value(pay_invoice).round(2) %>
+        <% empl_pf = PayRollReportData.employeer_pf_value(pay_invoice).round(2) %>
+        <% total_emp_pf += emp_pf %>
+        <% total_empl_pf += empl_pf %>
+        <% if empl_pf > 0 or emp_pf > 0 %>
+          <tr>
+            <td style="text-align: center;"> <%= pay_invoice.pay_month.split(' ')[0] %> </td>
+            <td style="text-align: center;"> <%= pay_invoice.pay_month.split(' ')[1] %> </td>
+            <td style="text-align: center;"> </td>
+            <td style="text-align: center;"> <%= number_with_precision(emp_pf, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> </td>
+            <td style="text-align: center;"> <%= number_with_precision(empl_pf, :precision => 2, :delimiter => ',') %> </td>
+            <td style="text-align: center;"> </td>
+            <td style="text-align: center;"> <%= number_with_precision(empl_pf + emp_pf, :precision => 2, :delimiter => ',') %> </td>
+            <% total_amount += (emp_pf + empl_pf) %>
+          </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+      <thead>
+      <tr>
+        <th style="text-align: center;"> </th>
+        <th style="text-align: center;"> </th>
+        <th style="text-align: center;"> Employee Total:</th>
+        <th style="text-align: center;"> <%= number_with_precision(total_emp_pf, :precision => 2, :delimiter => ',') %></th>
+        <th style="text-align: center;"> </th>
+        <th style="text-align: center;"> <%= number_with_precision(total_empl_pf, :precision => 2, :delimiter => ',') %></th>
+        <th style="text-align: center;"> </th>
+        <th style="text-align: center;"> <%= number_with_precision(total_emp_pf + total_empl_pf, :precision => 2, :delimiter => ',') %></th>
+      </tr>
+      </thead>
+    </table>
+    <% unless employee == @employees.last %>
+      <div class="page-break"></div>
+    <% end %>
+  <% end %>
+  <table class="table borderless dept-detail" style="margin-top: 5px;width:75%; margin-left: 12.5%">
+    <thead>
+    <tr>
+      <th style="text-align: center;"> </th>
+      <th style="text-align: center;"> </th>
+      <th style="text-align: center;"> </th>
+      <th style="text-align: center;"> </th>
+      <th style="text-align: center;"> </th>
+      <th style="text-align: center;"> </th>
+      <th style="text-align: center;"> Total:</th>
+      <th style="text-align: center;"> <%= number_with_precision(total_amount, :precision => 2, :delimiter => ',') %></th>
+    </tr>
+    </thead>
+  </table>
+</div>
+</body>
+
+</html>

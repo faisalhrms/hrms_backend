@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Over Strength OT Payment Sheet</title>
+  <link rel="stylesheet" media="screen" href="http://s3.amazonaws.com/sapphire-hrms/jameelkhushkhati-ttf" type="text/css"/>
+  <style type="text/css">
+    .page-break {
+      display: block;
+      clear: both;
+      page-break-after: always;
+    }
+    .container:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+    table { page-break-inside:auto }
+    tr    { page-break-inside:avoid; page-break-after:auto }
+    thead { display:table-header-group }
+    tfoot { display:table-footer-group }
+  </style>
+</head>
+<body>
+<div style="width:1400px;padding:10px;position:relative;font-family:Lato,sans-serif">
+  <div class="float-container" style="margin-top: 10px;">
+    <div style="width:100%;float:left;">
+      <% if @show_salary == true %>
+        <% count = 0 %>
+        <% page = 1 %>
+        <% grand_overtime = 0 %>
+        <% total_employees = 0 %>
+        <% grand_gross = 0 %>
+        <% grand_hours = 0 %>
+        <% grand_worked_days = 0 %>
+        <% @employees.active.each do |employee| %>
+          <% total_overtime_hours = 0 %>
+          <% total_overtime_amount = 0 %>
+          <% daily_salary = employee.gross_salary.to_f/TimeDifference.between(params[:start_date].to_date.beginning_of_month - 1.day,params[:end_date].to_date.end_of_month).in_days %>
+          <% employee_attendances = @employee_attendances.where(:employee_id => employee.id).where("attendance_date >= ? and attendance_date <= ?", params[:start_date].to_date, params[:end_date].to_date).order('attendance_date ASC') %>
+          <% employee_attendances.each do |employee_attendance| %>
+            <% if params[:overtime_restriction] == "all" %>
+              <% total_overtime_hours = total_overtime_hours + (employee_attendance.approved_overtime_hours) %>
+              <% total_overtime_amount = total_overtime_amount + ((employee.gross_salary/26)/8) * 2 * (employee_attendance.approved_overtime_hours) %>
+            <% elsif params[:overtime_restriction] == "lesser" %>
+              <% if employee_attendance.approved_overtime_hours <= PayInvoice::OVERTIME_CHECK_VALUE %>
+                <% total_overtime_hours = total_overtime_hours + (employee_attendance.approved_overtime_hours) %>
+                <% total_overtime_amount = total_overtime_amount + ((employee.gross_salary/26)/8) * 2 * (employee_attendance.approved_overtime_hours) %>
+              <% end %>
+            <% elsif params[:overtime_restriction] == "greater" %>
+              <% if employee_attendance.approved_overtime_hours > PayInvoice::OVERTIME_CHECK_VALUE %>
+                <% total_overtime_hours = total_overtime_hours + (employee_attendance.approved_overtime_hours) %>
+                <% total_overtime_amount = total_overtime_amount + ((employee.gross_salary/26)/8) * 2 * (employee_attendance.approved_overtime_hours) %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+            <% if count == 0 %>
+              <div style="text-align:right;font-size:10px">
+                <%= "Extraction Date - #{DateTime.now.strftime("%B %d, %Y %I:%M %P")} "%>
+              </div>
+              <% if grade_params.present? %>
+                <div style="text-align:right;font-size:10px">
+                  Report For: <%= grade_name(grade_params) %>
+                </div>
+              <% end %>
+              <div style="text-align:right;font-size:10px">
+                <%= "Page - #{page} "%>
+              </div>
+              <% if not (@company.avatar_file_name.nil? or @company.avatar_file_name.blank?) %>
+                <img src=<%= @company.avatar.url %> style="width:200px;height:75px;position:absolute">
+                <h1 style="text-align:left;text-transform:uppercase;font-size:15px;font-weight:300;margin-bottom:0px;"><%= @company.name %></h1>
+              <% end %>
+              <div style="height:60px;margin-top:40px;">
+                <h1 style="text-align:center;text-transform:uppercase;font-size:14px;font-weight:300;margin-bottom:0px;">Monthly Over Time Check List (<%= params[:payment_method] %>)</h1>
+                <h1 style="text-align:center;text-transform:uppercase;font-size:14px;font-weight:300;margin-bottom:0px;">Report Type: Over Strength</h1>
+                <h2 style="text-align:center;text-transform:uppercase;font-size:12px;font-weight:300;margin-bottom:0px;">Date Range: From: <%= params[:start_date].to_date %> To: <%= params[:end_date].to_date %> Mill: <%= @company.name %></h2>
+              </div>
+              <br>
+              <br>
+              <thead style="text-align:center;font-size: 10px;">
+              <tr style="background-color:#0454A9;color:#fff;page-break-inside: avoid;">
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Employee ID</th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Employee Name</th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30"></th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Designation</th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Department</th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30"></th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30"></th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30"></th>
+              </tr>
+              <tr style="background-color:#0454A9;color:#fff;page-break-inside: avoid;">
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30"></th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Gross Rate</th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Hours</th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Worked Days</th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30"></th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Payable Amount</th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Account No</th>
+                <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Thumb Impression</th>
+              </tr>
+              </thead>
+              <% count = 1 %>
+              <% page += 1 %>
+            <% end %>
+            <% if total_overtime_hours > 0 %>
+              <% grand_overtime += total_overtime_amount %>
+              <% total_employees += 1 %>
+              <% grand_gross += employee.gross_salary %>
+              <% grand_hours += total_overtime_hours %>
+              <% grand_worked_days += (total_overtime_hours/8) %>
+              <tbody style="font-size:12px;text-transform: uppercase;">
+              <tr style="border:2px solid #ECECEC;border-bottom:0px;border-top:0px;page-break-inside: avoid;">
+                <td style="text-align:center;padding: 5px 10px 5px 0px;font-weight: 900;" height="30"><%= employee.employee_code %></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= employee.full_name %></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= employee.designation_name %></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= employee.department_name %></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"></td>
+              </tr>
+              <tr style="border:2px solid #ECECEC;border-top:0px;page-break-inside: avoid;">
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= employee.gross_salary.round(2) %></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= total_overtime_hours.round(2) %></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= (total_overtime_hours/8).round(2) %></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30">Total Payable Amount: (Rs.): </td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;font-weight: 900;" height="30"><%= number_with_delimiter(total_overtime_amount.round) %></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= employee.bank_account_number %></td>
+                <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"></td>
+              </tr>
+              </tbody>
+              <% count += 1 %>
+            <% end %>
+          </table>
+        <% end %>
+        <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+          <thead style="text-align:center;font-size: 10px;">
+          <tr style="background-color:#0454A9;color:#fff;page-break-inside: avoid;">
+            <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Grand Total</th>
+            <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Gross Rate</th>
+            <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Hours</th>
+            <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Worked Days</th>
+            <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30"></th>
+            <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30">Payable Amount</th>
+            <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30"></th>
+            <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;" height="30"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= total_employees %></td>
+            <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= number_with_delimiter(grand_gross.round(2)) %></td>
+            <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= grand_hours.round(2) %></td>
+            <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= grand_worked_days.round(2) %></td>
+            <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"></td>
+            <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"><%= number_with_delimiter(grand_overtime.round) %></td>
+            <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"></td>
+            <td style="text-align:center;padding: 5px 10px 5px 0px;" height="30"></td>
+          </tbody>
+        </table>
+      <% else %>
+        <div style="width:1400px;padding:20px;box-sizing:border-box;position:relative;font-family:Lato,sans-serif">
+          Access Denied
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <br/>
+</div>
+</body>
+</html>
+<style type="text/css">
+  .page-break { page-break-after:always; }
+  .message{
+    border: 2px solid #ececec;
+    padding: 10px;
+    font-size: 12px;
+  }
+  .message p{
+    margin: 0;
+  }
+  @font-face{
+    font-family: Lato;
+    -fs-pdf-font-embed: embed;
+    -fs-pdf-font-encoding: Identity-H;
+  }
+  body{
+    margin:0;
+  }
+  .float-container:after{
+    content: "";
+    display: block;
+    clear: both;
+  }
+</style>

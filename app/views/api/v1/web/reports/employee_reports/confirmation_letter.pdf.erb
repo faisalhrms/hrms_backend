@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+<head>
+  <title>Confirmation Letter</title>
+  <style type="text/css">
+      .page-break {
+          display: block;
+          clear: both;
+          page-break-after: always;
+      }
+  </style>
+  <style type="text/css">
+      .bottom_line {
+          border-bottom: 1px solid black;
+          font-weight: bold;
+      }
+      div h3 {
+          font-size: 25px;
+          font-weight: normal;
+      }
+      div p {
+          font-size: 25px;
+      }
+      .a {
+          float:  left;
+          text-align: center;
+          margin-left: 100px;
+          font-size: 23px;
+          width: 100px;
+      }
+      .points {
+          float:  left;
+          text-align: center;
+          margin-left: 2px;
+          font-size: 20px;
+          width: 300px;
+          font-weight: bold
+      }
+      .info {
+          float:  left;
+          text-align: left;
+          margin-left: 2px;
+          font-size: 22px;
+          width: 800px;
+      }
+      .leftbox {
+          float:  left;
+          margin-left: 60px;
+          font-size: 23px;
+          width: 400px;
+      }
+      .box{
+          width: 150px;
+          font-size: 25px;
+          font-weight: bold;
+      }
+      .tabke_padding{
+          padding: 30px 0 30px 0;
+      }
+  </style>
+</head>
+<% points_array = ["Warning:", "Suspension:", "Charge Sheet:", "Casual Leave:", "Medical Leave:", "Leave Without Pay:", "Absent:" ] %>
+<% abc_array = ["b.", "c.", "d.", "e.", "f.", "g.", "h."] %>
+<% remarks_array = ["Responsibility", "Self Motivation", "Dedication/Hardworking", "Working Under Pressure", "Analytical Abilities", "Functional Abilities", "Honesty", "Relationship with Colleagues", "Commitment to Company Objectives", "Security Sensitivity", "Mannerism"] %>
+<% sign_array = ["Head of Department", "Director Operations", "Manager HR"] %>
+<body>
+<% @employees.each do |employee| %>
+  <div style="margin-top: 20px">
+    <% if not (@company.avatar_file_name.nil? or @company.avatar_file_name.blank?) %>
+      <img src=<%= @company.avatar.url %> style="width:200px;height:75px;position:absolute">
+    <% end %>
+    <div style="margin-top:100px;">
+      <% company_name = @company.name %>
+      <% company_name += " (#{employee.location_name})" %>
+      <h1 style="text-align:center;text-transform:uppercase;font-size:20px;font-weight:bold;margin-bottom:0px;"><%= company_name %></h1>
+      <h2 style="text-align:center;text-transform:uppercase;font-size:16.6666667px;font-weight:bold;margin-bottom:0px;"> 26 KM Faisalabad Road Feroze Wattoan District Sheikhupura  </h2>
+      <h2 style="text-align:center;text-transform:uppercase;font-size:16.6666667px;font-weight:bold;margin-bottom:0px;"> Phone: 056 - 3731004 Fax: 056 - 3731005 </h2>
+    </div>
+    <div style="margin-top:40px;border-bottom: 2px solid black;border-top: 2px solid black;height:70px;">
+      <h1 style="text-align: center;font-size: 30px">Confirmation of Probationer Employee</h1>
+    </div>
+    <h2>No. DFL(AD)/HRM/EC-<%= employee.employee_code%></h2>
+    <div style="margin-top:25px;">
+      <p>It is submitted that probationary period of <span class="bottom_line"><%= employee.full_name %></span> S/O <span class="bottom_line"><%= employee.father_name %></span> Employee ID <span class="bottom_line"><%= employee.employee_code %></span>
+        Designation <span class="bottom_line"><%= employee.designation_name %></span> in <span class="bottom_line"><%= employee.department_name %></span> Department at a Gross salary of Rs. <span class="bottom_line"><%= number_with_precision(ReportFormat.zero_to_dash(employee.gross_salary), :precision => 0, :delimiter => ',') %></span>
+        per month has been completed on <span class="bottom_line"><%= ReportFormat.date_format3(employee.confimration_due_date)%></span></p>
+    </div>
+    <div style="margin-top: 80px;">
+      <p>1- Qualification:  <span class="bottom_line"><%= ReportFormat.employee_qualification_program_name(employee)%></span></p>
+      <p>2- Experience:     <span class="bottom_line"><%= ReportFormat.date_in_human_readable(employee.joining_date) %></span></p>
+      <p>3- Detail of Service Record during Probationary period of the individual is as under: </p>
+    </div>
+    <div>
+      <table width="100%" style="margin-top: 20px;">
+        <tr>
+          <td class="a">a. </td>
+          <td class="info">Attendance/Punctuality: </td>
+          <td class="points">Regular/Irregular</td>
+        </tr>
+        <% i = 0 %>
+        <% points_array.each do |point| %>
+          <tr>
+            <td class="a"><%= abc_array[i] %> </td>
+            <td class="info"> <%= point %> </td>
+            <td class="points"> [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] </td>
+            <% i += 1 %>
+          </tr>
+        <% end %>
+        <tr>
+          <td class="a">i. </td>
+          <td class="info">Any commitment for raise on Successful completion of Probationary period  </td>
+          <td class="points" style="text-align: left">________________________________</td>
+        </tr>
+      </table>
+    </div>
+    <h1 style="margin-top: 30px;font-size: 25px">4.&nbsp;&nbsp;&nbsp;&nbsp;For Evaluation of Head of Department:</h1>
+    <div>
+      <table width="100%">
+        <tr>
+          <td style="text-align: left; width: 20%"> </td>
+          <td style="text-align: center;" class="box">Excellent</td>
+          <td style="text-align: center;" class="box">Good</td>
+          <td style="text-align: center;" class="box">Satisfactory</td>
+          <td style="text-align: center;" class="box">Poor</td>
+        </tr>
+        <% remarks_array.each do |remark| %>
+          <tr>
+            <td style="text-align: left;" class="leftbox"> <%= remark %> </td>
+            <td style="text-align: center;" class="box">[&nbsp;&nbsp;&nbsp;&nbsp;]</td>
+            <td style="text-align: center;" class="box">[&nbsp;&nbsp;&nbsp;&nbsp;]</td>
+            <td style="text-align: center;" class="box">[&nbsp;&nbsp;&nbsp;&nbsp;]</td>
+            <td style="text-align: center;" class="box">[&nbsp;&nbsp;&nbsp;&nbsp;]</td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+    <div style="margin-top: 45px;">
+      <table width="100%">
+        <tr>
+          <td style="text-align: left;width: 15%" class="box">General Remarks:</td>
+          <td style="text-align: left;width: 80%" class="box">_____________________________________________________________________________________________</td>
+        </tr>
+      </table>
+    </div>
+    <div style="margin-top: 25px;">
+      <table width="100%">
+        <tr>
+          <td style="text-align: left;font-weight: normal" class="box">Further training required </td>
+          <td style="text-align: center;" class="box">Yes [&nbsp;&nbsp;&nbsp;&nbsp;]</td>
+          <td style="text-align: center;" class="box">No [&nbsp;&nbsp;&nbsp;&nbsp;]</td>
+        </tr>
+      </table>
+    </div>
+    <div style="margin-top: 25px;">
+      <table width="100%">
+        <tr>
+          <td style="text-align: left;font-weight: normal;width: 100%" class="box">If yes for areas of training and period </td>
+        </tr>
+        <tr>
+          <td style="text-align: left;width: 100%" class="box">________________________________________________________________________________________________________________________</td>
+        </tr>
+      </table>
+    </div>
+    <div style="margin-top: 25px;">
+      <p>Confirm Probationer Employee: </p>
+      <table style="margin-top: -95px" width="100%">
+        <% sign_array.each do |sign| %>
+          <tr>
+            <td style="text-align: left;" class="box tabke_padding">  </td>
+            <td style="text-align: center;" class="box tabke_padding">Yes [&nbsp;&nbsp;&nbsp;&nbsp;]</td>
+            <td style="text-align: center;" class="box tabke_padding">No [&nbsp;&nbsp;&nbsp;&nbsp;]</td>
+            <td style="text-align: center;border-top: 2px solid black;" class="box tabke_padding"> <%= sign %> </td>
+            <td style="text-align: center;" class="box tabke_padding">Dated </td>
+          </tr><br>
+        <% end %>
+      </table>
+    </div>
+    <div style="margin-top:100px;">
+      <h2> For HR Office Use Only: </h2>
+      <div style="margin-top: 10px;">
+        <p>Confirmation Letter issued Vide letter DFL/HRM/PF <span> ___________________ </span> Dated <span> ___________________ </span> and keep in Personal</p>
+        </div>
+      <div style="margin-top: 10px;">
+     <p>File On dated <span> ________________ </span> by Name <span> ________________ </span> Designation <span> ________________ </span> Signature <span> ________________</span></p>
+      </div>
+    </div>
+  </div>
+<% end %>
+</body>
+</html>

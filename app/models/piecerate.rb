@@ -1,0 +1,2 @@
+class Piecerate < ApplicationRecord
+end

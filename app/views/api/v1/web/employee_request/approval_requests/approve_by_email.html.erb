@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html style="background: #FFFFFF;">
+<head>
+  <title>HRMS</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <%= csrf_meta_tags %>
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+
+    /*alert styling*/
+    .alert-success {
+      border-color: #e6e6e6;
+      border-left: 5px solid #00986a;
+      background-color: #fff;
+      color: #888;
+    }
+
+    .alert-info {
+      border-color: #e6e6e6;
+      border-left: 5px solid #00b3c8;
+      background-color: #fff;
+      color: #888;
+    }
+
+    .alert-warning {
+      border-color: #e6e6e6;
+      border-left: 5px solid #f9af2c;
+      background-color: #fff;
+      color: #888;
+    }
+
+    .alert-danger {
+      border-color: #e6e6e6;
+      border-left: 5px solid #c82630;
+      background-color: #fff;
+      color: #888;
+    }
+
+    @media (min-width: 768px) {
+      .alert {
+        border-radius: 6px;
+        display: table;
+        width: 100%;
+        padding-left: 78px;
+        position: relative;
+        padding-right: 60px;
+        border: 1px solid #e6e6e6;
+      }
+
+      .alert .close {
+        color: #888;
+        opacity: 1;
+        float: none;
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        margin-top: -12px;
+        font-size: 25px;
+      }
+
+      .alert .icon {
+        text-align: center;
+        width: 58px;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 1px solid #bdbdbd;
+        padding-top: 15px;
+        border-radius: 6px 0 0 6px;
+      }
+
+      .alert .icon i {
+        font-size: 20px;
+        color: #fff;
+        left: 21px;
+        margin-top: -10px;
+        position: absolute;
+        top: 50%;
+      }
+
+      .alert .icon img {
+        font-size: 20px;
+        color: #fff;
+        left: 18px;
+        margin-top: -10px;
+        position: absolute;
+        top: 50%;
+      }
+      /*============ colors ========*/
+      .alert.alert-success .icon,
+      .alert.alert-success .icon:after {
+        border-color: none;
+        background: #00986a;
+      }
+
+      .alert.alert-info .icon,
+      .alert.alert-info .icon:after {
+        border-color: none;
+        background: #00b3c8;
+      }
+
+      .alert.alert-warning .icon,
+      .alert.alert-warning .icon:after {
+        border: none;
+        background: #f9af2c;
+      }
+
+      .alert.alert-danger .icon,
+      .alert.alert-danger .icon:after {
+        border-color: none;
+        background: #c82630;
+      }
+    }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <% if @msg.include?('approved') %>
+    <div class="alert alert-success">
+      <div class="icon hidden-xs">
+        <i class="fa fa-check"></i>
+      </div>
+      <strong>Approved</strong>
+      <br> <%= @msg %>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      <div class="icon hidden-xs">
+        <i class="fa fa-exclamation-circle"></i>
+      </div>
+      <strong>Processed</strong>
+      <br> <%= @msg %>
+    </div>
+  <% end %>
+
+</div>
+</body>
+</html>

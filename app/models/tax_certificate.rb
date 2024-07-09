@@ -1,0 +1,2 @@
+class TaxCertificate < ApplicationRecord
+end

@@ -1,0 +1,19 @@
+json.leave_request do 
+	json.id 									@leave_request.id
+	json.employee_code 				@leave_request.employee_code
+	json.employee_name 				@leave_request.employee_name
+	json.leave_category 			@leave_request.leave_category
+	json.leave_type_name 			@leave_request.leave_type_name
+	json.allocated_quota 			@leave_request.allocated_quota
+	json.used_quota	 					@leave_request.used_quota
+	json.remaining_quota 			@leave_request.remaining_quota
+	json.request_count 				@leave_request.request_count
+	json.sandwich_count 			@leave_request.sandwich_count
+	json.start_date 					ReportFormat.date_format(@leave_request.start_date)
+	json.end_date 						ReportFormat.date_format(@leave_request.end_date)
+	json.apply_date 					ReportFormat.date_format(@leave_request.created_at)
+	json.min_apply_date 			ReportFormat.date_format(@leave_request.min_apply_date)
+	json.request_status 			@leave_request.request_status
+	json.apply_status 				@leave_request.apply_status
+	json.reason 							@leave_request.reason
+end

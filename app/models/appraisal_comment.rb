@@ -1,0 +1,2 @@
+class AppraisalComment < ApplicationRecord
+end

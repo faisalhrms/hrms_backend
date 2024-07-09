@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title><%= @pay_invoice.employee_name %> Salary Slip</title>
+  <link rel="stylesheet" media="screen" href="http://s3.amazonaws.com/sapphire-hrms/jameelkhushkhati-ttf" type="text/css"/>
+</head>
+<body>
+<% diff_amount = @pay_invoice.actual_pay_month.to_date >= Date.new(2021,3,1) ? @pay_invoice.actual_salary - (@pay_invoice.pay_invoice_details.where(:item_name => ["Basic Salary", "House Rent", "Medical", "Utility Allowance"]).sum(:amount)).to_f.round : 0 %>
+<% total_earning = @pay_invoice.pay_invoice_details.where(:item_type => 'Earning').sum(:amount).to_f.round + diff_amount %>
+<% if @pay_invoice.pay_execution.vehicle_monthly_prorated == false %>
+  <% if @show_salary == true %>
+    <div style="width:1400px;padding:20px;box-sizing:border-box;position:relative;font-family:Lato,sans-serif">
+      <% company = @employee.company %>
+      <% if not (company.avatar_file_name.nil? or company.avatar_file_name.blank?) %>
+        <img src=<%= company.avatar.url %> style="width:200px;height:100px;position:absolute;">
+      <% end %>
+      <div style="height:350px">
+        <h1 style="text-align:center;text-transform:uppercase;font-size:24px;font-weight:300;margin-bottom:0px;">Salary Slip</h1>
+        <p style="text-align: center;text-transform:uppercase;font-size:16px;margin-top:0px;color:#4F4F4F"><%= "Salary Month OF #{@pay_invoice.pay_month}" %></p>
+        <p style="font-size:16px;margin-top:40px;margin-bottom:5px"> <%= @pay_invoice.company_name.upcase %> </p>
+        <p style="font-size:16px;margin-top:60px;margin-bottom:5px"><%= @pay_invoice.employee_name %></p>
+        <p style="font-size:14px;margin-top:0px;margin-bottom:0px;color:#4F4F4F"><%= @pay_invoice.designation_name %></p>
+        <p><span style="text-transform:uppercase;font-size:14px;margin-top:0px;margin-bottom:0px;">Joining Date:</span> <span  style="font-size:14px;margin-top:0px;margin-bottom:0px;color:#4F4F4F"><%= ReportFormat.date_format(@pay_invoice.joining_date) %></span></p>
+        <p>
+          <span style="text-transform:uppercase;font-size:14px;margin-top:0px;margin-bottom:0px;">Employment Status:</span> <span  style="font-size:14px;margin-top:0px;margin-bottom:0px;color:#4F4F4F;text-transform:uppercase;">
+                <% if @pay_invoice.on_probation == true %>
+                  <%= "Probation" %>
+                <% else %>
+                  <%= "Confirmed" %>
+                <% end %>
+              </span>
+        </p>
+        <div style="width:100%">
+          <div style="float: left;width:50%">
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:50%">Employee ID</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:50%">Designation</p>
+            <br>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:50%;color:#4F4F4F"><%= @pay_invoice.employee_code %></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:50%;color:#4F4F4F"> <%= @pay_invoice.designation_name %> </p>
+          </div>
+          <div style="float: left;width:50%">
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:38%;text-align:right;">Grade</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:37%;text-align:right;">Salary Slip Number</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:25%;text-align:right;">Location</p>
+            <br>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:38%;color:#4F4F4F;text-align:right;"><%= @pay_invoice.grade_name %></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:37%;color:#4F4F4F;text-align:right;"><%= @pay_invoice.invoice_number %></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:25%;color:#4F4F4F;text-align:right;"><%= @pay_invoice.branch_name %></p>
+          </div>
+        </div>
+        <br/>
+        <div style="width:100%">
+          <div style="float: left;width:50%">
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:50%">Job Title</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:50%">Department</p>
+            <br>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:50%;color:#4F4F4F"><%= @pay_invoice.job_title_name %></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:50%;color:#4F4F4F"> <%= @pay_invoice.department_name %> </p>
+          </div>
+          <div style="float: left;width:50%">
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:38%;text-align:right;">Working Day</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:37%;text-align:right;">Deduction Days</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:25%;text-align:right;"> Pay Days</p>
+            <br>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:38%;color:#4F4F4F;text-align:right;"><%= @pay_invoice.no_of_pay_days %></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:37%;color:#4F4F4F;text-align:right;"><%= @pay_invoice.deduction_days %></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:25%;color:#4F4F4F;text-align:right;"><%= (@pay_invoice.no_of_pay_days - @pay_invoice.deduction_days) %></p>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <% if @pay_invoice.pay_execution.vehicle_monthly_prorated == false %>
+        <% if @pay_invoice.urdu_allowed == false %>
+          <div class="float-container" style="margin-top: 40px;">
+            <% total_other_earning = 0 %>
+            <% total_deduction = 0 %>
+            
+            <div style="width:33.333333%;float:left;padding-right:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Earnings
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% utility_allowance = @pay_invoice.pay_invoice_details.where(:item_name => "Utility Allowance").sum(:amount).to_f.round + diff_amount.to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == true and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Utility Allowance" %>
+                            <%= number_with_delimiter(utility_allowance) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round.abs) %>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(@pay_invoice.actual_salary.round) %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Payable Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                </tr>
+                <% arrears = @pay_invoice.pay_invoice_details.where(:item_name => ["Salary Arrears", "Allowance Arrear", "Deduction Reimbursement Arrear", "Manual Arrear", "Arrears", "Over Time", "Off Day Payment"]).sum(:amount).to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('item_name ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == false and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Arrears" %>
+                            <%= number_with_delimiter(arrears) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:10px;padding-right:10px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Other Income
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_other == true %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_other_earning = total_other_earning + invoice_detail.amount.round %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Other Income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_other_earning.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Deductions
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Attendance Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <% att_deduction = @pay_invoice.pay_invoice_details.where(:item_type => "Deduction", :item_name => "Attendance Deduction").sum(:amount).to_f.round %>
+                    <%= number_with_delimiter(att_deduction) %>
+                    <% total_deduction = total_deduction + att_deduction %>
+                  </td>
+                </tr>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Deduction").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.item_name != "Attendance Deduction" %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_deduction = total_deduction + invoice_detail.amount.round %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Income tax</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <%= number_with_delimiter(@pay_invoice.monthly_tax.round) %>
+                    <% total_deduction = total_deduction + @pay_invoice.monthly_tax.round %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= total_deduction %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="float-container">
+            <div style="float:left;width:33.333333%;padding-right:20px;box-sizing:border-box;">
+              <p style="text-transform:uppercase;font-size:12px;">(T. EARNINGS + OTHER INCOME) - T. DEDUCTON</p>
+              <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
+                <tbody style="text-transform: uppercase;font-size:12px;">
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Net income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px">
+                    Rs.<%= number_with_delimiter((total_earning - total_deduction).round) %>/-
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="float-container" style="margin-top: 40px;">
+            <p>YOUR SALARY HAS BEEN DEPOSITED INTO</p>
+            <div style="width:100%;float:left;padding-right:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    BANK NAME
+                  </th>
+                  <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    BRANCH
+                  </th>
+                  <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    BRANCH CODE
+                  </th>
+                  <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    ACCOUNT <TITLE></TITLE>
+                  </th>
+                  <th style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    ACCOUNT NO.
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="text-align:center;padding: 5px 10px 5px 0px;"> <%= @pay_invoice.employee.bank_name %> </td>
+                  <td style="text-align:center;padding: 5px 10px 5px 0px;"> <%= @pay_invoice.employee.bank_branch_name %> </td>
+                  <td style="text-align:center;padding: 5px 10px 5px 0px;"> <%= @pay_invoice.employee.bank_branch_code %> </td>
+                  <td style="text-align:center;padding: 5px 10px 5px 0px;"> <%= @pay_invoice.employee.bank_account_title %> </td>
+                  <td style="text-align:center;padding: 5px 10px 5px 0px;"> <%= @pay_invoice.employee.bank_account_number %> </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% else %>
+          <div class="float-container" style="margin-top: 40px;">
+            <% total_other_earning = 0 %>
+            <% total_deduction = 0 %>
+            
+            <div style="width:33.333333%;float:left;padding-right:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="3" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Earnings
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% utility_allowance = @pay_invoice.pay_invoice_details.where(:item_name => "Utility Allowance").sum(:amount).to_f.round + diff_amount.to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == true and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Utility Allowance" %>
+                            <%= number_with_delimiter(utility_allowance) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% end %>
+                        </td>
+                        <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= invoice_detail.item_name_in_urdu %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(@pay_invoice.actual_salary.round) %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "مجموعی تنخواہ" %></td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Payable Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "قابل تنخواہ مجموعی تنخواہ" %> </td>
+                </tr>
+                <% arrears = @pay_invoice.pay_invoice_details.where(:item_name => ["Salary Arrears", "Allowance Arrear", "Deduction Reimbursement Arrear", "Manual Arrear", "Arrears", "Over Time", "Off Day Payment"]).sum(:amount).to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == false and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Arrears" %>
+                            <%= number_with_delimiter(arrears) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% end %>
+                        </td>
+                        <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= invoice_detail.item_name_in_urdu %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "کل" %> </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:10px;padding-right:10px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="3" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Other Income
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_other == true %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_other_earning = total_other_earning + invoice_detail.amount.round %>
+                        </td>
+                        <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= invoice_detail.item_name_in_urdu %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Other Income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_other_earning.round) %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "دوسری آمدنی" %> </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="3" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Deductions
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Attendance Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <% att_deduction =  @pay_invoice.pay_invoice_details.where(:item_type => "Deduction", :item_name => "Attendance Deduction").sum(:amount).to_f.round %>
+                     <%= number_with_delimiter(att_deduction) %>
+                    <% total_deduction = total_deduction + att_deduction %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "حاضری کٹوتی" %> </td>
+                </tr>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Deduction").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.item_name != "Attendance Deduction" %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_deduction = total_deduction + invoice_detail.amount.round %>
+                        </td>
+                        <td style="padding: 5px 0px 5px 10px; text-align: right;"><%= invoice_detail.item_name_in_urdu %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Income tax</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <%= number_with_delimiter(@pay_invoice.monthly_tax.round) %>
+                    <% total_deduction = total_deduction + @pay_invoice.monthly_tax.round %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "انکم ٹیکس" %> </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= total_deduction %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "کل کٹوتی" %> </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="float-container">
+            <div style="float:left;width:33.333333%;padding-right:20px;box-sizing:border-box;">
+              <p style="text-transform:uppercase;font-size:12px;">(T. EARNINGS + OTHER INCOME) - T. DEDUCTON</p>
+              <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
+                <tbody style="text-transform: uppercase;font-size:12px;">
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Net income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px">
+                    Rs.<%= number_with_delimiter((total_earning + att_deduction - total_deduction).round) %>/-
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "اصل آمد" %> </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <% if @pay_invoice.urdu_allowed == false %>
+          <div class="float-container" style="margin-top: 40px;">
+            <% total_other_earning = 0 %>
+            <% total_deduction = 0 %>
+            
+            <div style="width:33.333333%;float:left;padding-right:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Earnings
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% utility_allowance = @pay_invoice.pay_invoice_details.where(:item_name => "Utility Allowance").sum(:amount).to_f.round + diff_amount.to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == true and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Utility Allowance" %>
+                            <%= number_with_delimiter(utility_allowance) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% end %>
+                        </td>
+                        <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= invoice_detail.item_name_in_urdu %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(@pay_invoice.actual_salary.round) %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Payable Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:10px;padding-right:10px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Other Income
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% arrears = @pay_invoice.pay_invoice_details.where(:item_name => ["Salary Arrears", "Allowance Arrear", "Deduction Reimbursement Arrear", "Manual Arrear", "Arrears", "Over Time", "Off Day Payment"]).sum(:amount).to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_other == true %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Arrears" %>
+                            <%= number_with_delimiter(arrears) %>
+                            <% total_other_earning = total_other_earning + arrears %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                            <% total_other_earning = total_other_earning + invoice_detail.amount.round %>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Other Income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_other_earning.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Deductions
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Deduction").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.item_name != "Attendance Deduction" %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_deduction = total_deduction + invoice_detail.amount.round %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Income tax</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <%= number_with_delimiter(@pay_invoice.monthly_tax.round) %>
+                    <% total_deduction = total_deduction + @pay_invoice.monthly_tax.round %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_deduction.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="float-container">
+            <div style="float:left;width:33.333333%;padding-right:20px;box-sizing:border-box;">
+              <p style="text-transform:uppercase;font-size:12px;">(T. EARNINGS + OTHER INCOME) - T. DEDUCTON</p>
+              <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
+                <tbody style="text-transform: uppercase;font-size:12px;">
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Net income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px">
+                    Rs.<%= number_with_delimiter((total_earning - total_deduction).round) %>/-
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      <p style="text-align:right; font-size:8px;margin-top:20px;">This is System generated PaySlip does not require any signature <%= Time.now.strftime("%d %B %Y")%></p>
+    </div>
+  <% else %>
+    <div style="width:1400px;padding:20px;box-sizing:border-box;position:relative;font-family:Lato,sans-serif">
+      Access Denied
+    </div>
+  <% end %>
+<% else %>
+  <% if @show_salary == true %>
+    <div style="width:1400px;padding:20px;box-sizing:border-box;position:relative;font-family:Lato,sans-serif">
+      <% company = @employee.company %>
+      <% if not (company.avatar_file_name.nil? or company.avatar_file_name.blank?) %>
+        <img src=<%= company.avatar.url %> style="width:150px;height:100px;position:absolute;">
+      <% end %>
+      <div style="height:350px">
+        <h1 style="text-align:center;text-transform:uppercase;font-size:24px;font-weight:300;margin-bottom:0px;">Salary Slip</h1>
+        <p style="text-align: center;text-transform:uppercase;font-size:16px;margin-top:0px;color:#4F4F4F"><%= "Salary Month OF #{@pay_invoice.pay_month}" %></p>
+        <p style="font-size:16px;margin-top:40px;margin-bottom:5px"> <%= @pay_invoice.company_name.upcase %> </p>
+        <p style="font-size:16px;margin-top:60px;margin-bottom:5px"><b><%= @pay_invoice.employee_name %></b></p>
+        <p style="font-size:14px;margin-top:0px;margin-bottom:0px;"><b><%= @pay_invoice.designation_name %></b></p>
+        <p><span style="text-transform:uppercase;font-size:14px;margin-top:0px;margin-bottom:0px;">Joining Date:</span> <span  style="font-size:14px;margin-top:0px;margin-bottom:0px;"><b><%= ReportFormat.date_format(@pay_invoice.joining_date) %></b></span></p>
+        <p>
+          <span style="text-transform:uppercase;font-size:14px;margin-top:0px;margin-bottom:0px;">Employment Status:</span> <span  style="font-size:14px;margin-top:0px;margin-bottom:0px;;text-transform:uppercase;">
+                <% if @pay_invoice.on_probation == true %>
+                  <b><%= "Probation" %></b>
+                <% else %>
+                  <b><%= "Confirmed" %></b>
+                <% end %>
+              </span>
+        </p>
+        <div style="width:100%">
+          <div style="float: left;width:50%">
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:50%">Employee ID</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:50%">Designation</p>
+            <br>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:50%;"><b><%= @pay_invoice.employee_code %></b></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:50%;"><b><%= @pay_invoice.designation_name %></b></p>
+          </div>
+          <div style="float: left;width:50%">
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:38%;text-align:right;">Grade</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:37%;text-align:right;">A/C Number</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:25%;text-align:right;">Location</p>
+            <br>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:38%;;text-align:right;"><b><%= @pay_invoice.grade_name %></b></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:37%;;text-align:right;"><b><%= @pay_invoice.employee.bank_account_number %></b></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:25%;;text-align:right;"><b><%= @pay_invoice.branch_name %></b></p>
+          </div>
+        </div>
+        <br/>
+        <div style="width:100%">
+          <div style="float: left;width:50%">
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:50%">Job Title</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:50%">Department</p>
+            <br>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:50%;"><b><%= @pay_invoice.job_title_name %></b></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:50%;"><b><%= @pay_invoice.department_name %></b></p>
+          </div>
+          <div style="float: left;width:50%">
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:38%;text-align:right;">Working Day</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:37%;text-align:right;">Deduction Days</p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:10px;margin-bottom:0px;float:left;width:25%;text-align:right;"> Pay Days</p>
+            <br>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:38%;text-align:right;"><%= @pay_invoice.no_of_pay_days %></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:37%;text-align:right;"><%= @pay_invoice.deduction_days %></p>
+            <p style="text-transform:uppercase;font-size:14px;margin-top:5px;margin-bottom:0px;float: left;width:25%;text-align:right;"><%= (@pay_invoice.no_of_pay_days - @pay_invoice.deduction_days) %></p>
+          </div>
+        </div>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <% if @pay_invoice.pay_execution.vehicle_monthly_prorated == false %>
+        <% if @pay_invoice.urdu_allowed == false %>
+          <div class="float-container" style="margin-top: 40px;">
+            <% total_other_earning = 0 %>
+            <% total_deduction = 0 %>
+            
+            <div style="width:33.333333%;float:left;padding-right:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Earnings
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% utility_allowance = @pay_invoice.pay_invoice_details.where(:item_name => "Utility Allowance").sum(:amount).to_f.round + diff_amount.to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == true and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Utility Allowance" %>
+                            <%= number_with_delimiter(utility_allowance) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round.abs) %>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(@pay_invoice.actual_salary.round) %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Payable Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                </tr>
+                <% arrears = @pay_invoice.pay_invoice_details.where(:item_name => ["Salary Arrears", "Allowance Arrear", "Deduction Reimbursement Arrear", "Manual Arrear", "Arrears", "Over Time", "Off Day Payment"]).sum(:amount).to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('item_name ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == false and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Arrears" %>
+                            <%= number_with_delimiter(arrears) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:10px;padding-right:10px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Other Income
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_other == true %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_other_earning = total_other_earning + invoice_detail.amount.round %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Other Income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_other_earning.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Deductions
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Attendance Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <% att_deduction = @pay_invoice.pay_invoice_details.where(:item_type => "Deduction", :item_name => "Attendance Deduction").sum(:amount).to_f.round %>
+                    <%= number_with_delimiter(att_deduction) %>
+                    <% total_deduction = total_deduction + att_deduction %>
+                  </td>
+                </tr>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Deduction").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.item_name != "Attendance Deduction" %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_deduction = total_deduction + invoice_detail.amount.round %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Income tax</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <%= number_with_delimiter(@pay_invoice.monthly_tax.round) %>
+                    <% total_deduction = total_deduction + @pay_invoice.monthly_tax.round %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= total_deduction %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="float-container">
+            <div style="float:left;width:33.333333%;padding-right:20px;box-sizing:border-box;">
+              <p style="text-transform:uppercase;font-size:12px;">(T. EARNINGS + OTHER INCOME) - T. DEDUCTON</p>
+              <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
+                <tbody style="text-transform: uppercase;font-size:12px;">
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Net income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px">
+                    Rs.<%= number_with_delimiter(((total_earning + att_deduction) - total_deduction).round) %>/-
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% else %>
+          <div class="float-container" style="margin-top: 40px;">
+            <% total_other_earning = 0 %>
+            <% total_deduction = 0 %>
+            
+            <div style="width:33.333333%;float:left;padding-right:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="3" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Earnings
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% utility_allowance = @pay_invoice.pay_invoice_details.where(:item_name => "Utility Allowance").sum(:amount).to_f.round + diff_amount.to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == true and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Utility Allowance" %>
+                            <%= number_with_delimiter(utility_allowance) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% end %>
+                        </td>
+                        <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= invoice_detail.item_name_in_urdu %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(@pay_invoice.actual_salary.round) %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "مجموعی تنخواہ" %></td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Payable Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "قابل تنخواہ مجموعی تنخواہ" %> </td>
+                </tr>
+                <% arrears = @pay_invoice.pay_invoice_details.where(:item_name => ["Salary Arrears", "Allowance Arrear", "Deduction Reimbursement Arrear", "Manual Arrear", "Arrears", "Over Time", "Off Day Payment"]).sum(:amount).to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == false and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Arrears" %>
+                            <%= number_with_delimiter(arrears) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% end %>
+                        </td>
+                        <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= invoice_detail.item_name_in_urdu %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "کل" %> </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:10px;padding-right:10px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="3" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Other Income
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_other == true %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_other_earning = total_other_earning + invoice_detail.amount.round %>
+                        </td>
+                        <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= invoice_detail.item_name_in_urdu %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Other Income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_other_earning.round) %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "دوسری آمدنی" %> </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="3" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Deductions
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Attendance Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <% att_deduction = @pay_invoice.pay_invoice_details.where(:item_type => "Deduction", :item_name => "Attendance Deduction").sum(:amount).to_f.round %>
+                    <%= number_with_delimiter(att_deduction) %>
+                    <% total_deduction = total_deduction + att_deduction %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "حاضری کٹوتی" %> </td>
+                </tr>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Deduction").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.item_name != "Attendance Deduction" %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_deduction = total_deduction + invoice_detail.amount.round %>
+                        </td>
+                        <td style="padding: 5px 0px 5px 10px; text-align: right;"><%= invoice_detail.item_name_in_urdu %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Income tax</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <%= number_with_delimiter(@pay_invoice.monthly_tax.round) %>
+                    <% total_deduction = total_deduction + @pay_invoice.monthly_tax.round %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "انکم ٹیکس" %> </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= total_deduction %>
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "کل کٹوتی" %> </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="float-container">
+            <div style="float:left;width:33.333333%;padding-right:20px;box-sizing:border-box;">
+              <p style="text-transform:uppercase;font-size:12px;">(T. EARNINGS + OTHER INCOME) - T. DEDUCTON</p>
+              <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
+                <tbody style="text-transform: uppercase;font-size:12px;">
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Net income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px">
+                    Rs.<%= number_with_delimiter(((total_earning + att_deduction) - total_deduction).round) %>/-
+                  </td>
+                  <td style="padding: 5px 10px 5px 10px; text-align: right;"><%= "اصل آمد" %> </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <% if @pay_invoice.urdu_allowed == false %>
+          <div class="float-container" style="margin-top: 40px;">
+            <% total_other_earning = 0 %>
+            <% total_deduction = 0 %>
+            
+            <div style="width:33.333333%;float:left;padding-right:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Earnings
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% utility_allowance = @pay_invoice.pay_invoice_details.where(:item_name => "Utility Allowance").sum(:amount).to_f.round + diff_amount.to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_gross_salary == true and invoice_detail.part_of_other == false %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Utility Allowance" %>
+                            <%= number_with_delimiter(utility_allowance) %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(@pay_invoice.actual_salary.round) %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Payable Gross Salary</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_earning.to_f.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:10px;padding-right:10px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Other Income
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <% arrears = @pay_invoice.pay_invoice_details.where(:item_name => ["Salary Arrears", "Allowance Arrear", "Deduction Reimbursement Arrear", "Manual Arrear", "Arrears", "Over Time", "Off Day Payment"]).sum(:amount).to_f.round %>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.part_of_other == true %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <% if invoice_detail.item_name == "Arrears" %>
+                            <%= number_with_delimiter(arrears) %>
+                            <% total_other_earning = total_other_earning + arrears %>
+                          <% else %>
+                            <%= number_with_delimiter(invoice_detail.amount.round) %>
+                            <% total_other_earning = total_other_earning + invoice_detail.amount.round %>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Other Income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_other_earning.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width:33.333333%;float:left;padding-left:20px;box-sizing:border-box;">
+              <table style="border-collapse:collapse;width:100%;table-layout:fixed;">
+                <thead>
+                <tr style="background-color:#4a4a4a;color:#fff">
+                  <th colspan="2" style="text-align:center;text-transform:uppercase;font-weight: 300;font-size: 12px;padding:5px;">
+                    Deductions
+                  </th>
+                </tr>
+                </thead>
+                <tbody style="font-size:12px;text-transform: uppercase;">
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">LWP</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <%= @pay_invoice.pay_invoice_details.where(:item_name => ["LWP", "Attendance Deduction"]).sum(:amount).round %>
+                    <% total_deduction = total_deduction + @pay_invoice.pay_invoice_details.where(:item_name => ["LWP", "Attendance Deduction"]).sum(:amount).round %>
+                  </td>
+                </tr>
+                <% @pay_invoice.pay_invoice_details.where(:item_type => "Deduction").order('id ASC').each do |invoice_detail|%>
+                  <% if invoice_detail.show_in_slip == true %>
+                    <% if invoice_detail.item_name != "Attendance Deduction" %>
+                      <tr style="border:2px solid #ECECEC;border-top:0px;">
+                        <td style="padding: 5px 0px 5px 10px;"><%= invoice_detail.item_name %></td>
+                        <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                          <%= number_with_delimiter(invoice_detail.amount.round) %>
+                          <% total_deduction = total_deduction + invoice_detail.amount.round %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <tr style="border:2px solid #ECECEC;border-top:0px;">
+                  <td style="padding: 5px 0px 5px 10px;">Income tax</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;">
+                    <%= number_with_delimiter(@pay_invoice.monthly_tax.round) %>
+                    <% total_deduction = total_deduction + @pay_invoice.monthly_tax.round %>
+                  </td>
+                </tr>
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Total Deduction</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px;border-right:2px solid #ececec;border-bottom:2px solid #ececec;">
+                    <%= number_with_delimiter(total_deduction.round) %>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="float-container">
+            <div style="float:left;width:33.333333%;padding-right:20px;box-sizing:border-box;">
+              <p style="text-transform:uppercase;font-size:12px;">(T. EARNINGS + OTHER INCOME) - T. DEDUCTON</p>
+              <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
+                <tbody style="text-transform: uppercase;font-size:12px;">
+                <tr style="border-top:2px solid #4a4a4a;border-left:2px solid #4a4a4a;">
+                  <td style="padding: 5px 0px 5px 10px;background-color:#4a4a4a;color:#fff">Net income</td>
+                  <td style="text-align:right;padding: 5px 10px 5px 0px">
+                    Rs.<%= number_with_delimiter((total_earning - total_deduction).round) %>/-
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      <p style="text-align:right; font-size:8px;margin-top:20px;">This is System generated PaySlip does not require any signature <%= Time.now.strftime("%d %B %Y")%></p>
+    </div>
+  <% else %>
+    <div style="width:1400px;padding:20px;box-sizing:border-box;position:relative;font-family:Lato,sans-serif">
+      Access Denied
+    </div>
+  <% end %>
+<% end %>
+</body>
+</html>
+<style type="text/css">
+  .message{
+    border: 2px solid #ececec;
+    padding: 10px;
+    font-size: 12px;
+  }
+  .message p{
+    margin: 0;
+  }
+  @font-face{
+    font-family: Lato;
+    -fs-pdf-font-embed: embed;
+    -fs-pdf-font-encoding: Identity-H;
+  }
+  body{
+    margin:0;
+  }
+  .float-container:after{
+    content: "";
+    display: block;
+    clear: both;
+  }
+</style>

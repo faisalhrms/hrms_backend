@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee Card</title>
+  <style>
+    @font-face {
+      font-family: "Oswald-VariableFont_wght";
+      src: url(<%= Rails.root.join('app','assets','fonts','Oswald-Medium.ttf') %>);
+    }
+    @font-face {
+      font-family: "Rubik-VariableFont_wght";
+      src: url(<%= Rails.root.join('app','assets','fonts','Rubik-VariableFont_wght.ttf') %>);
+    }
+    .front-side-main{
+      margin-left: 200px;
+      margin-top: 10px;
+      height: 420px;
+      width: 268px;
+      border: 1px solid #0d997f;
+    }
+    .back-side-main{
+      margin-left: 480px;
+      margin-top: -423px;
+      height: 422px;
+      width: 268px;
+      border: 1px solid #0d997f;
+    }
+    .appreal-img{
+      height: 420px;
+      width: 266px;
+    }
+    .dtl-img{
+        height: 420px;
+        width: 266px;
+    }
+    .denim-back-img{
+      height: 420px;
+      width: 266px;
+      margin-top: 2px;
+    }
+    .sapphire-back-img{
+      height: 420px;
+      width: 266px;
+      margin-top: 2px;
+    }
+    .employee-code{
+      font-size:16px;
+      font-family: "Oswald-VariableFont_wght";
+      color:white;
+      margin-top: -380px;
+      margin-left: 5px;
+    }
+    .dtl_employee-code{
+        font-size:16px;
+        font-family: "Oswald-VariableFont_wght";
+        color:transparent;
+        margin-top: -370px;
+        margin-left: 5px;
+    }
+    .dtl_employee-name{
+        color: white;
+        font-size: 13px;
+        font-family: 'Rubik-VariableFont_wght';
+        margin-top: 165px;
+        margin-left: 60px;
+    }
+    .contract_employee-name{
+        color: black;
+        font-size: 13px;
+        font-family: 'Rubik-VariableFont_wght';
+        margin-top: 165px;
+        margin-left: 60px;
+    }
+
+    .dtl_employee-desisgnation{
+        color: black;
+        font-size: 14px;
+        font-family: 'Rubik-VariableFont_wght';
+        margin-top: -5px;
+        margin-left: 55px;
+        font-weight: bold;
+    }
+    .dtl_img-div{
+        width:100px;
+        height:120px;
+        position: absolute;
+        z-index: 40;
+        margin-left: 155px;
+        margin-top: 25px;
+    }
+    .employee-img{
+      width:95px;
+      height:117px;
+      position: absolute;
+      z-index: 50;
+      border-radius: 10px;
+    }
+    .img-div{
+      width:100px;
+      height:120px;
+      position: absolute;
+      z-index: 40;
+      margin-left: 153px;
+      margin-top: 37px;
+    }
+    .employee-name{
+      color: white;
+      font-size: 13px;
+      font-family: 'Rubik-VariableFont_wght';
+      margin-top: 169px;
+      margin-left: 50px;
+    }
+    .employee-desisgnation{
+      color: black;
+      font-size: 14px;
+      font-family: 'Rubik-VariableFont_wght';
+      margin-top: -12px;
+      margin-left: 50px;
+      font-weight: bold;
+    }
+    .employee-sub-department-div{
+      height: 30px;
+      width: 28%;
+      margin-top: 40px;
+      margin-left: 10px;
+      position: absolute;
+      z-index: 49;
+      text-align: right;
+    }
+    .employee-sub-department{
+      color: darkblue;
+      font-size: 14px;
+      font-family: 'Rubik-VariableFont_wght';
+      font-weight: 900;
+    }
+    .cnic
+    {
+      color: #0d997f;
+      font-size: 14px;
+      font-family: 'Rubik-VariableFont_wght';
+      margin-top: -435px;
+      margin-left: 55px;
+    }
+    .record{
+        color: Black;
+        width: 230px;
+        font-size: 9px;
+        font-weight: bold;
+        font-family: 'Rubik-VariableFont_wght';
+        margin-top: -5px;
+        margin-left: 10px;
+    }
+    .bar{
+        background-color: white;
+        color: white;
+        height: 150px;
+        width: 30px;
+        margin-top: 170px;
+        position: absolute;
+    }
+  </style>
+</head>
+<body>
+<% @employees.each do |employee| %>
+  <div class="row">
+    <div class="col-sm-6">
+      <% if employee.location_name == "Apparel" or employee.location_name == "Garment" %>
+        <div class="front-side-main">
+          <%= wicked_pdf_image_tag("appreal.jpg", class: "appreal-img") %>
+          <div class="employee-code">
+            <p><%= employee.employee_code %></p>
+          </div>
+          <div class="img-div">
+            <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+          </div>
+          <div class="employee-name">
+            <p><%= employee.full_name.upcase %></p>
+          </div>
+          <div class="employee-desisgnation">
+            <p><%= employee.designation_name %></p>
+          </div>
+          <div class="employee-sub-department-div">
+            <p class="employee-sub-department"><%= employee.sub_department_name.upcase %></p>
+          </div>
+        </div>
+      <% elsif employee.location_name == "Denim" %>
+        <div class="front-side-main">
+          <%= wicked_pdf_image_tag("denim.jpg", class: "appreal-img") %>
+          <div class="employee-code">
+            <p><%= employee.employee_code %></p>
+          </div>
+          <div class="img-div">
+            <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+          </div>
+          <div class="employee-name">
+            <p><%= employee.full_name.upcase %></p>
+          </div>
+          <div class="employee-desisgnation">
+            <p><%= employee.designation_name %></p>
+          </div>
+          <div class="employee-sub-department-div">
+            <p class="employee-sub-department"><%= employee.sub_department_name.upcase %></p>
+          </div>
+        </div>
+      <% elsif employee.location_name == "Spinning" %>
+        <div class="front-side-main">
+          <%= wicked_pdf_image_tag("spinning.png", class: "appreal-img") %>
+          <div class="employee-code">
+            <p><%= employee.employee_code %></p>
+          </div>
+          <div class="img-div">
+            <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+          </div>
+          <div class="employee-name">
+            <p><%= employee.full_name.upcase %></p>
+          </div>
+          <div class="employee-desisgnation">
+            <p><%= employee.designation_name %></p>
+          </div>
+          <div class="employee-sub-department-div">
+            <p class="employee-sub-department"><%= employee.sub_department_name.upcase %></p>
+          </div>
+        </div>
+      <% elsif employee.location_name == "DFL-1" or employee.location_name == "DFL-2" or employee.location_name == "Weaving"%>
+        <div class="front-side-main">
+          <%= wicked_pdf_image_tag("weaving.png", class: "appreal-img") %>
+          <div class="employee-code">
+            <p><%= employee.employee_code %></p>
+          </div>
+          <div class="img-div">
+            <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+          </div>
+          <div class="employee-name">
+            <p><%= employee.full_name.upcase %></p>
+          </div>
+          <div class="employee-desisgnation">
+            <p><%= employee.designation_name %></p>
+          </div>
+          <div class="employee-sub-department-div">
+            <p class="employee-sub-department"><%= employee.sub_department_name.upcase %></p>
+          </div>
+        </div>
+      <% elsif employee.location_name == "Powerhouse"%>
+        <div class="front-side-main">
+          <%= wicked_pdf_image_tag("powerhouse.jpg", class: "appreal-img") %>
+          <div class="employee-code">
+            <p><%= employee.employee_code %></p>
+          </div>
+          <div class="img-div">
+            <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+          </div>
+          <div class="employee-name">
+            <p><%= employee.full_name.upcase %></p>
+          </div>
+          <div class="employee-desisgnation">
+            <p><%= employee.designation_name %></p>
+          </div>
+          <div class="employee-sub-department-div">
+            <p class="employee-sub-department"><%= employee.sub_department_name.upcase %></p>
+          </div>
+        </div>
+        <% elsif employee.location_name == "DTL" %>
+          <div class="front-side-main">
+            <div class="bar">
+              a
+            </div>
+            <%= wicked_pdf_image_tag("dtl.jpg", class: "dtl-img") %>
+            <div class="dtl_employee-code">
+              <p><%= employee.employee_code %></p>
+            </div>
+            <div class="dtl_img-div">
+              <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+            </div>
+            <div class="dtl_employee-name">
+              <p style="font-weight:bold"><%= employee.full_name.upcase %></p>
+            </div>
+            <div class="dtl_employee-desisgnation">
+              <p><%= employee.designation_name %></p>
+            </div>
+            <div class="employee-sub-department-div">
+              <p class="employee-sub-department"><%= employee.sub_department_name.upcase %></p>
+            </div>
+          </div>
+      <% elsif employee.location_name == "Daily Wager" %>
+        <div class="front-side-main">
+          <div class="bar">
+            a
+          </div>
+          <%= wicked_pdf_image_tag("wager.jpg", class: "dtl-img") %>
+          <div class="dtl_employee-code">
+            <p><%= employee.employee_code %></p>
+          </div>
+          <div class="dtl_img-div">
+            <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+          </div>
+          <div class="dtl_employee-name">
+            <p style="font-weight:bold"><%= employee.full_name.upcase %></p>
+          </div>
+          <div class="dtl_employee-desisgnation">
+            <p><%= employee.designation_name %></p>
+          </div>
+          <div class="employee-sub-department-div">
+            <p class="employee-sub-department"><%= employee.department_name.upcase %></p>
+          </div>
+        </div>
+      <% elsif employee.location_name == "Contract" %>
+        <div class="front-side-main">
+          <div class="bar">
+            a
+          </div>
+          <%= wicked_pdf_image_tag("contract.jpg", class: "dtl-img") %>
+          <div class="dtl_employee-code">
+            <p><%= employee.employee_code %></p>
+          </div>
+          <div class="dtl_img-div">
+            <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+          </div>
+          <div class="contract_employee-name">
+            <p style="font-weight:bold"><%= employee.full_name.upcase %></p>
+          </div>
+          <div class="dtl_employee-desisgnation">
+            <p><%= employee.designation_name %></p>
+          </div>
+          <div class="employee-sub-department-div">
+            <p class="employee-sub-department"><%= employee.department_name.upcase %></p>
+          </div>
+        </div>
+      <% elsif employee.location_name == "Piece Rate" %>
+        <div class="front-side-main">
+          <div class="bar">
+            a
+          </div>
+          <%= wicked_pdf_image_tag("piece.jpg", class: "dtl-img") %>
+          <div class="dtl_employee-code">
+            <p><%= employee.employee_code %></p>
+          </div>
+          <div class="dtl_img-div">
+            <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+          </div>
+          <div class="dtl_employee-name">
+            <p style="font-weight:bold"><%= employee.full_name.upcase %></p>
+          </div>
+          <div class="dtl_employee-desisgnation">
+            <p><%= employee.designation_name %></p>
+          </div>
+          <div class="employee-sub-department-div">
+            <p class="employee-sub-department"><%= employee.department_name.upcase %></p>
+          </div>
+        </div>
+      <% else %>
+        <div class="front-side-main">
+          <%= wicked_pdf_image_tag("appreal.jpg", class: "appreal-img") %>
+          <div class="employee-code">
+            <p><%= employee.employee_code %></p>
+          </div>
+          <div class="img-div">
+            <img src="<%= employee.try(:avatar).url %>"class="employee-img">
+          </div>
+          <div class="employee-name">
+            <p><%= employee.full_name.upcase %></p>
+          </div>
+          <div class="employee-desisgnation">
+            <p><%= employee.designation_name %></p>
+          </div>
+          <div class="employee-sub-department-div">
+            <p class="employee-sub-department"><%= employee.sub_department_name.upcase %></p>
+          </div>
+        </div>
+      <%end %>
+    </div>
+
+
+
+
+
+
+    <div class="col-sm-6">
+      <% if employee.location_name == "Spinning" or employee.location_name == "DFL-1" or employee.location_name == "DFL-2" or employee.location_name == "Weaving" or employee.location_name == "Powerhouse" %>
+        <div class="back-side-main">
+          <%= wicked_pdf_image_tag("back-sapphire.png", class: "sapphire-back-img") %>
+          <div class="cnic">
+            <p>CNIC: <%= employee.cnic_number %></p>
+          </div>
+          <div class="record">
+            <table>
+              <tr>
+                <td style="width: 100px">Emp. Code:</td>
+                <td><%= employee.employee_code %></td>
+              </tr>
+              <tr>
+                <td>D.O. Joining:</td>
+                <td><%= employee.joining_date.strftime('%d/%b/%Y') %></td>
+              </tr>
+              <tr style="color: red">
+                <td>Blood Group:</td>
+                <td><%= employee.blood_group || '-' %></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <% elsif employee.location_name == "DTL" or employee.location_name == "Contract" or employee.location_name == "Piece Rate" or employee.location_name == "Daily Wager"%>
+          <div class="back-side-main">
+            <%= wicked_pdf_image_tag("dtl_back.png", class: "sapphire-back-img") %>
+            <div class="cnic">
+              <p>CNIC: <%= employee.cnic_number %></p>
+            </div>
+            <div class="record">
+              <table>
+                <tr>
+                  <td style="width: 100px">Emp. Code:</td>
+                  <td><%= employee.employee_code %></td>
+                </tr>
+                <tr>
+                  <td style="width: 100px">Emp. Grade:</td>
+                  <td><%= employee.grade_name %></td>
+                </tr>
+                <tr>
+                  <td>D.O. Joining:</td>
+                  <td><%= employee.joining_date.strftime('%d/%b/%Y') %></td>
+                </tr>
+                <tr style="color: red">
+                  <td>Blood Group:</td>
+                  <td><%= employee.blood_group || '-' %></td>
+                </tr>
+                <tr>
+                  <td style="width: 100px">Cell Phone No:</td>
+                  <td><%= employee.official_mobile_number %></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+      <% else %>
+        <div class="back-side-main">
+          <%= wicked_pdf_image_tag("back-denim.png", class: "denim-back-img") %>
+          <div class="cnic">
+            <p>CNIC: <%= employee.cnic_number %></p>
+          </div>
+          <div class="record">
+            <table>
+              <tr>
+                <td style="width: 100px">Emp. Code:</td>
+                <td><%= employee.employee_code %></td>
+              </tr>
+              <tr>
+                <td>D.O. Joining:</td>
+                <td><%= employee.joining_date.strftime('%d/%b/%Y') %></td>
+              </tr>
+              <tr style="color: red">
+                <td>Blood Group:</td>
+                <td><%= employee.blood_group || '-' %></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<hr>
+<% end %>
+</body>
+</html>

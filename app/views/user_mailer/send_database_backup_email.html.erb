@@ -1,0 +1,18 @@
+<html>
+
+<head>
+	<meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+
+<body>
+	<% if (not @body_text.nil?) and (not @body_text.blank?) %>
+	<%= @body_text.html_safe %>
+	<br/>
+	<p><%= "Start Time => #{@start_time.strftime('%d-%m-%Y %I:%M:%S %P')}" %></p>
+	<br/>
+	<p><%= "End Time => #{@end_time.strftime('%d-%m-%Y %I:%M:%S %P')}" %></p>
+	<br/>
+	<% end %>
+</body>
+
+</html>

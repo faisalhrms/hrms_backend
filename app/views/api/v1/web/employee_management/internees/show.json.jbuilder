@@ -1,0 +1,34 @@
+json.internee do
+	json.id 													@internee.id
+	json.full_name										@internee.full_name
+	json.salutation  									@internee.salutation
+	json.first_name  									@internee.first_name
+	json.last_name  									@internee.last_name
+	json.father_name  								@internee.father_name
+	json.official_email  							@internee.official_email
+	json.official_mobile_number  			@internee.official_mobile_number
+	json.personal_email  							@internee.personal_email
+	json.personal_number  						@internee.personal_number
+	json.date_of_birth  							@internee.date_of_birth
+	json.gender  											@internee.gender
+	json.cnic_number  								@internee.cnic_number
+	json.blood_group  								@internee.blood_group
+	json.martial_status  							@internee.martial_status
+	json.gross_salary  								@internee.gross_salary
+	json.current_address  						@internee.current_address
+	json.company_id  									@internee.company_id
+	json.location_id  								@internee.location_id
+	json.branch_id  									@internee.branch_id
+	json.department_id  							@internee.department_id
+	json.sub_department_id  					@internee.sub_department_id
+	json.grade_id  										@internee.grade_id
+	json.designation_id  							@internee.designation_id
+	json.job_title_id  								@internee.job_title_id
+	json.salary_unit_id  							@internee.salary_unit_id
+	json.cost_center_id  							@internee.cost_center_id
+	json.joining_date  								@internee.joining_date
+	json.internee_code  							@internee.internee_code
+	json.is_active		  							@internee.is_active
+	json.is_converted		  						@internee.is_converted
+	json.current_address		  				@internee.current_address
+end

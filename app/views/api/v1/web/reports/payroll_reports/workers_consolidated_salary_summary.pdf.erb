@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Consolidated salary summary</title>
+  <style type="text/css">
+      body{
+          margin:0;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 14px;
+      }
+      .page-break {
+          display: block;
+          clear: both;
+          page-break-after: always;
+      }
+      .container:after{
+          content: "";
+          display: block;
+          clear: both;
+      }
+      table { page-break-inside:auto; border-collapse: collapse; }
+      tr    { page-break-inside:avoid; page-break-after:auto }
+      thead { display:table-header-group }
+      tfoot { display:table-footer-group }
+  </style>
+</head>
+<body>
+<div style="width:1500px;padding:10px;position:relative;font-family:Lato,sans-serif">
+  <table style="width: 100%">
+    <tr>
+      <td style="border: 2px solid #000; text-align: center; width: 200px" rowspan="2">
+        <img src=<%= @company.avatar.url %> width="150" />
+      </td>
+      <td style="border: 2px solid #000; text-align: center" rowspan="3">
+        <p style="font-weight: 800; margin-bottom: 5px; font-size: 14px"><%= @company.name %></p>
+        <p>Consolidated Summary of Monthly Salary for Apparel Division</p>
+        <p>For the Month of: <%= @pay_executions.last.formated_pay_month %></p>
+        <% grade_name = "" %>
+        <% if params[:grade_id] != "" and params[:grade_id].nil? == false %>
+          <% grade_names = Grade.find(params[:grade_id].map(&:to_i)).pluck(:name) %>
+          <% if grade_names.include?("W") %>
+            <% grade_name += "Worker, " %>
+          <% end %>
+          <% if grade_names.include?("S") %>
+            <% grade_name += "Staff, " %>
+          <% end %>
+          <% if grade_names.include?("M") %>
+            <% grade_name += "Management, " %>
+          <% end %>
+          <% grade_name = grade_name.gsub(/\, $/, '') %>
+        <% end %>
+        <p>Report For: <%= grade_name %></p>
+      </td>
+      <td style="border: 2px solid #000; text-align: right; padding: 5px 10px; width: 100px">
+        <span style="font-weight: 800; font-style: italic;">Print date:</span>
+      </td>
+      <td style="border: 2px solid #000; padding: 5px 10px; width: 100px">
+        <span><%= DateTime.now.strftime("%d/%m/%Y") %></span>
+      </td>
+    </tr>
+    <tr>
+      <td style="border: 2px solid #000; text-align: right; padding: 5px 10px">
+        <span style="font-weight: 800; font-style: italic;">Print time:</span>
+      </td>
+      <td style="border: 2px solid #000; padding: 5px 10px">
+        <span><%= DateTime.now.strftime("%I:%M:%S") %></span>
+      </td>
+    </tr>
+    <tr>
+      <td style="border: 2px solid #000; text-align: center; padding: 5px 0">
+        <span style="font-weight: 800"><%= @company.name %></span>
+      </td>
+      <td style="border: 2px solid #000; text-align: right; padding: 5px 10px">
+        <span style="font-weight: 800; font-style: italic;">Pages:</span>
+      </td>
+      <td style="border: 2px solid #000; padding: 5px 10px">
+        <span>Page 1 of 1</span>
+      </td>
+    </tr>
+  </table>
+
+  <% hiring_shift_wise_employees = Employee.includes(:hire_shift).where(id: @pay_invoices.pluck(:employee_id).uniq).order("general_types.name ASC").group_by(&:hiring_shift_id) %>
+  <% hiring_shifts = GeneralType.all.group_by(&:id) %>
+  <% worker_employees = {} %>
+  <% hiring_shift_wise_employees.each do |hiring_shift_employees| %>
+    <% hiring_shift_name = hiring_shift_employees.first.nil? ? "" : hiring_shifts[hiring_shift_employees.first].last.name %>
+    <% worker_employees[hiring_shift_name] = Employee.includes(:department).where(id: hiring_shift_employees.last.pluck(:id)).order("departments.name ASC").group_by(&:department_id) %>
+  <% end %>
+  <% worker_employees.each do |worker_employee| %>
+    <% time_slot = worker_employee.first %>
+    <tbody style="">
+    <tr>
+      <td><span style="font-weight: 800; background-color: #ccc;display: block; width: 160px; text-align: center; padding: 5px 0">Shift: <%= time_slot %></span></td>
+    </tr>
+    </tbody>
+    <% shift_employee_ids = [] %>
+    <% worker_employee[1].each do |department_employees| %>
+      <% shift_employee_ids += department_employees[1].pluck(:id) %>
+    <% end %>
+    <% bank_grand_total = Array.new(20, 0) %>
+    <% cash_grand_total = Array.new(20, 0) %>
+    <% jazz_cash_grand_total = Array.new(20, 0) %>
+    <% pay_item_id = PayItem.find_by_name("Salary Arrears").id %>
+    <% pay_invoice_bank_ids = [] %>
+    <% pay_invoice_cash_ids = [] %>
+    <% pay_invoice_jazz_cash_ids = [] %>
+    <% employee_bank_ids = [] %>
+    <% employee_cash_ids = [] %>
+    <% employee_jazz_cash_ids = [] %>
+    <% @pay_invoices.where(:employee_id => shift_employee_ids).each do |pay_invoice| %>
+      <% if pay_invoice.employee.payment_method == "Bank" %>
+        <% bank_grand_total[8] += pay_invoice.total_earning %>
+        <% bank_grand_total[15] += pay_invoice.pay_invoice_details.insurance_premium_gli %>
+        <% bank_grand_total[18] += (pay_invoice.total_deduction.round + pay_invoice.monthly_tax.round) %>
+        <% pay_invoice_bank_ids << pay_invoice.id %>
+        <% employee_bank_ids << pay_invoice.employee_id %>
+      <% elsif pay_invoice.employee.payment_method == "Cash" %>
+        <% cash_grand_total[8] += pay_invoice.total_earning %>
+        <% cash_grand_total[15] += pay_invoice.pay_invoice_details.insurance_premium_gli %>
+        <% cash_grand_total[18] += (pay_invoice.total_deduction.round + pay_invoice.monthly_tax.round) %>
+        <% pay_invoice_cash_ids << pay_invoice.id %>
+        <% employee_cash_ids << pay_invoice.employee_id %>
+      <% elsif pay_invoice.employee.payment_method == "Jazz Cash" %>
+        <% jazz_cash_grand_total[8] += pay_invoice.total_earning %>
+        <% jazz_cash_grand_total[15] += pay_invoice.pay_invoice_details.insurance_premium_gli %>
+        <% jazz_cash_grand_total[18] += (pay_invoice.total_deduction.round + pay_invoice.monthly_tax.round) %>
+        <% pay_invoice_jazz_cash_ids << pay_invoice.id %>
+        <% employee_jazz_cash_ids << pay_invoice.employee_id %>
+      <% end %>
+    <% end %>
+    <% bank_grand_total[0] += pay_invoice_bank_ids.uniq.count %>
+    <% bank_grand_total[1] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[2] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[3] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[4] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Other Allowance"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[5] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Incentive-F"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[6] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Over Time"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[7] += FixedPayItem.where(:is_active => true, :employee_id => employee_bank_ids, :pay_item_id => pay_item_id).sum(:item_amount).round.to_f %>
+    <% bank_grand_total[9] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Electric Bills-1"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[10] += @pay_invoices.where(:id => pay_invoice_bank_ids).sum(:monthly_tax).to_f.round %>
+    <% bank_grand_total[11] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[12] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Loan"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[13] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Advance"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[14] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Mess Deduction"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[16] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Miscellaneous Deduction"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[17] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_bank_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f %>
+
+    <% cash_grand_total[0] += pay_invoice_cash_ids.uniq.count %>
+    <% cash_grand_total[1] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[2] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[3] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[4] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Other Allowance"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[5] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Incentive-F"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[6] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Over Time"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[7] += FixedPayItem.where(:is_active => true, :employee_id => employee_cash_ids, :pay_item_id => pay_item_id).sum(:item_amount).round.to_f %>
+    <% cash_grand_total[9] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Electric Bills-1"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[10] += @pay_invoices.where(:id => pay_invoice_cash_ids).sum(:monthly_tax).to_f.round %>
+    <% cash_grand_total[11] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[12] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Loan"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[13] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Advance"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[14] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Mess Deduction"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[16] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Miscellaneous Deduction"]).sum(:amount).round.to_f %>
+    <% cash_grand_total[17] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_cash_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f %>
+
+    <% jazz_cash_grand_total[0] += pay_invoice_jazz_cash_ids.uniq.count %>
+    <% jazz_cash_grand_total[1] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[2] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Conveyance Allowance"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[3] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Washing Allowance"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[4] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Other Allowance"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[5] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Incentive-F"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[6] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Over Time"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[7] += FixedPayItem.where(:is_active => true, :employee_id => employee_jazz_cash_ids, :pay_item_id => pay_item_id).sum(:item_amount).round.to_f %>
+    <% jazz_cash_grand_total[9] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Electric Bills-1"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[10] += @pay_invoices.where(:id => pay_invoice_jazz_cash_ids).sum(:monthly_tax).to_f.round %>
+    <% jazz_cash_grand_total[11] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["EOBI"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[12] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Loan"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[13] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Advance"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[14] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Mess Deduction"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[16] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Miscellaneous Deduction"]).sum(:amount).round.to_f %>
+    <% jazz_cash_grand_total[17] += PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_jazz_cash_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f %>
+    <% bank_grand_total[19] = bank_grand_total[8] - bank_grand_total[18] %>
+    <table style="width: 100%; font-size: 11px; margin-top: 5px; border-top: 4px solid #000;" class="table-condensed">
+      <thead>
+      <tr>
+        <th style="padding: 5px 10px; text-align: left">Unit</th>
+        <th style="padding: 5px 10px">No. of Emp</th>
+        <th style="padding: 5px 10px">Gross Pay</th>
+        <th style="padding: 5px 10px">Conveyance Allowance</th>
+        <th style="padding: 5px 10px">Washing Allowance</th>
+        <th style="padding: 5px 10px">Other Allowance</th>
+        <th style="padding: 5px 10px">Incentive</th>
+        <th style="padding: 5px 10px">Overtime Amount</th>
+        <th style="padding: 5px 10px">Salary Arrears</th>
+        <th style="padding: 5px 10px">Total Earnings</th>
+        <th style="padding: 5px 10px">Electric Bill</th>
+        <th style="padding: 5px 10px">Income Tax</th>
+        <th style="padding: 5px 10px">EOBI Cont.</th>
+        <th style="padding: 5px 10px">Loan</th>
+        <th style="padding: 5px 10px">Advance</th>
+        <th style="padding: 5px 10px">Mess Bill</th>
+        <th style="padding: 5px 10px">Insurance Premium GLI</th>
+        <th style="padding: 5px 10px">Misc. Deduction</th>
+        <th style="padding: 5px 10px">P. Fund</th>
+        <th style="padding: 5px 10px">Deductions</th>
+        <th style="padding: 5px 10px">Net Pay</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% company_name = @company.name %>
+      <% unless params[:location_id].blank? %>
+        <% company_name += " (#{Location.find(params[:location_id]).name})" %>
+      <% end %>
+      <tr>
+        <td><span style="font-weight: 800; background-color: #ccc;display: block; width: 160px; text-align: center; padding: 5px 0">BANK TRANSFER</span></td>
+      </tr>
+      <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000">
+        <td style="width: 200px; padding: 8px; text-align: center"><%= company_name %></td>
+        <% bank_grand_total.each do |value| %>
+          <td style="padding: 8px; text-align: center"><%= number_with_precision(ReportFormat.zero_to_dash(value), :precision => 0, :delimiter => ',') %></td>
+        <% end %>
+      </tr>
+      <tr style="border-bottom: 1px solid #000">
+        <td style="padding: 8px; text-align: center; font-weight: 800">Sub Total:</td>
+        <% bank_grand_total.each do |value| %>
+          <td style="padding: 8px; text-align: center; font-weight: 800"><%= number_with_precision(ReportFormat.zero_to_dash(value), :precision => 0, :delimiter => ',') %></td>
+        <% end %>
+      </tr>
+      <% cash_grand_total[19] = cash_grand_total[8] - cash_grand_total[18] %>
+      <tr>
+        <td style="padding-top: 50px"><span style="font-weight: 800; background-color: #ccc;display: block; width: 160px; text-align: center; padding: 5px 0">CASH PAYMENT</span></td>
+      </tr>
+      <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000">
+        <td style="width: 200px; padding: 8px; text-align: center"><%= company_name %></td>
+        <% cash_grand_total.each do |value| %>
+          <td style="padding: 8px; text-align: center"><%= number_with_precision(ReportFormat.zero_to_dash(value), :precision => 0, :delimiter => ',') %></td>
+        <% end %>
+      </tr>
+      <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000">
+        <td style="width: 200px; padding: 8px; text-align: center; font-weight: 800">Sub Total:</td>
+        <% cash_grand_total.each do |value| %>
+          <td style="padding: 8px; text-align: center; font-weight: 800"><%= number_with_precision(ReportFormat.zero_to_dash(value), :precision => 0, :delimiter => ',') %></td>
+        <% end %>
+      </tr>
+      <% jazz_cash_grand_total[19] = jazz_cash_grand_total[8] - jazz_cash_grand_total[18] %>
+      <tr>
+        <td style="padding-top: 50px"><span style="font-weight: 800; background-color: #ccc;display: block; width: 160px; text-align: center; padding: 5px 0">JAZZ CASH PAYMENT</span></td>
+      </tr>
+      <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000">
+        <td style="width: 200px; padding: 8px; text-align: center"><%= company_name %></td>
+        <% jazz_cash_grand_total.each do |value| %>
+          <td style="padding: 8px; text-align: center"><%= number_with_precision(ReportFormat.zero_to_dash(value), :precision => 0, :delimiter => ',') %></td>
+        <% end %>
+      </tr>
+      <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000">
+        <td style="width: 200px; padding: 8px; text-align: center; font-weight: 800">Sub Total:</td>
+        <% jazz_cash_grand_total.each do |value| %>
+          <td style="padding: 8px; text-align: center; font-weight: 800"><%= number_with_precision(ReportFormat.zero_to_dash(value), :precision => 0, :delimiter => ',') %></td>
+        <% end %>
+      </tr>
+      <tr>
+        <td colspan="19" style="height: 50px"></td>
+      </tr>
+      <tr style="border-top: 2px solid #000000; border-bottom: 2px solid #000000">
+        <td style="padding: 8px; text-align: center; font-weight: 800">Grand Total</td>
+        <% for i in 0..19 %>
+          <td style="padding: 8px; text-align: center; font-weight: 800"><%= number_with_precision(ReportFormat.zero_to_dash(bank_grand_total[i] + cash_grand_total[i] + jazz_cash_grand_total[i]), :precision => 0, :delimiter => ',') %></td>
+        <% end %>
+      </tr>
+      </tbody>
+    </table>
+    <% company_total = cash_grand_total[19] + bank_grand_total[19] + jazz_cash_grand_total[19] %>
+    <table style="width: 100%; margin-top: 50px">
+      <tr>
+        <td style="font-weight: 800; font-style: italic; text-align: right; width: 300px; padding-right: 20px;">Company Total (Rs):</td>
+        <td style="padding: 8px 10px; border-top: 2px solid #000; border-bottom: 2px solid #000; width: 200px;text-align: right; font-weight: 800; font-style: italic;font-size: 14px"><%= number_with_precision(ReportFormat.zero_to_dash(company_total), :precision => 0, :delimiter => ',') %></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="height: 20px"></td>
+      </tr>
+      <tr>
+        <td style="font-weight: 800; font-style: italic; text-align: right; width: 300px; padding-right: 20px">Amount in words:</td>
+        <td style="padding: 8px 10px; font-weight: 600; font-style: italic; font-size: 14px; text-decoration: underline; text-transform: uppercase;" colspan="2"><%= company_total.humanize %></td>
+      </tr>
+    </table>
+    <div class="page-break"></div>
+  <% end %>
+</div>
+</body>
+</html>

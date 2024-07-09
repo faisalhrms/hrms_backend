@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PF Deductions</title>
+  <style type="text/css">
+    .page-break {
+      display: block;
+      clear: both;
+      page-break-after: always;
+    }
+    .container:after{
+      content: "";
+      display: block;
+      clear: both;
+    }
+    table { page-break-inside:auto }
+    table > thead > tr > th {
+      color: #000000;
+      font-size: 12px;
+      font-weight: bolder;
+    }
+
+    table > tfoot > tr > td {
+      color: #000000;
+      font-size: 12px;
+      font-weight: bolder;
+    }
+
+    table > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 10px;
+    }
+
+    table.print > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 15px;
+    }
+
+    table.summary > tbody > tr > td {
+      color: #000000;
+      font-weight: 100;
+      font-size: 13px;
+    }
+
+    .table td, .table th{
+      border-color: black;
+    }
+
+    .dept-detail tfoot tr {
+      border-bottom: 2px solid black;
+    }
+
+    .dept-detail tbody tr {
+      border-bottom: 2px solid black;
+    }
+
+    .summary tbody > tr:last-child {
+      border-bottom: 2px solid black;
+    }
+
+    .dept-detail thead tr {
+      border-bottom: 3px solid black;
+      border-top: 3px solid black;
+    }
+    table.print { width: 250px;height: 100%; }
+
+  </style>
+  <%= stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' %>
+</head>
+
+<body>
+<div>
+  <div class="container">
+    <div class="row" style="border: 2px solid black">
+      <div class="col-xs-2" style=";border-right: 2px solid black">
+        <div class="row">
+          <% if not (@company.avatar_file_name.nil? or @company.avatar_file_name.blank?) %>
+            <img src="<%= @company.avatar.url %>" style="width:220px;height:100px;margin-left: 12px;margin-top: 10px">
+          <% end %>
+        </div>
+        <% company_name = @company.name %>
+        <div class="row">
+          <p style="color:black;font-size:18px; font-weight: bolder; margin-left: 25px"><%= company_name %></p>
+        </div>
+      </div>
+      <div class="col-xs-8" >
+        <p style="color:black;text-align:center;font-size:18px; font-weight: bolder">Employees Monthly Deductions Report
+        </p>
+        <% unless params[:location_id].blank? %>
+          <% company_name += " (#{Location.find(params[:location_id]).name})" %>
+        <% end %>
+        <p style="color:black;text-align:center;font-size:18px; font-weight: bolder">Report For: <%= company_name %>
+        </p>
+        <p style="color:black;text-align:center;font-size:16px"> Provident Fund Contribution For the Month of : <%= @pay_executions.last.formated_pay_month %></p>
+
+      </div>
+      <div class="col-xs-2" style="height: 145px;border-left: 2px solid black">
+        <table class="table print" style="">
+          <tbody>
+          <tr>
+            <td>Print date</td>
+            <td><%= DateTime.now.strftime("%d/%m/%Y") %></td>
+          </tr>
+          <tr>
+            <td>Print time</td>
+            <td><%= DateTime.now.strftime("%I:%M:%S") %></td>
+          </tr>
+          <tr>
+            <td>Pages</td>
+            <td></td>
+          </tr>
+          </tbody>
+        </table>
+        <p></p>
+      </div>
+    </div>
+  </div>
+  <table class="table borderless dept-detail" style="margin-top: 5px;width:100%;">
+    <thead >
+    <tr style="">
+      <th style="text-align:center;">Sr. No</th>
+      <th style="text-align:center;">Employee ID</th>
+      <th style="text-align:center;">Employee's Name</th>
+      <th style="text-align:center;">Designation</th>
+      <th style="text-align:center;">Basic Salary</th>
+      <th style="text-align:center;">Provident Fund Cont.</th>
+    </tr>
+    </thead>
+    <% total_pf = 0 %>
+    <% count = 0 %>
+    <% department_ids = @pay_invoices.includes(:department).order('departments.name ASC').collect(&:department_id).uniq %>
+    <% department_ids.each do |department_id| %>
+      <tbody style="">
+        <tr>
+          <td style="text-align: center;font-weight: bold;"> Department: </td>
+          <td style="text-align: center;font-weight: bold;"> <%= Department.find(department_id).name %> </td>
+          <td style="text-align: center;"> </td>
+          <td style="text-align: center;"> </td>
+          <td style="text-align: center;"> </td>
+          <td style="text-align: center;"> </td>
+        </tr>
+        <% department_total_pf = 0 %>
+        <% @pay_invoices.includes(:department).where(department_id: department_id).each do |pay_invoice| %>
+          <% pf = pay_invoice.pay_invoice_details.where(:item_name => "Provident Fund").sum(:amount).round(2) %>
+          <% if pf > 0 %>
+            <% count = count + 1 %>
+            <% basic_salary = pay_invoice.pay_invoice_details.where(:item_name => "Basic Salary").sum(:amount).round(2) %>
+            <% department_total_pf += pf %>
+            <tr>
+              <td style="text-align: center;"> <%= count %> </td>
+              <td style="text-align: center;"> <%= pay_invoice.employee.employee_code %> </td>
+              <td style="text-align: center;"> <%= pay_invoice.employee.full_name %> </td>
+              <td style="text-align: center;"> <%= pay_invoice.employee.designation_name %> </td>
+              <td style="text-align: center;"> <%= number_with_precision(basic_salary, :precision => 2, :delimiter => ',') %> </td>
+              <td style="text-align: center;"> <%= number_with_precision(pf, :precision => 2, :delimiter => ',') %> </td>
+            </tr>
+          <% end %>
+        <% end %>
+        <tr style="border-bottom:0px">
+          <% for i in 0..3 %>
+            <td style="border-bottom:0px;"> &nbsp; </td>
+          <% end %>
+          <td style="font-weight: bold; text-align: center;">Total:</td>
+          <td style="font-weight: bold; text-align: center;border-bottom:4px solid black;border-top:2px solid black"><%= department_total_pf %></td>
+        </tr>
+      </tbody>
+      <% total_pf += department_total_pf %>
+    <% end %>
+  </table>
+  <table class="summary" style="width:100%;border-collapse:collapse">
+    <tbody>
+      <tr style="border-bottom:0px">
+        <% for i in 0..99 %>
+          <td style="border-bottom:0px;"> &nbsp; </td>
+        <% end %>
+        <td style="font-weight: bold; text-align: center;">Grand Total:</td>
+        <td style="font-weight: bold; text-align: center;border-bottom:4px solid black;border-top:2px solid black"><%= total_pf %></td>
+        <% for i in 0..10 %>
+          <td style="border-bottom:0px;"> &nbsp; </td>
+        <% end %>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+
+</html>

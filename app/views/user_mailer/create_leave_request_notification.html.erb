@@ -1,0 +1,36 @@
+<html>
+
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <style>
+    table, tr, td, th{
+        border-collapse: collapse;
+        border: 1px solid black;
+        padding: 20px;
+        text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+<table width="100%">
+  <tr>
+    <th>Employee Code</th>
+    <th>Employee Name</th>
+    <th>Department</th>
+    <th>Date</th>
+    <th colspan="2">Action</th>
+  </tr>
+  <tr>
+    <% token = "0a1d165e12a2bc249fdd588b275f670198835b689324af3b36e8b9ab4fe246ec80c97c1cb6d3ba495c7d214a06eb3285f25081ce6d307d520a9c0a6bdd892872" %>
+    <td><%= @approval_request.requestable.employee.employee_code %></td>
+    <td><%= @approval_request.requestable.employee.full_name %></td>
+    <td><%= @approval_request.requestable.employee.department_name %></td>
+    <td><%= @approval_request.created_at.to_date.strftime("%d-%B-%Y") %></td>
+    <td><a href="https://millshrmsbe.dfl.com.pk/api/web/leave_approval_requests/syed_talal_leave_request?id=<%= @approval_request.id %>&status=approved&token=<%= token %>" style="font-size: 18px; text-decoration: none; background-color: #16a085; color: white; padding: 10px">Approve</a></td>
+    <td><a href="https://millshrmsbe.dfl.com.pk/api/web/leave_approval_requests/syed_talal_leave_request?id=<%= @approval_request.id %>&status=reject&token=<%= token %>" style="font-size: 18px; text-decoration: none; background-color: #d9534f; color: white; padding: 10px">Reject</a></td>
+  </tr>
+</table>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+json.attendance_execution_transactions @attendance_execution_transactions.each do |attendance_execution_transaction|
+	json.location_name 					attendance_execution_transaction.actual_location_name
+	json.branch_name 						attendance_execution_transaction.actual_branch_name
+	json.department_name 				attendance_execution_transaction.actual_department_name
+	json.process_start_date 		ReportFormat.date_format(attendance_execution_transaction.start_date)
+	json.process_end_date 			ReportFormat.date_format(attendance_execution_transaction.end_date)
+	json.execution_start_date 	ReportFormat.date_format(attendance_execution_transaction.execution_start_time)
+	json.execution_end_date 		ReportFormat.date_format(attendance_execution_transaction.execution_end_time)
+	json.execution_start_time 	ReportFormat.twelve_hours_time_format(attendance_execution_transaction.execution_start_time)
+	json.execution_end_time 		ReportFormat.twelve_hours_time_format(attendance_execution_transaction.execution_end_time)
+end

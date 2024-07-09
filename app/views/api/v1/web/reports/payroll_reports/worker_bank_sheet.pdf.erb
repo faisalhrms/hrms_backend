@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Bank Sheet <%= @pay_execution.formated_pay_month %></title>
+  <style type="text/css">
+      body{
+          margin:0;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 14px;
+      }
+      .page-break {
+          display: block;
+          clear: both;
+          page-break-after: always;
+      }
+      .container:after{
+          content: "";
+          display: block;
+          clear: both;
+      }
+      table { page-break-inside:auto; border-collapse: collapse; }
+      tr    { page-break-inside:avoid; page-break-after:auto }
+      thead { display:table-header-group }
+      tfoot { display:table-footer-group }
+  </style>
+</head>
+<body>
+<% hiring_shift_wise_employees = Employee.includes(:hire_shift).where(id: @pay_invoices.pluck(:employee_id).uniq).order("general_types.name ASC").group_by(&:hiring_shift_id) %>
+<% employee_pay_invoices = @pay_invoices.group_by(&:employee_id) %>
+<% hiring_shifts = GeneralType.all.group_by(&:id) %>
+<% departments = Department.find(@pay_invoices.pluck(:department_id).uniq).group_by(&:id) %>
+<% worker_employees = {} %>
+<% hiring_shift_wise_employees.each do |hiring_shift_employees| %>
+  <% hiring_shift_name = hiring_shift_employees.first.nil? ? "" : hiring_shifts[hiring_shift_employees.first].last.name %>
+  <% worker_employees[hiring_shift_name] = Employee.includes(:department).where(id: hiring_shift_employees.last.pluck(:id)).order("departments.name ASC").group_by(&:department_id) %>
+<% end %>
+<% slip_count = 0 %>
+<% if @show_salary == true %>
+  <div style="width:100%;padding:10px;position:relative;font-family:Lato,sans-serif">
+    <% all_total_earning = 0 %>
+    <% total_overtime = 0 %>
+    <% total_gross_pay = 0 %>
+    <% all_total_deduction = 0 %>
+    <% total_net_payable = 0 %>
+    <% total_salary_arrear = 0 %>
+    <% worker_employees.each do |worker_employee| %>
+      <% time_slot = worker_employee.first %>
+      <% shift_total_earning = 0 %>
+      <% shift_total_overtime = 0 %>
+      <% shift_total_gross_pay = 0 %>
+      <% shift_total_deduction = 0 %>
+      <% shift_total_net_payable = 0 %>
+      <% shift_total_salary_arrear = 0 %>
+      <% worker_employee[1].each do |department_employees| %>
+        <% department = departments[department_employees.first].last.name %>
+        <% department_total_earning = 0 %>
+        <% department_total_overtime = 0 %>
+        <% department_total_gross_pay = 0 %>
+        <% department_total_deduction = 0 %>
+        <% department_total_net_payable = 0 %>
+        <% department_total_salary_arrear = 0 %>
+        <% department_employees[1].sort_by(&:employee_code).each do |employee| %>
+          <% pay_invoice = employee_pay_invoices[employee.id].last %>
+          <% if slip_count == 0 %>
+            <table class="table dept-detail" style="margin-top: 5px;width:100%;">
+              <tbody style="">
+              <tr style="border-bottom: 2px solid white;">
+                <td style="text-align: center;font-weight: bold; width: 20%"> Shift: </td>
+                <td style="text-align: center;font-weight: bold; background-color: grey; width: 10%"> <%= time_slot %> </td>
+                <td style="text-align: center; width: 15%"> <%= "" %> </td>
+                <td style="text-align: center; width: 15%"> <%= "" %> </td>
+                <td style="text-align: center; width: 15%"> <%= "" %> </td>
+                <td style="text-align: center; width: 20%"> <%= "" %> </td>
+              </tr>
+              <tr style="border-top: 2px solid white;">
+                <td style="text-align: center;font-weight: bold; width: 20%"> Department: </td>
+                <td style="text-align: center;font-weight: bold; background-color: grey; width: 10%"> <%= department %> </td>
+                <td style="text-align: center; width: 15%"> <%= "" %> </td>
+                <td style="text-align: center; width: 15%"> <%= "" %> </td>
+                <td style="text-align: center; width: 15%"> <%= "" %> </td>
+                <td style="text-align: center; width: 20%"> <%= "" %> </td>
+              </tr>
+              </tbody>
+            </table>
+          <% end %>
+          <% slip_count = slip_count + 1 %>
+          <% employee = pay_invoice.employee %>
+          <div style="margin-top: 10px; border: 1px solid #000; border-radius: 10px; width: 90%; margin-left: 5.5%; margin-right: 4.5%;">
+            <% total_earning = 0%>
+            <% gross_salary = 0%>
+            <% basic_pay = 0 %>
+            <% salary_arrear = 0 %>
+            <% house_rent = 0 %>
+            <% utility_allowance = 0 %>
+            <% medical_allowance = 0 %>
+            <% washing_allowance = 0 %>
+            <% conveyance_allowance = 0 %>
+            <% incentive = pay_invoice.pay_invoice_details.where(:item_name => "Incentive-F").sum(:amount).round(2) %>
+            <% other_allow = 0 %>
+            <% overtime_amount = pay_invoice.pay_invoice_details.where(:item_name => "Over Time").sum(:amount).round(2) %>
+            <% pay_invoice.pay_invoice_details.where(:item_type => "Earning").order('id ASC').each do |invoice_detail|%>
+              <% if invoice_detail.show_in_slip == true %>
+                <% if invoice_detail.part_of_gross_salary == true and invoice_detail.part_of_other == false %>
+                  <% if invoice_detail.item_name == "Basic Salary" %>
+                    <% item = PayItem.find(invoice_detail.item_id) %>
+                    <% basic_pay = PayItem.actual_calculate_formula_for_slip(employee, item, pay_invoice).round(2) %>
+                  <% elsif invoice_detail.item_name == "House Rent" %>
+                    <% item = PayItem.find(invoice_detail.item_id) %>
+                    <% house_rent = PayItem.actual_calculate_formula_for_slip(employee, item, pay_invoice).round(2) %>
+                  <% elsif invoice_detail.item_name == "Utility Allowance" %>
+                    <% item = PayItem.find(invoice_detail.item_id) %>
+                    <% utility_allowance = PayItem.actual_calculate_formula_for_slip(employee, item, pay_invoice).round(2) %>
+                  <% elsif invoice_detail.item_name == "Medical Allowance" %>
+                    <% item = PayItem.find(invoice_detail.item_id) %>
+                    <% medical_allowance = PayItem.actual_calculate_formula_for_slip(employee, item, pay_invoice).round(2) %>
+                  <% elsif invoice_detail.item_name == "Washing Allowance" %>
+                    <% item = PayItem.find(invoice_detail.item_id) %>
+                    <% washing_allowance = PayItem.actual_calculate_formula_for_slip(employee, item, pay_invoice).round(2) %>
+                  <% elsif invoice_detail.item_name == "Conveyance Allowance" %>
+                    <% item = PayItem.find(invoice_detail.item_id) %>
+                    <% conveyance_allowance = PayItem.actual_calculate_formula_for_slip(employee, item, pay_invoice).round(2) %>
+                  <% else %>
+                    <% other_allow = invoice_detail.amount.round(2) %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% end %>
+            <% salary_arrear = employee.fixed_pay_items.where(is_active: true, pay_item_id: PayItem.find_by_name("Salary Arrears").id).sum(&:item_amount) %>
+            <% total_salary_arrear += salary_arrear %>
+            <% department_total_salary_arrear += salary_arrear %>
+            <% shift_total_salary_arrear += salary_arrear %>
+
+            <% gross_salary = pay_invoice.total_earning - pay_invoice.total_deduction %>
+            <% total_earning = gross_salary %>
+
+            <% provident_fund = pay_invoice.pay_invoice_details.where(:item_name => "Provident Fund").sum(:amount).round(2) %>
+            <% loan = pay_invoice.pay_invoice_details.where(:item_name => "Loan").sum(:amount).round(2) %>
+            <% advance = pay_invoice.pay_invoice_details.where(:item_name => "Advance").sum(:amount).round(2) %>
+            <% income_tax = pay_invoice.monthly_tax.round(2) %>
+            <% electric_bill = pay_invoice.pay_invoice_details.where(:item_name => "Electric Bills-1").sum(:amount).round(2) %>
+            <% eobi = pay_invoice.pay_invoice_details.where(:item_name => "EOBI").sum(:amount).round(2) %>
+            <% mess = pay_invoice.pay_invoice_details.where(:item_name => "Mess Deduction").sum(:amount).round(2) %>
+            <% premium = pay_invoice.pay_invoice_details.where(:item_name => "Insurance Premium GLI").sum(:amount).round(2) %>
+            <% misc_deduction = pay_invoice.pay_invoice_details.where(:item_name => "Miscellaneous Deduction").sum(:amount).round(2) %>
+            <% canteen_deduction = pay_invoice.pay_invoice_details.where(:item_name => "Canteen Deduction").sum(:amount).round(2) %>
+            <% total_deduction = provident_fund + loan + advance + income_tax + electric_bill + eobi + mess + premium + misc_deduction + canteen_deduction %>
+            <table style="width: 100%;">
+              <tbody>
+              <!--          todo 1st table alignment-->
+              <td style="padding: 5px; border-right: 1px solid #000; width: 300px;">
+                <p style="font-weight: 600; font-size: 12px; margin: 5px 0 0;">Employee ID:</p>
+                <p style="font-weight: 900; margin: 10px 0; font-size: 20px"><%= employee.employee_code %></p>
+                <p style="font-weight: 900; margin: 10px 0; font-size: 20px"><%= employee.full_name %></p>
+                <p style="margin: 10px 0"><%= employee.father_name %></p>
+                <p style="margin: 10px 0"><%= employee.designation_name %></p>
+                <% if employee.payment_method == "Bank" %>
+                  <p style="font-weight: 600; font-size: 12px;">Bank Account No</p>
+                <% elsif employee.payment_method == "Jazz Cash" %>
+                  <p style="font-weight: 600; font-size: 12px;">Jazz Cash Account No</p>
+                <% end %>
+                <p style="margin: 10px 0;"><%= employee.bank_account_number %></p>
+                <p style="margin: 10px 0 5px; font-weight: 600; font-size: 12px">Gross Rate</p>
+                <p style="font-weight: 600; text-align: right; font-family: courier, monospace; font-size: 16px"><%= number_with_delimiter(pay_invoice.actual_salary) %></p>
+              </td>
+              <td style="vertical-align: top; border-right: 1px solid #000; padding: 10px; width: 150px">
+                <p style="text-align: center; font-weight: 600; margin: 0;">Attendance</p>
+                <p><span style="font-weight: 600">W.Days:</span> <span style="float: right; font-family: courier, monospace"><%= number_with_delimiter(pay_invoice.no_of_pay_days - pay_invoice.deduction_days) %></span></p>
+              </td>
+              <td style="border-right: 1px solid #000; vertical-align: top; padding: 10px; width: 300px;">
+                <p style="font-weight: 600; margin: 0; text-align: center">Salary Breakup</p>
+
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Basic Pay:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(basic_pay) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">House Rent:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(house_rent) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Utility Allow:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(utility_allowance) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Medical:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(medical_allowance) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Washing Allow:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(washing_allowance) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Convey. Allow:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(conveyance_allowance) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Incentive:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(incentive) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Other Allow:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(other_allow) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Salary Arrears:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(salary_arrear) %></span></p>
+                <p style="margin: 20px 0 10px"><span style="font-weight: 600; font-size: 12px">Gross Pay:</span> <span style="float: right;font-family: courier, monospace; font-size: 18px; font-weight: 600"><%= number_with_delimiter(pay_invoice.pay_invoice_details.where(:item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round) %></span></p>
+              </td>
+              <% employee_gross_pay = pay_invoice.pay_invoice_details.where(:item_name => ["Basic Salary", "House Rent", "Utility Allowance", "Medical Allowance"]).sum(:amount).round %>
+              <% total_gross_pay += employee_gross_pay %>
+              <% shift_total_gross_pay += employee_gross_pay %>
+              <% department_total_gross_pay += employee_gross_pay %>
+
+
+              <td style="border-right: 1px solid #000; vertical-align: top; padding: 10px; width: 200px;">
+                <p style="font-weight: 600; margin: 0; text-align: center">Overtime</p>
+
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">OT Hours:</span> <span style="float: right;font-family: courier, monospace"><%= pay_invoice.over_time_hours %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">OT Amnt:</span> <span style="float: right;font-family: courier, monospace"><%=number_with_delimiter(overtime_amount)%></span></p>
+
+                <% total_overtime += overtime_amount %>
+                <% department_total_overtime += overtime_amount %>
+                <% shift_total_overtime += overtime_amount %>
+                <p style="font-weight: 600; text-align: center; font-size: 16px; margin-top: 40px">Total Earning:</p>
+                <p style="margin: 126px 0 0;text-align: center;font-size: 18px;font-family: courier, monospace;font-weight: 600;border-top: 2px solid #000;padding-top: 10px;"><%=number_with_delimiter(total_earning + pay_invoice.total_deduction)%></p>
+              </td>
+              <% all_total_earning += pay_invoice.total_earning %>
+              <% department_total_earning += pay_invoice.total_earning %>
+              <% shift_total_earning += pay_invoice.total_earning %>
+              <td style="border-right: 1px solid #000; vertical-align: top; padding: 10px; width: 200px;">
+                <p style="font-weight: 600; margin: 0; text-align: center">Deductions</p>
+
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">P. Fund:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(provident_fund) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Loan:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(loan) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Advance:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(advance) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Income Tax:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(income_tax) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Electric Bill:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(electric_bill) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">EOBI:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(eobi) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Mess:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(mess) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Premium:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(premium) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Misc. Ded:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(misc_deduction) %></span></p>
+                <p style="margin: 10px 0"><span style="font-weight: 600; font-size: 12px">Canteen. Ded:</span> <span style="float: right;font-family: courier, monospace"><%= number_with_delimiter(canteen_deduction) %></span></p>
+                <p style="text-align: right; font-weight: 600; padding-right: 10px; font-size: 16px; margin-bottom: 0; font-family: courier, monospace"><%= number_with_delimiter(total_deduction) %></p>
+                <% all_total_deduction += total_deduction %>
+                <% department_total_deduction += total_deduction %>
+                <% shift_total_deduction += total_deduction %>
+              </td>
+              <td style="vertical-align: top; padding: 10px; width: 200px;">
+                <p style="font-weight: 600; margin: 0; text-align: center; font-size: 16px">Net Pay</p>
+
+                <% if employee.payment_method == "Bank" %>
+                  <p style="font-weight: 900;font-size: 20px; margin: 80px 0 0; text-align: center">Bank<br/> Transfer</p>
+                <% elsif employee.payment_method == "Jazz Cash" %>
+                  <p style="font-weight: 900;font-size: 20px; margin: 80px 0 0; text-align: center">Jazz Cash<br/> Transfer</p>
+                <% else %>
+                  <p style="font-weight: 600;font-size: 20px; margin: 80px 0 0; text-align: center"><br/></p>
+                <% end %>
+                <p style="font-weight: 600; text-align: center; font-size: 13px;margin: 80px 0 10px">Net Payable</p>
+                <p style="margin: 0;text-align: center;font-size: 20px;font-family: courier, monospace;font-weight: 900;border-top: 2px solid #000;padding-top: 10px;"><%= number_with_delimiter(pay_invoice.total_earning - total_deduction) %></p>
+                <% total_net_payable += (pay_invoice.total_earning - total_deduction) %>
+                <% department_total_net_payable += (pay_invoice.total_earning - total_deduction) %>
+                <% shift_total_net_payable += (pay_invoice.total_earning - total_deduction) %>
+              </td>
+              </tbody>
+            </table>
+          </div>
+          </div>
+          <% if slip_count == 5 %>
+            <div class="page-break"></div>
+            <% slip_count = 0 %>
+          <% end %>
+        <% end %>
+        <div style="border-top: 2px solid #000; margin-top: 70px; padding-top: 15px; width: 90%; margin-left: 5%; margin-right: 5%;">
+          <table style="width: 100%; text-align: right;">
+            <tbody>
+            <tr>
+              <td style="font-weight: 600; font-style: italic; font-size: 16px; text-align: right">Department Total:</td>
+              <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff"><%= number_with_delimiter(department_total_gross_pay) %></td>
+              <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff"><%= number_with_delimiter(department_total_salary_arrear) %></td>
+              <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff; border-left: 5px solid #fff"><%= number_with_delimiter(department_total_overtime) %></td>
+              <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff; border-left: 5px solid #fff"><%= number_with_delimiter(department_total_earning) %></td>
+              <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff; border-left: 5px solid #fff"><%= number_with_delimiter(department_total_deduction) %></td>
+              <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-left: 5px solid #fff"><%= number_with_delimiter(department_total_net_payable) %></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <% if worker_employee[1].values.last != department_employees[1] %>
+          <div class="page-break"></div>
+        <% end %>
+        <% slip_count = 0 %>
+      <% end %>
+      <div style="border-top: 2px solid #000; margin-top: 70px; padding-top: 15px; width: 90%; margin-left: 5%; margin-right: 5%;">
+        <table style="width: 100%; text-align: right;">
+          <tbody>
+          <tr>
+            <td style="font-weight: 600; font-style: italic; font-size: 16px; text-align: right">Shift Total:</td>
+            <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff"><%= number_with_delimiter(shift_total_gross_pay) %></td>
+            <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff"><%= number_with_delimiter(shift_total_salary_arrear) %></td>
+            <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff; border-left: 5px solid #fff"><%= number_with_delimiter(shift_total_overtime) %></td>
+            <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff; border-left: 5px solid #fff"><%= number_with_delimiter(shift_total_earning) %></td>
+            <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff; border-left: 5px solid #fff"><%= number_with_delimiter(shift_total_deduction) %></td>
+            <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-left: 5px solid #fff"><%= number_with_delimiter(shift_total_net_payable) %></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="page-break"></div>
+      <% slip_count = 0 %>
+    <% end %>
+    <div style="border-top: 2px solid #000; margin-top: 70px; padding-top: 15px; width: 90%; margin-left: 5%; margin-right: 5%;">
+      <table style="width: 100%; text-align: right;">
+        <tbody>
+        <tr style="font-weight: 600; font-size: 16px">
+          <td></td>
+          <td style="padding-bottom: 10px">Gross Pay:</td>
+          <td style="padding-bottom: 10px">Salary Arrears:</td>
+          <td style="padding-bottom: 10px">Overtime Total</td>
+          <td style="padding-bottom: 10px">Total Earning</td>
+          <td style="padding-bottom: 10px">Deductions</td>
+          <td style="padding-bottom: 10px">Net Pay</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; font-style: italic; font-size: 16px; text-align: right">Company Total:</td>
+          <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff"><%= number_with_delimiter(total_gross_pay) %></td>
+          <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff"><%= number_with_delimiter(total_salary_arrear) %></td>
+          <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff; border-left: 5px solid #fff"><%= number_with_delimiter(total_overtime) %></td>
+          <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff; border-left: 5px solid #fff"><%= number_with_delimiter(all_total_earning) %></td>
+          <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-right: 5px solid #fff; border-left: 5px solid #fff"><%= number_with_delimiter(all_total_deduction) %></td>
+          <td style="padding: 5px 0; border-top: 2px solid #000; border-bottom: 2px solid #000; font-size: 16px;font-family: courier, monospace;font-weight: 600;border-left: 5px solid #fff"><%= number_with_delimiter(total_net_payable) %></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+<% else %>
+  <div style="width:1400px;padding:20px;box-sizing:border-box;position:relative;font-family:Lato,sans-serif">
+    Access Denied
+  </div>
+<% end %>
+</body>
+</html>
+<style type="text/css">
+    .page-break { display:block; clear:both; page-break-after:always; }
+    .message{
+        border: 2px solid #ececec;
+        padding: 10px;
+        font-size: 12px;
+    }
+    .message p{
+        margin: 0;
+    }
+    @font-face{
+        font-family: Lato;
+        -fs-pdf-font-embed: embed;
+        -fs-pdf-font-encoding: Identity-H;
+    }
+    body{
+        margin:0;
+    }
+    .float-container:after{
+        content: "";
+        display: block;
+        clear: both;
+    }
+</style>

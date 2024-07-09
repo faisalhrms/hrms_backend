@@ -1,0 +1,16 @@
+json.sub_time_slot do
+  json.id           					@sub_time_slot.try(:id)
+	json.company_id 						@sub_time_slot.try(:company_id)
+	json.location_id 						@sub_time_slot.try(:location_id)
+	json.branch_id 							@sub_time_slot.try(:branch_id)
+	json.time_slot_id 					@sub_time_slot.try(:time_slot_id)
+	json.name 									@sub_time_slot.try(:name)
+	json.code 									@sub_time_slot.try(:code)
+	json.start_time 						@sub_time_slot.try(:start_time)
+	json.end_time 							@sub_time_slot.try(:end_time)
+	json.start_buffer 					@sub_time_slot.try(:start_buffer)
+	json.end_buffer 						@sub_time_slot.try(:end_buffer)
+	json.is_active 							@sub_time_slot.try(:is_active)
+	json.total_working_minutes 	@sub_time_slot.try(:total_working_minutes)
+	json.description 						@sub_time_slot.try(:description)
+end

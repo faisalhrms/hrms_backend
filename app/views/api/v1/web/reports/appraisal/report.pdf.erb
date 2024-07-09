@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Appraisal Report</title>
+  <style>
+      table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+      }
+      td{
+          font-size: 18px;
+          padding: 5px;
+      }
+  </style>
+</head>
+<body>
+<div>
+  <table width="100%">
+    <tr style="text-align: center; font-size: 20px">
+      <th>PERFORMANCE REVIEW OF KEY AREAS OF WORK</th>
+    </tr>
+    <tr style="text-align: center;">
+      <td>(<%= @fiscal_year_data.first.name %>)</td>
+    </tr>
+  </table>
+</div><br>
+<div>
+  <table width="100%">
+    <tr>
+      <td style="width: 20%"><b>Employee Name:</b></td>
+      <td style="width: 30%"><%= @employee_data.first.first_name %> <%= @employee_data.first.last_name %></td>
+      <td style="width: 25%"><b>Emp. No:</b></td>
+      <td style="width: 25%"><%= @employee_data.first.personal_number %></td>
+    </tr>
+    <tr>
+      <td style="width: 20%"><b>Position Title:</b></td>
+      <td style="width: 30%"><%= @designation.first.name %></td>
+      <td style="width: 25%"><b>Grade:</b></td>
+      <td style="width: 25%"><%= @grade.first.name %></td>
+    </tr>
+    <tr>
+      <td style="width: 20%"><b>Department:</b></td>
+      <td style="width: 30%"><%= @department.first.name %></td>
+      <td style="width: 25%"><b>Date of Joining:</b></td>
+      <td style="width: 25%"><%= @employee_data.first.joining_date.strftime("%B %d, %Y") %></td>
+    </tr>
+    <tr>
+      <td style="width: 20%"><b>Line Manager (Name):</b></td>
+      <td style="width: 30%"><%= @line_manager.first.first_name %> <%= @line_manager.first.last_name %></td>
+      <td style="width: 25%"><b>Line Manager (Emp. No):</b></td>
+      <td style="width: 25%"><%= @line_manager.first.id %></td>
+    </tr>
+  </table>
+</div><br>
+<div>
+  <table width="100%">
+    <tr style="text-align: center;">
+      <td style="width: 5%"><b>Sr. No.</b></td>
+      <td style="width: 30%"><b>Goals and Objectives</b></td>
+      <td style="width: 25%"><b>KPI's</b></td>
+      <td style="width: 10%"><b>Weight %</b></td>
+      <td style="width: 15%"><b>Ratings</b></td>
+      <td style="width: 15%"><b>Weighted Score</b></td>
+    </tr>
+  </table>
+</div><br>
+<div>
+  <table width="100%">
+    <% count = 1 %>
+    <% total_rating = 0 %>
+    <% total_score = 0 %>
+    <% @task_data.each do |goals| %>
+      <% t_id = goals.first.id %>
+      <tr>
+        <td style="width: 5%; text-align: center;"><b><%= count %></b></td>
+        <td style="width: 30%"><%= goals.first.goal %></td>
+        <td style="width: 25%; text-align: center;"><b>KPI's</b></td>
+        <td style="width: 10%; text-align: center;"><%= goals.first.weight %></td>
+        <% competency = Appraisal.where(:objective_id => @objective_setting.first.id, :task_id => goals.first.id) %>
+        <% if competency.present? %>
+          <% rating = Competency.where(:id => competency.first.competency_id) %>
+          <% r = rating.first.rating %>
+          <% total_rating = total_rating + r %>
+          <% s = ((goals.first.weight.to_i/100.to_f)*rating.first.rating).round(2)  %>
+          <% total_score = total_score + s %>
+          <td style="width: 15%; text-align: center;"><%= r %></td>
+          <td style="width: 15%; text-align: center;"><%= s %></td>
+        <% else %>
+          <td style="width: 15%; text-align: center;">-</td>
+          <td style="width: 15%; text-align: center;">-</td>
+        <% end %>
+      </tr>
+      <% @sub_task_data.each do |id| %>
+        <tr>
+          <% if id.task_id == t_id %>
+            <td colspan="6" style="text-align: center"><%= id.kpi %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      <% count = count + 1 %>
+    <% end %>
+    <tr>
+      <td style="width: 5%; text-align: center;"></td>
+      <td colspan="3"><b>Total Weightage:</b></td>
+      <td style="text-align: center; width: 10%"><b><%= @total %> %</b></td>
+      <td style="width: 20%; text-align: center;"></td>
+    </tr>
+    <tr>
+      <td style="width: 5%; text-align: center;"></td>
+      <td colspan="4"><b>Weighted Average Score:</b></td>
+      <td style="width: 15%; text-align: center;"><%= total_score %></td>
+    </tr>
+    <tr>
+      <td style="width: 5%; text-align: center;"></td>
+      <td colspan="4"><b>Net Score:</b></td>
+      <% net_score =  (total_score*0.70).round(2) %>
+      <td style="width: 15%; text-align: center;"><%= net_score %></td>
+    </tr>
+  </table>
+</div><br>
+</body>
+</html>

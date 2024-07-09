@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Human Capital Management</title>
+		<style type="text/css">
+		.main_heading_block{
+			padding: 20px;
+			border: 2px solid rgba(0, 0, 0, 0.14);
+		}
+		.main_heading_block:after{
+			content: "";
+			display: block;
+			clear: both;
+		}
+		.main_heading_block_img{			
+		    padding: 0px 0px 0px 20px;
+		    width: 100px;
+		    float: left;
+		}
+		.main_heading_block_heading{
+			width: 800px;
+			text-align: center;
+			float: left;
+		}
+		.main_employee_info_block{
+			padding: 20px;
+			border: 2px solid rgba(0, 0, 0, 0.14);
+		}
+		.main_employee_info_block:after{
+			content: "";
+			display: block;
+			clear: both;
+		}
+		.main_employee_info_block_info{
+			width: 800px;
+		    float: left;
+		}
+		.main_employee_info_block_img{
+			width: 200px;
+		    float: left;
+		}
+		.main_employee_info_block_min{
+			    width: 230px;
+			    float: left;
+			    padding: 10px;
+		}
+		.main_employee_info_block_name{
+			width: 60px;
+		    float: left;
+		    font-weight: 900;
+		}
+		.main_employee_info_block_name_text{
+			text-decoration: underline;
+			width: 170px;
+			float: left;
+		}
+		.main_employee_info_block_salary_unit{
+			width: 90px;
+		    float: left;
+		    font-weight: 900;
+		}
+		.main_employee_info_block_salary_unit_text{
+			text-decoration: underline;
+			width: 140px;
+			float: left;
+		}
+		.main_employee_info_block_designation{
+			width: 95px;
+		    float: left;
+		    font-weight: 900;
+		}
+		.main_employee_info_block_designation_text{
+			text-decoration: underline;
+			width: 135px;
+			float: left;
+		}
+		.main_employee_info_block_location{
+			width: 75px;
+		    float: left;
+		    font-weight: 900;
+		}
+		.main_employee_info_block_location_text{
+			text-decoration: underline;
+			width: 155px;
+			float: left;
+		}
+		.main_employee_info_block_grade{
+			width: 60px;
+		    float: left;
+		    font-weight: 900;
+		}
+		.main_employee_info_block_grade_text{
+			text-decoration: underline;
+			width: 170px;
+			float: left;
+		}
+		.main_employee_info_block_department{
+			width: 95px;
+		    float: left;
+		    font-weight: 900;
+		}
+		.main_employee_info_block_department_text{
+			text-decoration: underline;
+			width: 135px;
+			float: left;
+		}
+		.main_employee_info_block_card_no{
+			width: 80px;
+		    float: left;
+		    font-weight: 900;
+		}
+		.main_employee_info_block_card_no_text{
+			text-decoration: underline;
+			width: 150px;
+			float: left;
+		}
+	    .hand_over_to_employee{
+	    	padding: 20px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    }
+	    .hand_over_to_employee:after{
+			content: "";
+			display: block;
+			clear: both;
+		}
+	    .hand_over_to_employee_heading{
+		    font-weight: 900;
+		    font-size: 20px;
+	    }
+	    .hand_over_to_employee_table{
+	    	width:950px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	padding: 20px;
+	    	float: left;
+	    }
+	    .hand_over_to_employee_table_header{
+	    	width:500px;
+	    	font-weight: 900;
+	    }
+	    .hand_over_to_employee_table_header_asset_name{
+	    	width: 200px;
+		    float: left;
+	    }
+	    .hand_over_to_employee_table_header_entitled_name{
+	    	width: 100px;
+		    float: left;
+	    }
+	    .hand_over_to_employee_table_header_received_name{
+	    	width: 100px;
+		    float: left;
+	    }
+	    .hand_over_to_employee_table_header_hand_over_name{
+	    	width: 100px;
+		    float: left;
+	    }
+	    .hand_over_to_employee_table_element{
+	    	width:500px;
+	    	float: left;
+	    	padding: 5px 0px;
+	    }
+	    .hand_over_to_employee_table_header_asset_element{
+	    	width: 200px;
+		    float: left;
+		    font-weight: 900;
+	    }
+	    .hand_over_to_employee_table_header_entitled_element{
+	    	width: 100px;
+		    float: left;
+	    }
+	    .hand_over_to_employee_table_header_received_element{
+	    	width: 100px;
+		    float: left;	
+	    }
+	    .hand_over_to_employee_table_header_hand_over_element{
+	    	width: 100px;
+		    float: left;
+	    }
+	    .hand_over_to_employee_table_header_asset_element_box{
+	    	width: 50px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	height: 15px;
+	    }
+	    .hand_over_to_employee_table_header_entitled_element_box{
+	    	width: 50px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	height: 15px;
+	    }
+	    .hand_over_to_employee_table_header_received_element_box{
+	    	width: 50px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	height: 15px;
+	    }
+	    .hand_over_to_employee_table_header_hand_over_element_box{
+	    	width: 50px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	height: 15px;
+	    }
+	    .hand_over_to_employee_footer{
+	    	width:950px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	padding: 20px;
+	    	float: left;
+	    }
+	    .hand_over_to_employee_footer:after{
+			content: "";
+			display: block;
+			clear: both;
+		}
+	    .hand_over_to_employee_footer_date{
+			    width: 310px;
+			    float: left;
+		}
+	    .hand_over_to_employee_footer_date_dash{
+	    }
+	    .hand_over_to_employee_footer_date_text{
+			text-align: center;
+			padding: 20px 0px;
+		}
+	    .hand_over_to_employee_footer_received{
+			    width: 310px;
+			    float: left;
+		}
+	    .hand_over_to_employee_footer_received_dash{
+
+		}
+	    .hand_over_to_employee_footer_received_text{
+			text-align: center;
+			padding: 20px 0px;
+		}
+	    .hand_over_to_employee_footer_hr_department{
+			    width: 310px;
+			    float: left;
+		}
+	    .hand_over_to_employee_footer_hr_department_dash{
+
+		}
+	    .hand_over_to_employee_footer_hr_department_text{
+	    	text-align: center;
+	    	padding: 20px 0px;
+		}
+	    .return_back_to_company{
+	    	padding: 20px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    }
+	    .return_back_to_company:after{
+			content: "";
+			display: block;
+			clear: both;
+		}
+	    .return_back_to_company_heading{
+		    font-weight: 900;
+		    font-size: 20px;
+	    }
+	    .return_back_to_company_table{
+	    	width:950px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	padding: 20px;
+	    	float: left;
+	    }
+	    .return_back_to_company_table_header{
+	    	width:920px;
+	    	font-weight: 900;
+	    }
+	    .return_back_to_company_table_header_asset_name{
+	    	width: 200px;
+		    float: left;
+	    }
+	    .return_back_to_company_table_header_received_by_employee{
+	    	width: 180px;
+		    float: left;
+	    }
+	    .return_back_to_company_table_header_received_by_concerned{
+	    	width: 180px;
+		    float: left;
+	    }
+	    .return_back_to_company_table_header_received_by_name{
+	    	width: 180px;
+		    float: left;
+	    }
+	    .return_back_to_company_table_header_received_by_signature{
+	    	width: 180px;
+		    float: left;
+	    }
+	    .return_back_to_company_table_element{
+	    	width:920px;
+	    	float: left;
+	    	padding: 5px 0px;
+	    }
+	    .return_back_to_company_table_header_asset_element{
+	    	width: 200px;
+		    float: left;
+		    font-weight: 900;
+	    }
+	    .return_back_to_company_table_header_received_by_employee_element{
+	    	width: 180px;
+		    float: left;
+	    }
+	    .return_back_to_company_table_header_received_by_concerned_element{
+	    	width: 180px;
+		    float: left;	
+	    }
+	    .return_back_to_company_table_header_received_by_name_element{
+	    	width: 180px;
+		    float: left;
+	    }
+	    .return_back_to_company_table_header_received_by_signature_element{
+	    	width: 180px;
+		    float: left;
+	    }
+	    .return_back_to_company_table_header_asset_element_box{
+	    	width: 150px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	height: 15px;
+	    }
+	    .return_back_to_company_table_header_received_by_employee_element_box{
+	    	width: 150px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	height: 15px;
+	    }
+	    .return_back_to_company_table_header_received_by_concerned_element_box{
+	    	width: 150px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	height: 15px;
+	    }
+	    .return_back_to_company_table_header_received_by_name_element_box{
+	    	width: 150px;
+	    	border-bottom: 2px solid rgba(0, 0, 0, 0.14);
+	    	height: 15px;
+	    }
+	    .return_back_to_company_table_header_received_by_signature_element_box{
+	    	width: 150px;
+	    	border-bottom: 2px solid rgba(0, 0, 0, 0.14);
+	    	height: 15px;
+	    }
+	    .return_back_to_company_footer{
+	    	width:950px;
+	    	border: 2px solid rgba(0, 0, 0, 0.14);
+	    	padding: 20px;
+	    	float: left;
+	    }
+	    .return_back_to_company_footer:after{
+			content: "";
+			display: block;
+			clear: both;
+		}
+	    .return_back_to_company_footer_date{
+			    width: 310px;
+			    float: left;
+		}
+	    .return_back_to_company_footer_date_dash{
+	    }
+	    .return_back_to_company_footer_date_text{
+			text-align: center;
+			padding: 20px 0px;
+		}
+	    .return_back_to_company_footer_received{
+			    width: 310px;
+			    float: left;
+		}
+	    .return_back_to_company_footer_received_dash{
+
+		}
+	    .return_back_to_company_footer_received_text{
+			text-align: center;
+			padding: 20px 0px;
+		}
+	    .return_back_to_company_footer_hr_department{
+			    width: 310px;
+			    float: left;
+		}
+	    .return_back_to_company_footer_hr_department_dash{
+
+		}
+	    .return_back_to_company_footer_hr_department_text{
+	    	text-align: center;
+	    	padding: 20px 0px;
+		}
+		</style>
+	</head>
+	<body>
+	<div style="box-sizing:border-box;position:relative;padding:0px;margin:0px;text-align:left;width: 1050px;border: 2px solid rgba(0, 0, 0, 0.14);">
+		<div class="main_heading_block">
+			<div class="main_heading_block_img">
+				<% if not @employee.company.nil? %>
+					<% if not @employee.company.avatar.nil? %>
+						<img src=<%=@employee.company.present? ? @employee.company.avatar.url : "" %> width="100px">
+					<% end %>
+				<% end %>
+			</div>
+			<div class="main_heading_block_heading">
+				<h2><%= @employee.company_name %></h2>
+				<p style="font-size: 20px;">Human Resource - Employee Asset Hand - Over Form</p>
+			</div>
+		</div>
+		<div class="main_employee_info_block">
+			<div class="main_employee_info_block_info">
+				<div class="main_employee_info_block_min">
+					<div class="main_employee_info_block_name" >Name:</div>
+					<div class="main_employee_info_block_name_text"><%= @employee.present? ? "#{@employee.full_name}" : "" %></div>				
+				</div>
+				<div class="main_employee_info_block_min">
+					<div class="main_employee_info_block_salary_unit">Salary Unit:</div>
+					<div class="main_employee_info_block_salary_unit_text"><%= @employee.salary_unit_name %></div>
+				</div>
+				<div class="main_employee_info_block_min">
+					<div class="main_employee_info_block_designation">Designation:</div>
+					<div class="main_employee_info_block_designation_text"><%= @employee.designation_name %></div>
+				</div>
+				<div class="main_employee_info_block_min">
+					<div class="main_employee_info_block_location">Location:</div>
+					<div class="main_employee_info_block_location_text"><%= @employee.branch_name %></div>
+				</div>
+				<div class="main_employee_info_block_min">
+					<div class="main_employee_info_block_grade">Grade:</div>
+					<div class="main_employee_info_block_grade_text"><%= @employee.grade_name %></div>
+				</div>
+				<div class="main_employee_info_block_min">
+					<div class="main_employee_info_block_department">Department:</div>
+					<div class="main_employee_info_block_department_text"><%= @employee.department_name %></div>
+				</div>
+				<div class="main_employee_info_block_min">
+					<div class="main_employee_info_block_card_no">Emp Id.:</div>
+					<div class="main_employee_info_block_card_no_text"><%= @employee.employee_code %></div>
+				</div>
+			</div>
+			<div class="main_employee_info_block_img">
+				<% if not @employee.nil? %>
+					<% if not @employee.avatar.nil? %>
+						<img src=<%=@employee.present? ? @employee.avatar.url : "" %> width="150px">
+					<% end %>
+				<% end %>
+			</div>
+		</div>
+		<div class="hand_over_to_employee">
+			<div class="hand_over_to_employee_heading">Hand Over to Employee:</div>
+			<div class="hand_over_to_employee_table">
+				<div class="hand_over_to_employee_table_header">
+					<div class="hand_over_to_employee_table_header_asset_name">Asset Name</div>
+					<div class="hand_over_to_employee_table_header_entitled_name">Entitled</div>
+					<div class="hand_over_to_employee_table_header_received_name">Received</div>
+					<div class="hand_over_to_employee_table_header_hand_over_name">Hand Over</div>
+				</div>
+				<div class="hand_over_to_employee_table_element">
+					<div class="hand_over_to_employee_table_header_asset_element">Mobile Phone : </div>
+					<div class="hand_over_to_employee_table_header_entitled_element"><div class="hand_over_to_employee_table_header_entitled_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_received_element"><div class="hand_over_to_employee_table_header_received_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_hand_over_element"><div class="hand_over_to_employee_table_header_hand_over_element_box"></div></div>
+				</div>
+				<div class="hand_over_to_employee_table_element">
+					<div class="hand_over_to_employee_table_header_asset_element">Mobile Sim : </div>
+					<div class="hand_over_to_employee_table_header_entitled_element"><div class="hand_over_to_employee_table_header_entitled_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_received_element"><div class="hand_over_to_employee_table_header_received_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_hand_over_element"><div class="hand_over_to_employee_table_header_hand_over_element_box"></div></div>
+				</div>
+				<div class="hand_over_to_employee_table_element">
+					<div class="hand_over_to_employee_table_header_asset_element">Laptop : </div>
+					<div class="hand_over_to_employee_table_header_entitled_element"><div class="hand_over_to_employee_table_header_entitled_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_received_element"><div class="hand_over_to_employee_table_header_received_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_hand_over_element"><div class="hand_over_to_employee_table_header_hand_over_element_box"></div></div>
+				</div>
+				<div class="hand_over_to_employee_table_element">
+					<div class="hand_over_to_employee_table_header_asset_element">Car : </div>
+					<div class="hand_over_to_employee_table_header_entitled_element"><div class="hand_over_to_employee_table_header_entitled_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_received_element"><div class="hand_over_to_employee_table_header_received_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_hand_over_element"><div class="hand_over_to_employee_table_header_hand_over_element_box"></div></div>
+				</div>
+				<div class="hand_over_to_employee_table_element">
+					<div class="hand_over_to_employee_table_header_asset_element">Bike : </div>
+					<div class="hand_over_to_employee_table_header_entitled_element"><div class="hand_over_to_employee_table_header_entitled_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_received_element"><div class="hand_over_to_employee_table_header_received_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_hand_over_element"><div class="hand_over_to_employee_table_header_hand_over_element_box"></div></div>
+				</div>
+				<div class="hand_over_to_employee_table_element">
+					<div class="hand_over_to_employee_table_header_asset_element">External Hard Drive : </div>
+					<div class="hand_over_to_employee_table_header_entitled_element"><div class="hand_over_to_employee_table_header_entitled_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_received_element"><div class="hand_over_to_employee_table_header_received_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_hand_over_element"><div class="hand_over_to_employee_table_header_hand_over_element_box"></div></div>
+				</div>
+				<div class="hand_over_to_employee_table_element">
+					<div class="hand_over_to_employee_table_header_asset_element">USB Storage Drive : </div>
+					<div class="hand_over_to_employee_table_header_entitled_element"><div class="hand_over_to_employee_table_header_entitled_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_received_element"><div class="hand_over_to_employee_table_header_received_element_box"></div></div>
+					<div class="hand_over_to_employee_table_header_hand_over_element"><div class="hand_over_to_employee_table_header_hand_over_element_box"></div></div>
+				</div>
+			</div>
+			<div class="hand_over_to_employee_footer">
+				<div class="hand_over_to_employee_footer_date">
+					<div class="hand_over_to_employee_footer_date_dash">
+						_____________________________________
+					</div>
+					<div class="hand_over_to_employee_footer_date_text">
+						Date
+					</div>
+				</div>
+				<div class="hand_over_to_employee_footer_received">
+					<div class="hand_over_to_employee_footer_received_dash">
+					   _____________________________________
+					</div>
+					<div class="hand_over_to_employee_footer_received_text">
+						Received by (Employee Signature)
+					</div>
+				</div>
+				<div class="hand_over_to_employee_footer_hr_department">
+					<div class="hand_over_to_employee_footer_hr_department_dash">
+						_____________________________________
+					</div>
+					<div class="hand_over_to_employee_footer_hr_department_text">
+						HR Department (Signature & Stamp)
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="return_back_to_company">
+			<div class="return_back_to_company_heading">Return back to Company:</div>
+			<div class="return_back_to_company_table">
+				<div class="return_back_to_company_table_header">
+					<div class="return_back_to_company_table_header_asset_name">Asset Name</div>
+					<div class="return_back_to_company_table_header_received_by_employee">Returned By Employee</div>
+					<div class="return_back_to_company_table_header_received_by_concerned">Received By Concerned (HOD)</div>
+					<div class="return_back_to_company_table_header_received_by_name">Received By (Name)</div>
+					<div class="return_back_to_company_table_header_received_by_signature">Received By (Signature)</div>
+				</div>
+				<div class="return_back_to_company_table_element">
+					<div class="return_back_to_company_table_header_asset_element">Mobile Phone : </div>
+					<div class="return_back_to_company_table_header_received_by_employee_element"><div class="return_back_to_company_table_header_received_by_employee_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_concerned_element"><div class="return_back_to_company_table_header_received_by_concerned_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_name_element"><div class="return_back_to_company_table_header_received_by_name_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_signature_element"><div class="return_back_to_company_table_header_received_by_signature_element_box"></div></div>
+				</div>
+				<div class="return_back_to_company_table_element">
+					<div class="return_back_to_company_table_header_asset_element">Mobile Sim : </div>
+					<div class="return_back_to_company_table_header_received_by_employee_element"><div class="return_back_to_company_table_header_received_by_employee_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_concerned_element"><div class="return_back_to_company_table_header_received_by_concerned_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_name_element"><div class="return_back_to_company_table_header_received_by_name_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_signature_element"><div class="return_back_to_company_table_header_received_by_signature_element_box"></div></div>
+				</div>
+				<div class="return_back_to_company_table_element">
+					<div class="return_back_to_company_table_header_asset_element">Laptop : </div>
+					<div class="return_back_to_company_table_header_received_by_employee_element"><div class="return_back_to_company_table_header_received_by_employee_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_concerned_element"><div class="return_back_to_company_table_header_received_by_concerned_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_name_element"><div class="return_back_to_company_table_header_received_by_name_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_signature_element"><div class="return_back_to_company_table_header_received_by_signature_element_box"></div></div>
+				</div>
+				<div class="return_back_to_company_table_element">
+					<div class="return_back_to_company_table_header_asset_element">Car : </div>
+					<div class="return_back_to_company_table_header_received_by_employee_element"><div class="return_back_to_company_table_header_received_by_employee_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_concerned_element"><div class="return_back_to_company_table_header_received_by_concerned_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_name_element"><div class="return_back_to_company_table_header_received_by_name_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_signature_element"><div class="return_back_to_company_table_header_received_by_signature_element_box"></div></div>
+				</div>
+				<div class="return_back_to_company_table_element">
+					<div class="return_back_to_company_table_header_asset_element">Bike : </div>
+					<div class="return_back_to_company_table_header_received_by_employee_element"><div class="return_back_to_company_table_header_received_by_employee_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_concerned_element"><div class="return_back_to_company_table_header_received_by_concerned_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_name_element"><div class="return_back_to_company_table_header_received_by_name_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_signature_element"><div class="return_back_to_company_table_header_received_by_signature_element_box"></div></div>
+				</div>
+				<div class="return_back_to_company_table_element">
+					<div class="return_back_to_company_table_header_asset_element">External Hard Drive : </div>
+					<div class="return_back_to_company_table_header_received_by_employee_element"><div class="return_back_to_company_table_header_received_by_employee_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_concerned_element"><div class="return_back_to_company_table_header_received_by_concerned_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_name_element"><div class="return_back_to_company_table_header_received_by_name_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_signature_element"><div class="return_back_to_company_table_header_received_by_signature_element_box"></div></div>
+				</div>
+				<div class="return_back_to_company_table_element">
+					<div class="return_back_to_company_table_header_asset_element">USB Storage Drive : </div>
+					<div class="return_back_to_company_table_header_received_by_employee_element"><div class="return_back_to_company_table_header_received_by_employee_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_concerned_element"><div class="return_back_to_company_table_header_received_by_concerned_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_name_element"><div class="return_back_to_company_table_header_received_by_name_element_box"></div></div>
+					<div class="return_back_to_company_table_header_received_by_signature_element"><div class="return_back_to_company_table_header_received_by_signature_element_box"></div></div>
+				</div>
+			</div>
+			<div class="return_back_to_company_footer">
+				<div class="return_back_to_company_footer_date">
+					<div class="return_back_to_company_footer_date_dash">
+						_____________________________________
+					</div>
+					<div class="return_back_to_company_footer_date_text">
+						Date
+					</div>
+				</div>
+				<div class="return_back_to_company_footer_received">
+					<div class="return_back_to_company_footer_received_dash">
+					   _____________________________________
+					</div>
+					<div class="return_back_to_company_footer_received_text">
+						Received by (Employee Signature)
+					</div>
+				</div>
+				<div class="return_back_to_company_footer_hr_department">
+					<div class="return_back_to_company_footer_hr_department_dash">
+						_____________________________________
+					</div>
+					<div class="return_back_to_company_footer_hr_department_text">
+						HR Department (Signature & Stamp)
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</body>
+</html>
