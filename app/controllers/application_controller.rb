@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :null_session
   before_action :authenticate_user_from_token!
+  before_action :set_default_response_format
 
   private
   def save_excel_file(book, file_name)
@@ -50,5 +51,7 @@ class ApplicationController < ActionController::Base
   def record_not_found
     render status:404, json: {message: "No Record Found"}
   end
-
+  def set_default_response_format
+    request.format = :json
+  end
 end

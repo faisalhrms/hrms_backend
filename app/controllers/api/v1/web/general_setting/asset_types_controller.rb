@@ -1,16 +1,16 @@
 class Api::V1::Web::GeneralSetting::AssetTypesController < ApplicationController
 
-	before_filter :set_asset_type, :only => [:show, :update, :destroy]
+	before_action :set_asset_type, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @asset_types = AssetType.all.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/asset_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/asset_types/index'
   end
 
   def active_list
     @asset_types = AssetType.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/asset_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/asset_types/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::GeneralSetting::AssetTypesController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/general_setting/asset_types/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/asset_types/show'
   end
 
   def update

@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::AssetDetailsController < ApplicationController
 
-	before_filter :set_asset_detail, :only => [:show, :update, :destroy]
+	before_action :set_asset_detail, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::Organization::AssetDetailsController < ApplicationController
     else
       @asset_details = AssetDetail.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/organization/asset_details/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/asset_details/index'
   end
 
   def filter_data
     @asset_details = AssetDetail.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/organization/asset_details/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/asset_details/index'
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::Web::Organization::AssetDetailsController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/asset_details/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/asset_details/show'
   end
 
   def update

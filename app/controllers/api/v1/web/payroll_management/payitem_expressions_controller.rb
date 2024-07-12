@@ -1,16 +1,16 @@
 class Api::V1::Web::PayrollManagement::PayitemExpressionsController < ApplicationController
 
-	before_filter :set_payitem_expression, :only => [:show, :update, :destroy]
+	before_action :set_payitem_expression, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @payitem_expressions = PayitemExpression.all.order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/payitem_expressions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/payitem_expressions/index'
   end
 
   def filter_data
     @payitem_expressions = PayitemExpression.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/payitem_expressions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/payitem_expressions/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::PayrollManagement::PayitemExpressionsController < Applicatio
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/payitem_expressions/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/payitem_expressions/show'
   end
 
   def update

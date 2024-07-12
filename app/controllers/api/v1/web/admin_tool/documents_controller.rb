@@ -1,6 +1,6 @@
 class Api::V1::Web::AdminTool::DocumentsController < ApplicationController
 
-	before_filter :set_document, :only => [:show, :update, :destroy]
+	before_action :set_document, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::AdminTool::DocumentsController < ApplicationController
     else
       @documents = Document.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/documents/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/documents/index'
   end
 
   def create
@@ -22,7 +22,7 @@ class Api::V1::Web::AdminTool::DocumentsController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/admin_tool/documents/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/documents/show'
   end
 
   def update

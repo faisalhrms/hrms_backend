@@ -12,7 +12,7 @@ class Api::V1::Web::TokensController < ApplicationController
         @user_permissions = @user.role.role_permissions
       end
       @notis = user.recieved_notifications.where(:did_read => false).order('id DESC')
-      render status:200, template: 'api/v1/web/tokens/validate.json.jbuilder'
+      render status:200, template: 'api/v1/web/tokens/validate'
     else
       render json: {:errors => ["Invalid login credentials"], debug_error_from: "DEBUG_INFO: authenticate_user_from_token!"}, :status => 401
     end

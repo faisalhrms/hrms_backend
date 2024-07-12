@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::AttendanceRelaxationsController < ApplicationController
 
-	before_filter :set_attendance_relaxation, :only => [:show, :update, :destroy]
+	before_action :set_attendance_relaxation, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::AttendanceManagement::AttendanceRelaxationsController < Appl
     else
       @attendance_relaxations = AttendanceRelaxation.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/attendance_management/attendance_relaxations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_relaxations/index'
   end
 
   def filter_data
     @attendance_relaxations = AttendanceRelaxation.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_relaxations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_relaxations/index'
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceRelaxationsController < Appl
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/attendance_relaxations/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_relaxations/show'
   end
 
   def update

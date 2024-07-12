@@ -1,6 +1,6 @@
 class Api::V1::Web::EmployeeManagement::TemporaryStaffsController < ApplicationController
 
-	before_filter :set_temporary_staff, :only => [:show, :update, :converted_to_employee, :download_temp_staff]
+	before_action :set_temporary_staff, :only => [:show, :update, :converted_to_employee, :download_temp_staff]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def temporary_staff_index
@@ -29,7 +29,7 @@ class Api::V1::Web::EmployeeManagement::TemporaryStaffsController < ApplicationC
     if not params[:cost_center_id].blank?
       @temporary_staffs = TemporaryStaff.cost_center_related_employee(@temporary_staffs, params[:cost_center_id].to_i)
     end
-    render status:200, template: 'api/v1/web/employee_management/temporary_staffs/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/temporary_staffs/index'
   end
 
   def create
@@ -52,7 +52,7 @@ class Api::V1::Web::EmployeeManagement::TemporaryStaffsController < ApplicationC
   end
 
   def show
-    render status:200, template: 'api/v1/web/employee_management/temporary_staffs/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/temporary_staffs/show'
   end
 
   def converted_to_employee
@@ -148,7 +148,7 @@ class Api::V1::Web::EmployeeManagement::TemporaryStaffsController < ApplicationC
 
   def fetch_attendance
     @date_range = (params[:start_date].to_date..params[:end_date].to_date).to_a.map{|x| x.to_date}
-    render status:200, template: 'api/v1/web/employee_management/temporary_staffs/fetch_attendance.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/temporary_staffs/fetch_attendance'
   end
 
 	private

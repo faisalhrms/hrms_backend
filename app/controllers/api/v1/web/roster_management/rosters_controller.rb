@@ -1,6 +1,6 @@
 class Api::V1::Web::RosterManagement::RostersController < ApplicationController
 
-	before_filter :set_roster, :only => [:destroy]
+	before_action :set_roster, :only => [:destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def roster_index
@@ -13,7 +13,7 @@ class Api::V1::Web::RosterManagement::RostersController < ApplicationController
     @employees = Employee.where(:id => employee_ids).includes(:location, :branch, :department, :grade)
     filter_employee_roster_on_request
     @employee_roster_data = EmployeeRoster.group_by_employee(@new_date_range, @employees.ids)
-    render status:200, template: 'api/v1/web/roster_management/rosters/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/rosters/index'
   end
 
   def export_roster
@@ -235,7 +235,7 @@ class Api::V1::Web::RosterManagement::RostersController < ApplicationController
       @employees = []
     end
     @employee_roster_data = EmployeeRoster.group_by_employee(@new_date_range, @employees.ids)
-    render status:200, template: 'api/v1/web/roster_management/rosters/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/rosters/index'
   end
 
   def generate_roster_detail
@@ -345,7 +345,7 @@ class Api::V1::Web::RosterManagement::RostersController < ApplicationController
     @employees = @employees.includes(:location, :branch, :department, :grade) if @employees.present?
     ###################### Time Slot ######################
     @time_slot = TimeSlot.find(params[:time_slot_id])
-    render status:200, template: 'api/v1/web/roster_management/rosters/generate_roster_detail.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/rosters/generate_roster_detail'
   end
 
   def generate_restday_roster_detail
@@ -439,7 +439,7 @@ class Api::V1::Web::RosterManagement::RostersController < ApplicationController
     @employees = @employees.get_by_employee_code(params[:employees].gsub(' ', '').split(',')) if params[:employees].present?
     ###################### Time Slot ######################
     @time_slot = TimeSlot.find(params[:time_slot_id])
-    render status:200, template: 'api/v1/web/roster_management/rosters/generate_restday_roster_detail.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/rosters/generate_restday_roster_detail'
   end
 
   def save_bulk_hiring_shift
@@ -771,14 +771,14 @@ class Api::V1::Web::RosterManagement::RostersController < ApplicationController
   def show
     @employee    = Employee.find params[:employee_id]
     @time_slots = TimeSlot.where(:branch_id => @employee.branch_id, :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/roster_management/rosters/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/rosters/show'
   end
 
   def get_employee_roster
     month_start_date   = (Time.now - 1.month).beginning_of_month
     month_end_date     = (Time.now + 1.month).end_of_month
     @employee_rosters = EmployeeRoster.where(:employee_id => params[:employee_id], :roster_date =>month_start_date.to_date..month_end_date.to_date).order('roster_date ASC')
-    render status:200, template: 'api/v1/web/roster_management/rosters/get_employee_roster.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/rosters/get_employee_roster'
   end
 
   def bulk_update

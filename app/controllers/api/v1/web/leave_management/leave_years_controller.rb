@@ -1,6 +1,6 @@
 class Api::V1::Web::LeaveManagement::LeaveYearsController < ApplicationController
 
-	before_filter :set_leave_year, :only => [:show, :update, :destroy]
+	before_action :set_leave_year, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::LeaveManagement::LeaveYearsController < ApplicationControlle
     else
       @leave_years = LeaveYear.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/leave_management/leave_years/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_years/index'
   end
 
   def filter_data
     @leave_years = LeaveYear.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/leave_management/leave_years/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_years/index'
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::Web::LeaveManagement::LeaveYearsController < ApplicationControlle
   end
 
   def show
-    render status:200, template: 'api/v1/web/leave_management/leave_years/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_years/show'
   end
 
   def update

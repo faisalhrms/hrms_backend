@@ -1,6 +1,6 @@
 class Api::V1::Web::EmployeeManagement::InterneesController < ApplicationController
 
-	before_filter :set_internee, :only => [:show, :update, :converted_to_employee]
+	before_action :set_internee, :only => [:show, :update, :converted_to_employee]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def internee_index
@@ -29,12 +29,12 @@ class Api::V1::Web::EmployeeManagement::InterneesController < ApplicationControl
     if not params[:cost_center_id].blank?
       @internees = Internee.cost_center_related_employee(@internees, params[:cost_center_id].to_i)
     end
-    render status:200, template: 'api/v1/web/employee_management/internees/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/internees/index'
   end
 
   def filter_data
     @internees = Internee.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/employee_management/internees/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/internees/index'
   end
 
   def create
@@ -57,7 +57,7 @@ class Api::V1::Web::EmployeeManagement::InterneesController < ApplicationControl
   end
 
   def show
-    render status:200, template: 'api/v1/web/employee_management/internees/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/internees/show'
   end
 
   def converted_to_employee

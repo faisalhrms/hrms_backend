@@ -41,13 +41,13 @@ class Api::V1::Web::NotificationsController < ApplicationController
 	def index
     user = User.find_by_email(params[:user_email])
     @noti = user.recieved_notifications.order('id DESC')
-    render status:200, template: 'api/v1/web/notifications/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/notifications/index'
   end
 
   def get_lastest_notifications
   	user = User.find_by_email(params[:user_email])
   	@notis = user.recieved_notifications.where(:did_read => false).order('id DESC')
-		render status:200, template: 'api/v1/web/notifications/get_unread_notification.json.jbuilder'
+		render status:200, template: 'api/v1/web/notifications/get_unread_notification'
   end
 
   def mark_as_read

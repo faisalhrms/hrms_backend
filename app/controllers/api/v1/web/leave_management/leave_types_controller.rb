@@ -1,6 +1,6 @@
 class Api::V1::Web::LeaveManagement::LeaveTypesController < ApplicationController
 
-	before_filter :set_leave_type, :only => [:show, :update, :destroy]
+	before_action :set_leave_type, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::LeaveManagement::LeaveTypesController < ApplicationControlle
     else
       @leave_types = LeaveType.where(:company_id => current_user.company_id).order('sort_order ASC')
     end
-    render status:200, template: 'api/v1/web/leave_management/leave_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_types/index'
   end
 
   def non_composite
@@ -18,29 +18,29 @@ class Api::V1::Web::LeaveManagement::LeaveTypesController < ApplicationControlle
     else
       @leave_types = LeaveType.where(:company_id => current_user.company_id, :is_composite => false, :special_leave => false, :is_active => true).order('sort_order ASC')
     end
-    render status:200, template: 'api/v1/web/leave_management/leave_types/non_composite.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_types/non_composite'
   end
 
   def filter_data
     @leave_types = LeaveType.where(:company_id => params[:company_id], :is_active => true).order('sort_order ASC')
-    render status:200, template: 'api/v1/web/leave_management/leave_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_types/index'
   end
 
   def filter_location_data
     @leave_types = LeaveType.where(:location_id => params[:location_id], :is_active => true).order('sort_order ASC')
-    render status:200, template: 'api/v1/web/leave_management/leave_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_types/index'
   end
 
   def inactive_leave_years
     @leave_years = LeaveYear.where(:company_id => current_user.company_id, is_active: false).order('id DESC')
-    render status:200, template: 'api/v1/web/leave_management/leave_years/inactive_leave_years.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_years/inactive_leave_years'
   end
 
   def filter_employee_leave_type
     leave_type_ids = LeaveAllocation.where(:employee => params[:employee_id], :is_active => true).collect(&:leave_type_id)
     @employee = Employee.find_by(id: params[:employee_id])
     @leave_types = LeaveType.where(:id => leave_type_ids, :is_active => true).order('sort_order ASC')
-    render status:200, template: 'api/v1/web/leave_management/leave_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_types/index'
   end
 
   def create
@@ -57,7 +57,7 @@ class Api::V1::Web::LeaveManagement::LeaveTypesController < ApplicationControlle
   end
 
   def show
-    render status:200, template: 'api/v1/web/leave_management/leave_types/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_types/show'
   end
 
   def update

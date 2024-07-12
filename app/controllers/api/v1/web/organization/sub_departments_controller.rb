@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::SubDepartmentsController < ApplicationController
 
-	before_filter :set_sub_department, :only => [:show, :update, :destroy]
+	before_action :set_sub_department, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -22,7 +22,7 @@ class Api::V1::Web::Organization::SubDepartmentsController < ApplicationControll
     else
       @sub_departments = SubDepartment.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/organization/sub_departments/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/sub_departments/index'
   end
 
   def filter_data
@@ -35,7 +35,7 @@ class Api::V1::Web::Organization::SubDepartmentsController < ApplicationControll
         @sub_departments = SubDepartment.where(:id => current_user.employee.sub_department_id, :is_active => true).order('id DESC')
       end
     end
-    render status:200, template: 'api/v1/web/organization/sub_departments/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/sub_departments/index'
   end
 
   def department_related_data
@@ -45,7 +45,7 @@ class Api::V1::Web::Organization::SubDepartmentsController < ApplicationControll
       department_ids = params[:department_id].split(',').map(&:to_i)
     end
     @sub_departments = SubDepartment.where(:department_id => department_ids, :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/organization/sub_departments/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/sub_departments/index'
   end
 
   def create
@@ -58,7 +58,7 @@ class Api::V1::Web::Organization::SubDepartmentsController < ApplicationControll
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/sub_departments/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/sub_departments/show'
   end
 
   def update

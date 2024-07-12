@@ -1,6 +1,6 @@
 class Api::V1::Web::PerformanceManagement::TasksController < ApplicationController
 
-  before_filter :set_task, :only => [:show, :update, :destroy]
+  before_action :set_task, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -10,7 +10,7 @@ class Api::V1::Web::PerformanceManagement::TasksController < ApplicationControll
       if @objective_setting.present?
         @tasks = Task.where(id: @objective_setting.task_ids.try(:split, ','))
         # @tasks = Task.where(:employee_id => @current_user.employee.id, :fiscal_year_id => fiscal_year_id).order('id ASC')
-        render status:200, template: 'api/v1/web/performance_management/tasks/index.json.jbuilder'
+        render status:200, template: 'api/v1/web/performance_management/tasks/index'
       end
     end
   end
@@ -21,7 +21,7 @@ class Api::V1::Web::PerformanceManagement::TasksController < ApplicationControll
       @objective_setting = ObjectiveSetting.where(:employee_id => @current_user.employee.id, :fiscal_year_id => fiscal_year_id, :status => "Approved").last
       if @objective_setting.present?
         @tasks = Task.where(id: @objective_setting.task_ids.try(:split, ','))
-        render status:200, template: 'api/v1/web/performance_management/tasks/index.json.jbuilder'
+        render status:200, template: 'api/v1/web/performance_management/tasks/index'
       end
     end
   end
@@ -36,17 +36,17 @@ class Api::V1::Web::PerformanceManagement::TasksController < ApplicationControll
       @objective_setting = ObjectiveSetting.where(:employee_id => employee.id, :fiscal_year_id => fiscal_year_id, :status => "Approved").last
       @tasks = Task.where(id: @objective_setting.task_ids.try(:split, ','))
     end
-    render status:200, template: 'api/v1/web/performance_management/tasks/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/tasks/index'
   end
 
   def complete_list_task
     @tasks = Task.all.order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/tasks/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/tasks/index'
   end
 
   def org_chart
     @company = Company.find(params[:company_id])
-    render status:200, template: 'api/v1/web/organization/companies/org_chart.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/companies/org_chart'
   end
 
 
@@ -60,7 +60,7 @@ class Api::V1::Web::PerformanceManagement::TasksController < ApplicationControll
   end
 
   def show
-    render status:200, template: 'api/v1/web/performance_management/tasks/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/tasks/show'
   end
 
   # def update

@@ -77,7 +77,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		end
 		if @pay_invoices.count > 0
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/salary_register.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/salary_register'
 			elsif params[:report_type].to_i == 3
 				pay_item_ids 	= @pay_execution.item_execution_details.where(:status => "Allowed").collect(&:pay_item_id)
 				pay_items  		= PayItem.where(:id => pay_item_ids).order('sort_order ASC')
@@ -697,7 +697,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 
 		if @pay_invoices.count > 0
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/multi_salary_register.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/multi_salary_register'
 			elsif params[:report_type].to_i == 2
 				check_directory("#{Rails.public_path}/pdf")
 				file_name = ENV['APP_URL'].include?('millshrmsbe.dfl.com.pk') ? "multi_salary_register_mill" : "multi_salary_register"
@@ -1266,7 +1266,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		@pay_invoices = @pay_invoices.order('employee_id ASC')
 		if @pay_invoices.count > 0
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/salary_register_month_wise.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/salary_register_month_wise'
 			elsif params[:report_type].to_i == 2
 				time = Time.now
 				url_path = ""
@@ -3694,7 +3694,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 			if params[:report_type].to_i == 1
 				department_ids = @pay_invoices.collect(&:department_id)
 				@departments = Department.where(:id => department_ids).order('id ASC')
-				render status:200, template: 'api/v1/web/reports/payroll_reports/salary_sheet.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/salary_sheet'
 			elsif params[:report_type].to_i == 2
 				department_ids = @pay_invoices.collect(&:department_id)
 				@departments = Department.where(:id => department_ids).order('id ASC')
@@ -4150,7 +4150,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 			dpi = 700
 			dfl_report_check = ENV.fetch("APP_URL").include?('millshrmsbe.dfl.com.pk')
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/payment_register.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/payment_register'
 			elsif params[:report_type].to_i == 2
 				file_name = dfl_report_check ? "bank_sheet" : "multiple_invoice"
 				if file_name == "bank_sheet"
@@ -4378,7 +4378,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		if @pay_invoices.count > 0
 			dfl_mill_report_check = ENV.fetch("APP_URL").include?('millshrmsbe.dfl.com.pk')
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/eobi_report.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/eobi_report'
 			elsif params[:report_type].to_i == 2
 				time = Time.now
 				url_path = ""
@@ -5242,7 +5242,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		if @pay_invoices.count > 0
 			dfl_mill_report_check = ENV.fetch("APP_URL").include?('millshrmsbe.dfl.com.pk')
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/pessi_report.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/pessi_report'
 			elsif params[:report_type].to_i == 2
 				file_name = "pessi_report"
 				check_directory("#{Rails.public_path}/pdf")
@@ -5485,7 +5485,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		end
 		if @pay_invoices.count > 0
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/social_security_report.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/social_security_report'
 			elsif params[:report_type].to_i == 3
 				pay_item_ids 	= @pay_execution.item_execution_details.where(:status => "Allowed").collect(&:pay_item_id)
 				pay_items  		= PayItem.where(:id => pay_item_ids).order('sort_order ASC')
@@ -5852,7 +5852,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		end
 		if @pay_invoices.count > 0
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/provident_fund_report.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/provident_fund_report'
 			elsif params[:report_type].to_i == 2
 				time = Time.now
 				url_path = ""
@@ -6056,7 +6056,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 
 	def tax_certificate_filter_data
 		@tax_certificate = TaxCertificate.where(:employee_id => params[:employee_id], :fiscal_year_id => params[:fiscal_year_id])
-		render status:200, template: 'api/v1/web/reports/payroll_reports/tax_certificate_filter_data.json.jbuilder'
+		render status:200, template: 'api/v1/web/reports/payroll_reports/tax_certificate_filter_data'
 	end
 
 	def export_tax_certificate
@@ -6157,7 +6157,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		end
 		if @pay_invoices.count > 0
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/tax_report.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/tax_report'
 			elsif params[:report_type].to_i == 3
 				pay_item_ids 	= @pay_execution.item_execution_details.where(:status => "Allowed").collect(&:pay_item_id)
 				pay_items  		= PayItem.where(:id => pay_item_ids).order('sort_order ASC')
@@ -6488,7 +6488,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		# @pay_invoices = @pay_invoices.where(employee_id: Employee.find_by_employee_code('771501'))
 		if @pay_invoices.count > 0
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/tax_structure.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/tax_structure'
 			elsif params[:report_type].to_i == 3
 				time = Time.now
 				book = Axlsx::Package.new
@@ -13395,7 +13395,7 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		@pay_invoices = @pay_invoices.where(:status => true, :pay_execution_id => pay_executions.collect(&:id), :employee_id => @employees.collect(&:id).uniq).order('employee_id ASC')
 		if @pay_invoices.count > 0
 			if params[:report_type].to_i == 1
-				render status:200, template: 'api/v1/web/reports/payroll_reports/comman_staff_report.json.jbuilder'
+				render status:200, template: 'api/v1/web/reports/payroll_reports/comman_staff_report'
 			elsif params[:report_type].to_i == 2
 				time = Time.now
 				url_path = ""

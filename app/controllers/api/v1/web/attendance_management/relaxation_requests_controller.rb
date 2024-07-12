@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::RelaxationRequestsController < ApplicationController
 
-	before_filter :set_relaxation, :only => [:show]
+	before_action :set_relaxation, :only => [:show]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::AttendanceManagement::RelaxationRequestsController < Applica
     else
       @relaxation_requests = []
     end
-    render status:200, template: 'api/v1/web/attendance_management/relaxation_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/relaxation_requests/index'
   end
 
   def bulk_index
@@ -42,7 +42,7 @@ class Api::V1::Web::AttendanceManagement::RelaxationRequestsController < Applica
       selected_status = ["Cancelled", "Rejected", "Availed", "Waiting For Approval"]
     end
     @relaxation_requests = RelaxationRequest.where(:company_id => params[:company_id], :request_status => selected_status, :employee_id => @employees.collect(&:id)).where(['start_date >= ? AND end_date <= ?', start_date.to_date.beginning_of_day, end_date.to_date.end_of_day]).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/relaxation_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/relaxation_requests/index'
   end
 
   def bulk_export
@@ -201,7 +201,7 @@ class Api::V1::Web::AttendanceManagement::RelaxationRequestsController < Applica
 
   def filter_data
     @relaxation_requests = RelaxationRequest.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/relaxation_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/relaxation_requests/index'
   end
 
   def create
@@ -324,7 +324,7 @@ class Api::V1::Web::AttendanceManagement::RelaxationRequestsController < Applica
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/relaxation_requests/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/relaxation_requests/show'
   end
 
 	private

@@ -91,7 +91,7 @@ class Api::V1::Web::Reports::OfficialDutyReportsController < ApplicationControll
 
     if @official_duties.count > 0
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/official_duty_reports/od_register.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/official_duty_reports/od_register'
       elsif params[:report_type].to_i == 2
         time = Time.now
         url_path = ""

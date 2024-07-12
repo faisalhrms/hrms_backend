@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::GradeAllocationsController < ApplicationController
 
-	before_filter :set_grade_allocation, :only => [:show, :update, :destroy]
+	before_action :set_grade_allocation, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -15,12 +15,12 @@ class Api::V1::Web::Organization::GradeAllocationsController < ApplicationContro
     else
       @grade_allocations = []
     end
-    render status:200, template: 'api/v1/web/organization/grade_allocations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/grade_allocations/index'
   end
 
   def filter_data
     @grade_allocations = GradeAllocation.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/organization/grade_allocations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/grade_allocations/index'
   end
 
   def create
@@ -35,11 +35,11 @@ class Api::V1::Web::Organization::GradeAllocationsController < ApplicationContro
 
   def fetch_grade_data
   	@grades = Grade.where(:company_id => params[:company_id], :is_active => true).order('id ASC')
-  	render status:200, template: 'api/v1/web/organization/grade_allocations/fetch_grade_data.json.jbuilder'
+  	render status:200, template: 'api/v1/web/organization/grade_allocations/fetch_grade_data'
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/grade_allocations/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/grade_allocations/show'
   end
 
   def update

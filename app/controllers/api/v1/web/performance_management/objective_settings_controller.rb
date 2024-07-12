@@ -1,11 +1,11 @@
 class Api::V1::Web::PerformanceManagement::ObjectiveSettingsController < ApplicationController
 
-  before_filter :set_objective_setting, :only => [:show, :update, :destroy]
+  before_action :set_objective_setting, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @objective_settings = data
-    render status:200, template: 'api/v1/web/performance_management/objective_settings/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_settings/index'
   end
 
   def employee_data
@@ -19,7 +19,7 @@ class Api::V1::Web::PerformanceManagement::ObjectiveSettingsController < Applica
       if @employee_data.first.line_manager_id.present?
         @line_manager_data = Employee.where(:id => @employee_data.first.line_manager_id)
       end
-      render status:200, template: 'api/v1/web/performance_management/objective_settings/employee_data.json.jbuilder'
+      render status:200, template: 'api/v1/web/performance_management/objective_settings/employee_data'
     else
       render json: {errors: "No Record Found"}, status: :unprocessable_entity
     end
@@ -27,12 +27,12 @@ class Api::V1::Web::PerformanceManagement::ObjectiveSettingsController < Applica
 
   def get_employee
     @employees = Employee.all.order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/objective_settings/employee.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_settings/employee'
   end
 
   def filter_data
     @objective_settings = ObjectiveSetting.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/objective_settings/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_settings/index'
   end
 
   def filter_approvals
@@ -91,7 +91,7 @@ class Api::V1::Web::PerformanceManagement::ObjectiveSettingsController < Applica
       end
     end
     @objective_settings = objective_setting
-    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index'
   end
 
   def filter_appraisal_approvals
@@ -150,7 +150,7 @@ class Api::V1::Web::PerformanceManagement::ObjectiveSettingsController < Applica
       end
     end
     @objective_settings = objective_setting
-    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index'
   end
 
   def filter_hod_approvals
@@ -206,7 +206,7 @@ class Api::V1::Web::PerformanceManagement::ObjectiveSettingsController < Applica
       end
     end
     @objective_settings = objective_setting
-    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index'
   end
 
   def create
@@ -319,7 +319,7 @@ class Api::V1::Web::PerformanceManagement::ObjectiveSettingsController < Applica
   end
 
   def show
-    render status:200, template: 'api/v1/web/performance_management/objective_settings/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_settings/show'
   end
 
   def update

@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::BranchesController < ApplicationController
 
-	before_filter :set_branch, :only => [:show, :update, :destroy]
+	before_action :set_branch, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -27,7 +27,7 @@ class Api::V1::Web::Organization::BranchesController < ApplicationController
     else
       @branches = Branch.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/organization/branches/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/branches/index'
   end
 
   def filter_data
@@ -71,7 +71,7 @@ class Api::V1::Web::Organization::BranchesController < ApplicationController
       end
     end
     @branches = @branches.includes(:location) if @branches.present?
-    render status:200, template: 'api/v1/web/organization/branches/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/branches/index'
   end
 
   def multi_filter_data
@@ -94,7 +94,7 @@ class Api::V1::Web::Organization::BranchesController < ApplicationController
         @branches = []
       end
     end
-    render status:200, template: 'api/v1/web/organization/branches/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/branches/index'
   end
 
   def company_filter_data
@@ -110,7 +110,7 @@ class Api::V1::Web::Organization::BranchesController < ApplicationController
     else
       @branches = []
     end
-    render status:200, template: 'api/v1/web/organization/branches/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/branches/index'
   end
 
   def create
@@ -123,7 +123,7 @@ class Api::V1::Web::Organization::BranchesController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/branches/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/branches/show'
   end
 
   def update

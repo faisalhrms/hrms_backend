@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::BenefitStructuresController < ApplicationController
 
-	before_filter :set_benefit_structure, :only => [:show, :update, :destroy, :benefit_structure_allocation]
+	before_action :set_benefit_structure, :only => [:show, :update, :destroy, :benefit_structure_allocation]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::PayrollManagement::BenefitStructuresController < Application
     else
       @benefit_structures = BenefitStructure.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/benefit_structures/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/benefit_structures/index'
   end
 
   def filter_data
     @benefit_structures = BenefitStructure.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/benefit_structures/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/benefit_structures/index'
   end
 
   def create
@@ -27,7 +27,7 @@ class Api::V1::Web::PayrollManagement::BenefitStructuresController < Application
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/benefit_structures/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/benefit_structures/show'
   end
 
   def benefit_structure_allocation

@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::EmployeeAdvancesController < ApplicationController
 
-	before_filter :set_employee_advance, :only => [:show, :update, :destroy]
+	before_action :set_employee_advance, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::PayrollManagement::EmployeeAdvancesController < ApplicationC
     else
       @employee_advances = EmployeeAdvance.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/employee_advances/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_advances/index'
   end
 
   def filter_data
     @employee_advances = EmployeeAdvance.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/employee_advances/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_advances/index'
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::Web::PayrollManagement::EmployeeAdvancesController < ApplicationC
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/employee_advances/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_advances/show'
   end
 
   def update

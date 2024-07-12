@@ -72,7 +72,7 @@ class Api::V1::Web::DashboardsController < ApplicationController
 			@relaxation_approvals = []
 		end
 
-		render status:200, template: 'api/v1/web/dashboards/main_dashboard.json.jbuilder'
+		render status:200, template: 'api/v1/web/dashboards/main_dashboard'
 	end
 
 	def hris_dashboard
@@ -154,7 +154,7 @@ class Api::V1::Web::DashboardsController < ApplicationController
 		@junior_management_tier      = @grades.where(:management_tier => "Junior-Management").collect(&:id)
 		@non_management_tier         = @grades.where(:management_tier => "Non-Management").collect(&:id)
 
-		render status:200, template: 'api/v1/web/dashboards/hris_dashboard.json.jbuilder'
+		render status:200, template: 'api/v1/web/dashboards/hris_dashboard'
 	end
 
 	def salary_dashboard
@@ -232,7 +232,7 @@ class Api::V1::Web::DashboardsController < ApplicationController
 		@pf_depart      = Department.where(:company_id => current_user.company_id, :id => @employee_list.collect(&:department_id), :is_active => true).order('name ASC')
 		@careem_employee      = FixedPayItem.where(:pay_item_id => 41).collect(&:employee_id)
 
-		render status:200, template: 'api/v1/web/dashboards/salary_dashboard.json.jbuilder'
+		render status:200, template: 'api/v1/web/dashboards/salary_dashboard'
 	end
 
 	def attendance_dashboard
@@ -320,7 +320,7 @@ class Api::V1::Web::DashboardsController < ApplicationController
 
 		@leave_type      	= LeaveType.where(:is_active => true,:location_id => location_ids).pluck(:id).uniq
 
-		render status:200, template: 'api/v1/web/dashboards/attendance_dashboard.json.jbuilder'
+		render status:200, template: 'api/v1/web/dashboards/attendance_dashboard'
 	end
 
 	def company_wise_dashboard
@@ -386,7 +386,7 @@ class Api::V1::Web::DashboardsController < ApplicationController
 			@relaxation_approvals = []
 		end
 
-		render status:200, template: 'api/v1/web/dashboards/main_dashboard.json.jbuilder'
+		render status:200, template: 'api/v1/web/dashboards/main_dashboard'
 	end
 
 end

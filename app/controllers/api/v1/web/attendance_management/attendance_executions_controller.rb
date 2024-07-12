@@ -9,7 +9,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceExecutionsController < Appli
 		else
 			@employee_attendances = []
 		end
-		render status:200, template: 'api/v1/web/attendance_management/attendance_executions/bulk_index.json.jbuilder'
+		render status:200, template: 'api/v1/web/attendance_management/attendance_executions/bulk_index'
 	end
 
 	def download_time_card
@@ -69,7 +69,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceExecutionsController < Appli
 
 	def fetch_employee_attendance
 		@date_range = (params[:start_date].to_date..params[:end_date].to_date).to_a.map{|x| x.to_date}
-		render status:200, template: 'api/v1/web/attendance_management/attendance_executions/fetch_employee_attendance.json.jbuilder'
+		render status:200, template: 'api/v1/web/attendance_management/attendance_executions/fetch_employee_attendance'
 	end
 
 	def save_multi_day_attendance
@@ -523,7 +523,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceExecutionsController < Appli
       @employee_attendances = EmployeeAttendance.employee_related_employee_attendance(@employee_attendances, params[:employee_id].to_i)
     end
     
-		render status:200, template: 'api/v1/web/attendance_management/attendance_executions/fetch_overtime_employee_attendance.json.jbuilder'
+		render status:200, template: 'api/v1/web/attendance_management/attendance_executions/fetch_overtime_employee_attendance'
 	end
 
 	def bulk_approved_overtime

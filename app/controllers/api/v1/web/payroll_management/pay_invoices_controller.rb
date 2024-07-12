@@ -1,21 +1,21 @@
 class Api::V1::Web::PayrollManagement::PayInvoicesController < ApplicationController
 
-  before_filter :set_pay_invoice, :only => [:show, :update_tax_adjustment]
+  before_action :set_pay_invoice, :only => [:show, :update_tax_adjustment]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
 	def current_pay_invoices
     @pay_invoices = PayInvoice.where(:company_id => params[:company_id], :status => true, :pay_month => params[:pay_month].to_date.strftime("%B %Y")).includes(:employee)
     filter_invoice_data_on_request
-    render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index'
   end
 
   def my_salary_slip_list
     if not current_user.employee.nil?
       @pay_invoices = PayInvoice.where(:employee_id => current_user.employee.id, :status => true, :is_locked => true).order('id DESC')
-      render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index.json.jbuilder'    
+      render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index'    
     else
       @pay_invoices = []
-      render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index.json.jbuilder'    
+      render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index'    
     end    
   end
 
@@ -50,10 +50,10 @@ class Api::V1::Web::PayrollManagement::PayInvoicesController < ApplicationContro
     if subordinate_employee_ids.count > 0
       @pay_invoices = PayInvoice.where(:employee_id => subordinate_employee_ids, :company_id => params[:company_id], :status => true, :pay_month => params[:pay_month].to_date.strftime("%B %Y"), :is_locked => true)
       filter_invoice_data_on_request
-      render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index.json.jbuilder'
+      render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index'
     else
       @pay_invoices = []
-      render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index.json.jbuilder'
+      render status:200, template: 'api/v1/web/payroll_management/pay_invoices/index'
     end
   end
 
@@ -97,7 +97,7 @@ class Api::V1::Web::PayrollManagement::PayInvoicesController < ApplicationContro
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/pay_invoices/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_invoices/show'
   end
 
   def update_tax_adjustment

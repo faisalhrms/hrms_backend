@@ -8,7 +8,7 @@ class Api::V1::Web::AdminTool::ActivityStreamsController < ApplicationController
     @user_activities = UserActivity.where(:created_at => params[:start_date].to_date.beginning_of_day..params[:end_date].to_date.end_of_day, :company_id => params[:company_id]).order('id DESC')
     if @user_activities.count > 0
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/admin_tool/activity_streams/selected_activity_stream.json.jbuilder'
+        render status:200, template: 'api/v1/web/admin_tool/activity_streams/selected_activity_stream'
       elsif params[:report_type].to_i == 2
         time = Time.now
         url_path = ""

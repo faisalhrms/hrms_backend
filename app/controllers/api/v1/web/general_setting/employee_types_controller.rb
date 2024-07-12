@@ -1,16 +1,16 @@
 class Api::V1::Web::GeneralSetting::EmployeeTypesController < ApplicationController
 
-	before_filter :set_employee_type, :only => [:show, :update, :destroy]
+	before_action :set_employee_type, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @employee_types = EmployeeType.all.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/employee_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/employee_types/index'
   end
 
   def active_list
     @employee_types = EmployeeType.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/employee_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/employee_types/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::GeneralSetting::EmployeeTypesController < ApplicationControl
   end
 
   def show
-    render status:200, template: 'api/v1/web/general_setting/employee_types/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/employee_types/show'
   end
 
   def update

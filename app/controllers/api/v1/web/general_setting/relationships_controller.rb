@@ -1,16 +1,16 @@
 class Api::V1::Web::GeneralSetting::RelationshipsController < ApplicationController
 
-	before_filter :set_relationship, :only => [:show, :update, :destroy]
+	before_action :set_relationship, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @relationships = Relationship.all.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/relationships/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/relationships/index'
   end
 
   def active_list
     @relationships = Relationship.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/relationships/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/relationships/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::GeneralSetting::RelationshipsController < ApplicationControl
   end
 
   def show
-    render status:200, template: 'api/v1/web/general_setting/relationships/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/relationships/show'
   end
 
   def update

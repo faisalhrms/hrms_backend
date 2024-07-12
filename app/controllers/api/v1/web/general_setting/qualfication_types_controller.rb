@@ -1,16 +1,16 @@
 class Api::V1::Web::GeneralSetting::QualficationTypesController < ApplicationController
 
-	before_filter :set_qualfication_type, :only => [:show, :update, :destroy]
+	before_action :set_qualfication_type, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @qualfication_types = QualficationType.all.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/qualfication_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/qualfication_types/index'
   end
 
   def active_list
     @qualfication_types = QualficationType.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/qualfication_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/qualfication_types/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::GeneralSetting::QualficationTypesController < ApplicationCon
   end
 
   def show
-    render status:200, template: 'api/v1/web/general_setting/qualfication_types/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/qualfication_types/show'
   end
 
   def update

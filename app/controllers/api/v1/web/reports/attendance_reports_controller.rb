@@ -319,7 +319,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 				department_ids = @employee_attendances.collect(&:department_id)
 				@departments = Department.where(:id => department_ids).order('id ASC')
 				if params[:report_type].to_i == 1
-					render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_summary.json.jbuilder'
+					render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_summary'
 				elsif params[:report_type].to_i == 2
 					time = Time.now
 					url_path = ""
@@ -664,7 +664,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 
 	  if @employee_attendances.count > 0
 	    if params[:report_type].to_i == 1
-	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_summary_detail.json.jbuilder'
+	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_summary_detail'
 	    elsif params[:report_type].to_i == 2
 	    	time = Time.now
 	      url_path = ""
@@ -1012,7 +1012,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 	  	department_ids = @employee_attendances.collect(&:department_id)
 	  	@departments = Department.where(:id => department_ids).order('id ASC')
 	    if params[:report_type].to_i == 1
-	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_detail.json.jbuilder'
+	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_detail'
 	    elsif params[:report_type].to_i == 2
 	    	time = Time.now
 	      url_path = ""
@@ -1258,7 +1258,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 	  if @attendance_logs.count > 0
 			@attendance_logs = @attendance_logs.includes(employee: [:department, :designation, :sub_department])
 	    if params[:report_type].to_i == 1
-	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_log.json.jbuilder'
+	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_log'
 	    elsif params[:report_type].to_i == 3
 	    	time = Time.now
 				book = Axlsx::Package.new
@@ -1525,7 +1525,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 	    if params[:report_view] == "Absent Only"
 	    	@employee_absent_attendances = @employee_attendances.where(:attendance_status => ['Absent'])
 	    	if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_absent_only.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_absent_only'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -1672,7 +1672,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 			elsif params[:report_view] == "Late Arrival"
 				@employee_attendances = @employee_attendances.where(:attendance_status => ['Late', 'Short Leave', 'Full Day', 'Half Day'])
 				if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_late_arrival.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_late_arrival'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -1820,7 +1820,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 			elsif params[:report_view] == "Early Gone"
 				@employee_attendances = @employee_attendances.where.not(:in_time => nil, :out_time => nil)
 				if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_early_gone.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_early_gone'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -1995,7 +1995,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		  elsif params[:report_view] == "Missing Out"
 				@employee_attendances = @employee_attendances.where(:out_time => nil).where.not(:in_time => nil)
 				if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_missing_out.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_missing_out'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -2151,7 +2151,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 			elsif params[:report_view] == "OD"
 				@employee_attendances = @employee_attendances.where(:is_official_duty => true)
 				if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_od.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_od'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -2273,7 +2273,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 			elsif params[:report_view] == "Rest Day Only"
 				@employee_attendances = @employee_attendances.where(:is_rest_day => true)
 				if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_rest_day.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_rest_day'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -2389,7 +2389,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		    end
 			elsif params[:report_view] == "Time IN Only"
 				if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_in_time.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_in_time'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -2538,7 +2538,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		    end
 			elsif params[:report_view] == "Time OUT Only"
 				if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_out_time.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_out_time'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -2709,7 +2709,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		    end
 			elsif params[:report_view] == "In-Out Time Only"
 		    if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_in_out_time.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance_in_out_time'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -2881,7 +2881,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		    end
 			elsif params[:report_view] == "Shop ID"
 		    if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -3103,7 +3103,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 	      render json: {message: "Excel Created", path: url_path}
 			else
 		    if params[:report_type].to_i == 1
-		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance.json.jbuilder'
+		    	render status:200, template: 'api/v1/web/reports/attendance_reports/daily_attendance'
 		    elsif params[:report_type].to_i == 2
 		    	department_ids = @employee_attendances.collect(&:department_id)
 		  		@departments = Department.where(:id => department_ids).order('name ASC')
@@ -3522,7 +3522,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 
 	  if @attendance_execution_transactions.count > 0
 	    if params[:report_type].to_i == 1
-	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_execution_log.json.jbuilder'
+	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_execution_log'
 	    elsif params[:report_type].to_i == 3
 	    	time = Time.now
 				book = Axlsx::Package.new
@@ -3711,7 +3711,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 	  	employee_ids = @employee_attendances.collect(&:employee_id)
 	  	@employees = Employee.where(:id => employee_ids)
 	    if params[:report_type].to_i == 1
-	    	render status:200, template: 'api/v1/web/reports/attendance_reports/detail_overtime.json.jbuilder'
+	    	render status:200, template: 'api/v1/web/reports/attendance_reports/detail_overtime'
 	    elsif params[:report_type].to_i == 3
 	    	time = Time.now
 				book = Axlsx::Package.new
@@ -3895,7 +3895,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
     end
 	  if @employee_attendances.count > 0
 	    if params[:report_type].to_i == 1
-	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_register.json.jbuilder'
+	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_register'
 	    elsif params[:report_type].to_i == 3
 	    	date_ranges = (params[:start_date].to_date..params[:end_date].to_date).to_a.map{|x| x.to_date}		
 	    	employee_ids = @employee_attendances.collect(&:employee_id).uniq
@@ -4097,7 +4097,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
     end
 	  if @employee_attendances.count > 0
 	    if params[:report_type].to_i == 1
-	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_register_detail.json.jbuilder'
+	    	render status:200, template: 'api/v1/web/reports/attendance_reports/attendance_register_detail'
 	    elsif params[:report_type].to_i == 3
 	    	date_ranges = (params[:start_date].to_date..params[:end_date].to_date).to_a.map{|x| x.to_date}		
 	    	employee_ids = @employee_attendances.collect(&:employee_id).uniq

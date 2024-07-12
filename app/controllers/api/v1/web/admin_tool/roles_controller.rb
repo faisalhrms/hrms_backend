@@ -1,6 +1,6 @@
 class Api::V1::Web::AdminTool::RolesController < ApplicationController
 
-	before_filter :set_role, :only => [:show, :update, :destroy]
+	before_action :set_role, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::AdminTool::RolesController < ApplicationController
     else
       @roles = Role.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/roles/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/roles/index'
   end
 
   def filter_data
     @roles = Role.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/admin_tool/roles/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/roles/index'
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::Web::AdminTool::RolesController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/admin_tool/roles/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/roles/show'
   end
 
   def update

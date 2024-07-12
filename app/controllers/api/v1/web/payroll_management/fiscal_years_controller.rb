@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::FiscalYearsController < ApplicationController
 
-	before_filter :set_fiscal_year, :only => [:show, :update, :destroy]
+	before_action :set_fiscal_year, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,17 +9,17 @@ class Api::V1::Web::PayrollManagement::FiscalYearsController < ApplicationContro
     else
       @fiscal_years = FiscalYear.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/fiscal_years/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/fiscal_years/index'
   end
 
   def filter_data
     @fiscal_years = FiscalYear.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/fiscal_years/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/fiscal_years/index'
   end
 
   def filter_data_is_active
     @fiscal_years = FiscalYear.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/fiscal_years/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/fiscal_years/index'
   end
 
   def create
@@ -33,7 +33,7 @@ class Api::V1::Web::PayrollManagement::FiscalYearsController < ApplicationContro
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/fiscal_years/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/fiscal_years/show'
   end
 
   def update

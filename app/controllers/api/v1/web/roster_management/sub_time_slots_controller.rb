@@ -1,6 +1,6 @@
 class Api::V1::Web::RosterManagement::SubTimeSlotsController < ApplicationController
 
-	before_filter :set_sub_time_slot, :only => [:show, :update, :destroy]
+	before_action :set_sub_time_slot, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,22 +9,22 @@ class Api::V1::Web::RosterManagement::SubTimeSlotsController < ApplicationContro
     else
       @sub_time_slots = SubTimeSlot.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/index'
   end
 
   def filter_data
     @sub_time_slots = SubTimeSlot.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/index'
   end
 
   def location_related_sub_time_slots
     @sub_time_slots = SubTimeSlot.where(:location_id => params[:location_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/index'
   end
 
   def branch_related_sub_time_slots
     @sub_time_slots = SubTimeSlot.where(:branch_id => params[:branch_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/index'
   end
 
   def create
@@ -65,7 +65,7 @@ class Api::V1::Web::RosterManagement::SubTimeSlotsController < ApplicationContro
   end
 
   def show
-    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/sub_time_slots/show'
   end
 
   def update

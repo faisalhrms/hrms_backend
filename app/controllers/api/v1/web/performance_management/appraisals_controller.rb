@@ -1,6 +1,6 @@
 class Api::V1::Web::PerformanceManagement::AppraisalsController < ApplicationController
 
-  before_filter :set_appraisal, :only => [:show, :update, :destroy]
+  before_action :set_appraisal, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -14,7 +14,7 @@ class Api::V1::Web::PerformanceManagement::AppraisalsController < ApplicationCon
     # task_id.each do |task|
     #     @tasks = @tasks + Task.where(:id => task)
     # end
-    render status:200, template: 'api/v1/web/performance_management/sub_tasks/tasks.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/sub_tasks/tasks'
   end
 
   def index2
@@ -36,7 +36,7 @@ class Api::V1::Web::PerformanceManagement::AppraisalsController < ApplicationCon
           @appraisals = appraisals.flatten
           @comment = AppraisalComment.where(employee_id: @objective_setting.employee_id, fiscal_year_id: FiscalYear.active.try(:id)).last
           @tasks = Task.where(:employee_id => current_user.employee.id, :fiscal_year_id => fiscal_year_id).order('id ASC')
-          render status:200, template: 'api/v1/web/performance_management/appraisals/index.json.jbuilder'
+          render status:200, template: 'api/v1/web/performance_management/appraisals/index'
         end
       end
     end
@@ -61,7 +61,7 @@ class Api::V1::Web::PerformanceManagement::AppraisalsController < ApplicationCon
           @appraisals = appraisals.flatten
           @comment = AppraisalComment.where(employee_id: @objective_setting.employee_id, fiscal_year_id: FiscalYear.active.try(:id)).last
           @tasks = Task.where(id: @objective_setting.task_ids.try(:split, ','))
-          render status:200, template: 'api/v1/web/performance_management/appraisals/index.json.jbuilder'
+          render status:200, template: 'api/v1/web/performance_management/appraisals/index'
         end
       else
         employee = Employee.find_by_employee_code(params[:id])
@@ -80,7 +80,7 @@ class Api::V1::Web::PerformanceManagement::AppraisalsController < ApplicationCon
           @appraisals = appraisals.flatten
           @comment = AppraisalComment.where(employee_id: employee.id, fiscal_year_id: FiscalYear.active.try(:id)).last
           @tasks = Task.where(id: @objective_setting.task_ids.try(:split, ','))
-          render status:200, template: 'api/v1/web/performance_management/appraisals/index.json.jbuilder'
+          render status:200, template: 'api/v1/web/performance_management/appraisals/index'
         end
       end
     end
@@ -88,12 +88,12 @@ class Api::V1::Web::PerformanceManagement::AppraisalsController < ApplicationCon
 
   def filter_data
     @objective_settings = ObjectiveSetting.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/appraisals/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/appraisals/index'
   end
 
   def filter_competency_data
     @appraisals = Appraisal.where(:id => params[:id])
-    render status:200, template: 'api/v1/web/performance_management/appraisals/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/appraisals/index'
   end
 
   def filter_objective_data
@@ -103,7 +103,7 @@ class Api::V1::Web::PerformanceManagement::AppraisalsController < ApplicationCon
     task_ids.each do |id|
       @tasks = @tasks + Task.where(:id => id)
     end
-    render status:200, template: 'api/v1/web/performance_management/tasks/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/tasks/index'
   end
 
   def filter_approvals
@@ -115,7 +115,7 @@ class Api::V1::Web::PerformanceManagement::AppraisalsController < ApplicationCon
       objective_setting = objective_setting + ObjectiveSetting.where(:employee_id => e.id)
     end
     @objective_settings = ObjectiveSetting.all.order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/appraisals/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/appraisals/index'
   end
 
   def create
@@ -205,7 +205,7 @@ class Api::V1::Web::PerformanceManagement::AppraisalsController < ApplicationCon
   end
 
   def show
-    render status:200, template: 'api/v1/web/performance_management/appraisals/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/appraisals/show'
   end
 
   def update

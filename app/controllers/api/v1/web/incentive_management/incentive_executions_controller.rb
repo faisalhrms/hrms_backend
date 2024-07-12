@@ -7,7 +7,7 @@ class Api::V1::Web::IncentiveManagement::IncentiveExecutionsController < Applica
 		employee_attendances = EmployeeAttendance.where(:company_id => params[:company_id], :location_id => params[:location_id], :branch_id => params[:branch_id]).where('attendance_date::Date BETWEEN ? AND ?',start_date, end_date)
 		employee_ids = employee_attendances.collect(&:employee_id).uniq
 		@employees = Employee.where(:id => employee_ids, :incentive_allowed => true)
-		render status:200, template: 'api/v1/web/employee_management/employees/index.json.jbuilder'
+		render status:200, template: 'api/v1/web/employee_management/employees/index'
 	end
 
 	def sale_incentive

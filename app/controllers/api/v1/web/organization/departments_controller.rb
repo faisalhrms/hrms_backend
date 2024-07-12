@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::DepartmentsController < ApplicationController
 
-	before_filter :set_department, :only => [:show, :update, :destroy]
+	before_action :set_department, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -23,7 +23,7 @@ class Api::V1::Web::Organization::DepartmentsController < ApplicationController
     else
       @departments = []
     end
-    render status:200, template: 'api/v1/web/organization/departments/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/departments/index'
   end
 
   def filter_data
@@ -61,7 +61,7 @@ class Api::V1::Web::Organization::DepartmentsController < ApplicationController
     else
       @departments = []
     end
-    render status:200, template: 'api/v1/web/organization/departments/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/departments/index'
   end
 
   def salary_dashboard_filters
@@ -70,7 +70,7 @@ class Api::V1::Web::Organization::DepartmentsController < ApplicationController
     else
       @departments = []
     end
-    render status:200, template: 'api/v1/web/organization/departments/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/departments/index'
   end
 
   def create
@@ -83,7 +83,7 @@ class Api::V1::Web::Organization::DepartmentsController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/departments/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/departments/show'
   end
 
   def update

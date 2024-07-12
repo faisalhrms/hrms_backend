@@ -1,10 +1,10 @@
 class Api::V1::Web::EmployeeManagement::EmployeeTransactionsController < ApplicationController
 
-	before_filter :set_employee_transaction, :only => [:show, :update, :destroy]
+	before_action :set_employee_transaction, :only => [:show, :update, :destroy]
 
 	def index
 		@employee_transactions = EmployeeTransactionHistory.where(:employee_id => params[:employee_id]).order('id DESC')
-		render status:200, template: 'api/v1/web/employee_management/employee_transactions/index.json.jbuilder'
+		render status:200, template: 'api/v1/web/employee_management/employee_transactions/index'
 	end
 
 	def save_employee_change
@@ -112,7 +112,7 @@ class Api::V1::Web::EmployeeManagement::EmployeeTransactionsController < Applica
 	end
 
 	def show
-		render status:200, template: 'api/v1/web/employee_management/employee_transactions/show.json.jbuilder'
+		render status:200, template: 'api/v1/web/employee_management/employee_transactions/show'
 	end
 
 	private

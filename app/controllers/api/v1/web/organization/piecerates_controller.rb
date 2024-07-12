@@ -1,11 +1,11 @@
 class Api::V1::Web::Organization::PieceratesController < ApplicationController
 
-  before_filter :set_piecerate, :only => [:show, :update, :destroy]
+  before_action :set_piecerate, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @piecerates = Piecerate.all.order('piecerate_type_name ASC')
-    render status:200, template: 'api/v1/web/organization/piecerates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/piecerates/index'
   end
 
   def filter_data
@@ -16,37 +16,37 @@ class Api::V1::Web::Organization::PieceratesController < ApplicationController
         @piecerates << Piecerate.find(id.to_i)
       end
     end
-    render status:200, template: 'api/v1/web/organization/piecerates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/piecerates/index'
   end
 
   def department_related_data
     @piecerates = Piecerate.where(:department_id => params[:department_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/organization/piecerates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/piecerates/index'
   end
 
   def floor_data
     @piecerates = Piecerate.where(:piecerate_type_name => "floor").order('id DESC')
-    render status:200, template: 'api/v1/web/organization/piecerates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/piecerates/index'
   end
 
   def incharge_data
     @piecerates = Piecerate.where(:piecerate_type_name => "incharge").order('id DESC')
-    render status:200, template: 'api/v1/web/organization/piecerates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/piecerates/index'
   end
 
   def line_data
     @piecerates = Piecerate.where(:piecerate_type_name => "line").order('id DESC')
-    render status:200, template: 'api/v1/web/organization/piecerates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/piecerates/index'
   end
 
   def category_data
     @piecerates = Piecerate.where(:piecerate_type_name => "category").order('id DESC')
-    render status:200, template: 'api/v1/web/organization/piecerates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/piecerates/index'
   end
 
   def group_data
     @piecerates = Piecerate.where(:piecerate_type_name => "group").order('id DESC')
-    render status:200, template: 'api/v1/web/organization/piecerates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/piecerates/index'
   end
 
   def create
@@ -59,7 +59,7 @@ class Api::V1::Web::Organization::PieceratesController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/piecerates/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/piecerates/show'
   end
 
   def update

@@ -1,6 +1,6 @@
 class Api::V1::Web::IncentiveManagement::SaleEntriesController < ApplicationController
 
-	before_filter :set_sale_entry, :only => [:show, :update, :destroy]
+	before_action :set_sale_entry, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::IncentiveManagement::SaleEntriesController < ApplicationCont
     else
       @sale_entries = SaleEntry.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/incentive_management/sale_entries/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/incentive_management/sale_entries/index'
   end
 
   def filter_data
     @sale_entries = SaleEntry.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/incentive_management/sale_entries/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/incentive_management/sale_entries/index'
   end
 
   def create
@@ -29,7 +29,7 @@ class Api::V1::Web::IncentiveManagement::SaleEntriesController < ApplicationCont
   end
 
   def show
-    render status:200, template: 'api/v1/web/incentive_management/sale_entries/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/incentive_management/sale_entries/show'
   end
 
   def update

@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::EmployeeLoansController < ApplicationController
 
-	before_filter :set_employee_loan, :only => [:show, :update, :destroy]
+	before_action :set_employee_loan, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::PayrollManagement::EmployeeLoansController < ApplicationCont
     else
       @employee_loans = EmployeeLoan.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/employee_loans/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_loans/index'
   end
 
   def filter_data
     @employee_loans = EmployeeLoan.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/employee_loans/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_loans/index'
   end
 
   def get_pay_back_date
@@ -57,11 +57,11 @@ class Api::V1::Web::PayrollManagement::EmployeeLoansController < ApplicationCont
   end
 
   def employee_loan_detail
-    render status:200, template: 'api/v1/web/payroll_management/employee_loans/employee_loan_detail.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_loans/employee_loan_detail'
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/employee_loans/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_loans/show'
   end
 
   def update

@@ -1,6 +1,6 @@
 class Api::V1::Web::PerformanceManagement::SubTasksController < ApplicationController
 
-  before_filter :set_sub_task, :only => [:show, :destroy]
+  before_action :set_sub_task, :only => [:show, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -11,7 +11,7 @@ class Api::V1::Web::PerformanceManagement::SubTasksController < ApplicationContr
       if  date_of_joining <= "2023-03-31" and employee_status == "Confirmed"
         @objective_setting = current_user.employee.objective_settings.where(fiscal_year_id: fiscal_year.id).last
         @tasks = Task.where(id: @objective_setting.task_ids.try(:split, ',')) if @objective_setting
-        render status:200, template: 'api/v1/web/performance_management/sub_tasks/index.json.jbuilder'
+        render status:200, template: 'api/v1/web/performance_management/sub_tasks/index'
       else
         render json: {errors: 'You Are Not Eligible'}, status: :unprocessable_entity
       end
@@ -23,7 +23,7 @@ class Api::V1::Web::PerformanceManagement::SubTasksController < ApplicationContr
     @tasks = Task.where(id: @objective_setting.task_ids.try(:split, ',')) if @objective_setting
     # @tasks = Task.where(:employee_id => @objective_setting.employee_id, :fiscal_year_id => @objective_setting.fiscal_year_id).order('id ASC')
     if @tasks.present?
-      render status:200, template: 'api/v1/web/performance_management/sub_tasks/index.json.jbuilder'
+      render status:200, template: 'api/v1/web/performance_management/sub_tasks/index'
     end
   end
 
@@ -40,10 +40,10 @@ class Api::V1::Web::PerformanceManagement::SubTasksController < ApplicationContr
     end
     @tasks = Task.where(:employee_id => params[:id], :fiscal_year_id => fiscal_id).order('id ASC')
     if @tasks.present?
-      render status:200, template: 'api/v1/web/performance_management/sub_tasks/index.json.jbuilder'
+      render status:200, template: 'api/v1/web/performance_management/sub_tasks/index'
     else
       @tasks = Task.where(:employee_id => employee.id, :fiscal_year_id => fiscal_id).order('id ASC')
-      render status:200, template: 'api/v1/web/performance_management/sub_tasks/index.json.jbuilder'
+      render status:200, template: 'api/v1/web/performance_management/sub_tasks/index'
     end
   end
 
@@ -51,7 +51,7 @@ class Api::V1::Web::PerformanceManagement::SubTasksController < ApplicationContr
     @task = Task.find(params[:id])
     fiscal_id = FiscalYear.where(:is_active => true).first.id
     @objective_setting = ObjectiveSetting.where(:employee_id => @task.employee_id, :fiscal_year_id => fiscal_id).first
-    render status:200, template: 'api/v1/web/performance_management/sub_tasks/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/sub_tasks/show'
   end
 
   def filter_task_data
@@ -68,7 +68,7 @@ class Api::V1::Web::PerformanceManagement::SubTasksController < ApplicationContr
     else
       @sub_task = SubTask.where(:task_id => params[:task_id]).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/performance_management/sub_tasks/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/sub_tasks/filter_data'
   end
 
   def submit_for_approval
@@ -380,7 +380,7 @@ class Api::V1::Web::PerformanceManagement::SubTasksController < ApplicationContr
 
   def show
     @task = Task.find(params[:id])
-    render status:200, template: 'api/v1/web/performance_management/sub_tasks/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/sub_tasks/show'
   end
 
   def update

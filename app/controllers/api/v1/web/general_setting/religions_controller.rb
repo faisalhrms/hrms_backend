@@ -1,11 +1,11 @@
 class Api::V1::Web::GeneralSetting::ReligionsController < ApplicationController
 
-	before_filter :set_religion, :only => [:show, :update, :destroy]
+	before_action :set_religion, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @religions = Religion.all.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/religions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/religions/index'
   end
 
   def create
@@ -18,7 +18,7 @@ class Api::V1::Web::GeneralSetting::ReligionsController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/general_setting/religions/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/religions/show'
   end
 
   def update

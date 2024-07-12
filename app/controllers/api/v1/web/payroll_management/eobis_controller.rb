@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::EobisController < ApplicationController
 
-	before_filter :set_eobi, :only => [:show, :update, :destroy]
+	before_action :set_eobi, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::PayrollManagement::EobisController < ApplicationController
     else
       @eobis = Eobi.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/eobis/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/eobis/index'
   end
 
   def filter_data
     @eobis = Eobi.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/eobis/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/eobis/index'
   end
 
   def create
@@ -27,7 +27,7 @@ class Api::V1::Web::PayrollManagement::EobisController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/eobis/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/eobis/show'
   end
 
   def update

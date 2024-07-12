@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::AttendanceEarningsController < ApplicationController
 
-	before_filter :set_attendance_earning, :only => [:show, :update, :destroy]
+	before_action :set_attendance_earning, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::AttendanceManagement::AttendanceEarningsController < Applica
     else
       @attendance_earnings = AttendanceEarning.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/attendance_management/attendance_earnings/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_earnings/index'
   end
 
   def filter_data
     @attendance_earnings = AttendanceEarning.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_earnings/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_earnings/index'
   end
 
   def create
@@ -32,7 +32,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceEarningsController < Applica
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/attendance_earnings/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_earnings/show'
   end
 
   def update

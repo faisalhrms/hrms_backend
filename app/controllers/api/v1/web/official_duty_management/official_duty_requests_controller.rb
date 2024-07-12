@@ -1,7 +1,7 @@
 class Api::V1::Web::OfficialDutyManagement::OfficialDutyRequestsController < ApplicationController
   include LeaveOdRequest
 
-  before_filter :set_official_duty, :only => [:show]
+  before_action :set_official_duty, :only => [:show]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def bulk_export
@@ -196,12 +196,12 @@ class Api::V1::Web::OfficialDutyManagement::OfficialDutyRequestsController < App
 
   def filter_data
     @official_duty_requests = OfficialDuty.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/official_duty_management/official_duty_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/official_duty_management/official_duty_requests/index'
   end
 
   def filter_data1
     @request_flow = RequestFlow.find_by(:company_id => params[:company_id],:id => 2)
-    render status:200, template: 'api/v1/web/official_duty_management/official_duty_requests/od_back_date.json.jbuilder'
+    render status:200, template: 'api/v1/web/official_duty_management/official_duty_requests/od_back_date'
   end
 
   def create
@@ -335,7 +335,7 @@ class Api::V1::Web::OfficialDutyManagement::OfficialDutyRequestsController < App
   end
 
   def show
-    render status:200, template: 'api/v1/web/official_duty_management/official_duty_requests/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/official_duty_management/official_duty_requests/show'
   end
 
 	private

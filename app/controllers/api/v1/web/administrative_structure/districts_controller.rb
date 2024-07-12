@@ -1,16 +1,16 @@
 class Api::V1::Web::AdministrativeStructure::DistrictsController < ApplicationController
 
-	before_filter :set_district, :only => [:show, :update, :destroy]
+	before_action :set_district, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @districts = District.all.order('id DESC')
-    render status:200, template: 'api/v1/web/administrative_structure/districts/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/administrative_structure/districts/index'
   end
 
   def filter_data
     @districts = District.where(:division_id => params[:division_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/administrative_structure/districts/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/administrative_structure/districts/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::AdministrativeStructure::DistrictsController < ApplicationCo
   end
 
   def show
-    render status:200, template: 'api/v1/web/administrative_structure/districts/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/administrative_structure/districts/show'
   end
 
   def update

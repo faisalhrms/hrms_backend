@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::PayExecutionsController < ApplicationController
 
-	before_filter :set_pay_execution, :only => [:show, :update, :destroy, :generate_payroll, :regenerate_payroll, :locked_payroll, :bulk_download_slip, :download_tax_working]
+	before_action :set_pay_execution, :only => [:show, :update, :destroy, :generate_payroll, :regenerate_payroll, :locked_payroll, :bulk_download_slip, :download_tax_working]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,17 +9,17 @@ class Api::V1::Web::PayrollManagement::PayExecutionsController < ApplicationCont
     else
       @pay_executions = PayExecution.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/pay_executions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_executions/index'
   end
 
   def filter_data
     @pay_executions = PayExecution.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/pay_executions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_executions/index'
   end
 
   def fixed_pay_executions
     @pay_executions = PayExecution.where(:company_id => params[:company_id], :calculation_type => "Fixed").order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/pay_executions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_executions/index'
   end
 
   def create
@@ -42,7 +42,7 @@ class Api::V1::Web::PayrollManagement::PayExecutionsController < ApplicationCont
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/pay_executions/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_executions/show'
   end
 
   def update

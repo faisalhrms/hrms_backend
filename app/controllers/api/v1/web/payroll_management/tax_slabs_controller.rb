@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::TaxSlabsController < ApplicationController
 
-	before_filter :set_tax_slab, :only => [:show, :update, :destroy]
+	before_action :set_tax_slab, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::PayrollManagement::TaxSlabsController < ApplicationControlle
     else
       @tax_slabs = TaxSlab.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/tax_slabs/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/tax_slabs/index'
   end
 
   def filter_data
     @tax_slabs = TaxSlab.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/tax_slabs/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/tax_slabs/index'
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::Web::PayrollManagement::TaxSlabsController < ApplicationControlle
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/tax_slabs/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/tax_slabs/show'
   end
 
   def update

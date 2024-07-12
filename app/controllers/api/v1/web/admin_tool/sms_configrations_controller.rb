@@ -1,6 +1,6 @@
 class Api::V1::Web::AdminTool::SmsConfigrationsController < ApplicationController
 
-	before_filter :set_sms_configration, :only => [:show, :update, :destroy]
+	before_action :set_sms_configration, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::AdminTool::SmsConfigrationsController < ApplicationControlle
     else
       @sms_configrations = SmsConfigration.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/sms_configrations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_configrations/index'
   end
 
   def active_list
@@ -18,12 +18,12 @@ class Api::V1::Web::AdminTool::SmsConfigrationsController < ApplicationControlle
     else
       @sms_configrations = SmsConfigration.where(:company_id => current_user.company_id, :is_active => true).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/sms_configrations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_configrations/index'
   end
 
   def filter_data
     @sms_configrations = SmsConfigration.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/admin_tool/sms_configrations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_configrations/index'
   end
 
   def create
@@ -36,7 +36,7 @@ class Api::V1::Web::AdminTool::SmsConfigrationsController < ApplicationControlle
   end
 
   def show
-    render status:200, template: 'api/v1/web/admin_tool/sms_configrations/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_configrations/show'
   end
 
   def update

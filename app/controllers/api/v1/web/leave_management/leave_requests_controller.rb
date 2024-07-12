@@ -1,7 +1,7 @@
 class Api::V1::Web::LeaveManagement::LeaveRequestsController < ApplicationController
   include LeaveOdRequest
 
-	before_filter :set_leave_request, :only => [:show]
+	before_action :set_leave_request, :only => [:show]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def bulk_export
@@ -132,7 +132,7 @@ class Api::V1::Web::LeaveManagement::LeaveRequestsController < ApplicationContro
         @leave_type = LeaveType.find(params[:leave_type_id])
         @leave_allocation = LeaveAllocation.find_by(:leave_type_id => params[:leave_type_id], :employee_id => current_user.employee.id, :is_active => true)
         if not @leave_allocation.nil?
-          render status:200, template: 'api/v1/web/leave_management/leave_requests/employee_leave_quota.json.jbuilder'
+          render status:200, template: 'api/v1/web/leave_management/leave_requests/employee_leave_quota'
         else
           render json: {errors: "Leave Quota not assigned to you"}, status: :unprocessable_entity
         end
@@ -143,7 +143,7 @@ class Api::V1::Web::LeaveManagement::LeaveRequestsController < ApplicationContro
       @leave_type = LeaveType.find(params[:leave_type_id])
       @leave_allocation = LeaveAllocation.find_by(:leave_type_id => params[:leave_type_id], :employee_id => params[:employee_id], :is_active => true)
       if not @leave_allocation.nil?
-        render status:200, template: 'api/v1/web/leave_management/leave_requests/employee_leave_quota.json.jbuilder'
+        render status:200, template: 'api/v1/web/leave_management/leave_requests/employee_leave_quota'
       else
         render json: {errors: "Leave Quota not assigned to you"}, status: :unprocessable_entity
       end
@@ -195,7 +195,7 @@ class Api::V1::Web::LeaveManagement::LeaveRequestsController < ApplicationContro
 
   def filter_data
     @leave_requests = LeaveRequest.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/leave_management/leave_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_requests/index'
   end
 
   def bulk_save
@@ -316,7 +316,7 @@ class Api::V1::Web::LeaveManagement::LeaveRequestsController < ApplicationContro
   end
 
   def show
-    render status:200, template: 'api/v1/web/leave_management/leave_requests/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_requests/show'
   end
 
 	private

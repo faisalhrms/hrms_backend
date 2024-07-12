@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::CompaniesController < ApplicationController
 
-	before_filter :set_company, :only => [:show, :update, :destroy]
+	before_action :set_company, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -15,7 +15,7 @@ class Api::V1::Web::Organization::CompaniesController < ApplicationController
     else
       @companies = Company.where(:id => current_user.company_id, :is_active => true).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/organization/companies/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/companies/index'
   end
 
   def complete_list
@@ -24,12 +24,12 @@ class Api::V1::Web::Organization::CompaniesController < ApplicationController
     else
       @companies = Company.where(:id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/organization/companies/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/companies/index'
   end
 
   def org_chart
     @company = Company.find(params[:company_id])
-    render status:200, template: 'api/v1/web/organization/companies/org_chart.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/companies/org_chart'
   end
 
   def employee_code_prefix
@@ -55,7 +55,7 @@ class Api::V1::Web::Organization::CompaniesController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/companies/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/companies/show'
   end
 
   def update

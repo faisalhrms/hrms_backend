@@ -1,16 +1,16 @@
 class Api::V1::Web::GeneralSetting::SpecializationsController < ApplicationController
 
-	before_filter :set_specialization, :only => [:show, :update, :destroy]
+	before_action :set_specialization, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @specializations = Specialization.all.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/specializations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/specializations/index'
   end
 
   def active_list
     @specializations = Specialization.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/specializations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/specializations/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::GeneralSetting::SpecializationsController < ApplicationContr
   end
 
   def show
-    render status:200, template: 'api/v1/web/general_setting/specializations/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/specializations/show'
   end
 
   def update

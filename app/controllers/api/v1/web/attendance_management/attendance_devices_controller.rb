@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::AttendanceDevicesController < ApplicationController
 
-	before_filter :set_attendance_device, :only => [:show, :update, :destroy, :fetch_device_data]
+	before_action :set_attendance_device, :only => [:show, :update, :destroy, :fetch_device_data]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::AttendanceManagement::AttendanceDevicesController < Applicat
     else
       @attendance_devices = AttendanceDevice.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/attendance_management/attendance_devices/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_devices/index'
   end
 
   def filter_data
     @attendance_devices = AttendanceDevice.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_devices/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_devices/index'
   end
 
   def create
@@ -27,7 +27,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceDevicesController < Applicat
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/attendance_devices/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_devices/show'
   end
 
   def update

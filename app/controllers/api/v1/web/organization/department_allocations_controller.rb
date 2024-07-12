@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::DepartmentAllocationsController < ApplicationController
 
-	before_filter :set_department_allocation, :only => [:show, :update, :destroy]
+	before_action :set_department_allocation, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -15,12 +15,12 @@ class Api::V1::Web::Organization::DepartmentAllocationsController < ApplicationC
     else
       @department_allocations = []
     end
-    render status:200, template: 'api/v1/web/organization/department_allocations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/department_allocations/index'
   end
 
   def filter_data
     @department_allocations = DepartmentAllocation.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/organization/department_allocations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/department_allocations/index'
   end
 
   def create
@@ -35,11 +35,11 @@ class Api::V1::Web::Organization::DepartmentAllocationsController < ApplicationC
 
   def fetch_department_data
   	@departments = Department.where(:company_id => params[:company_id], :is_active => true).order('id ASC')
-  	render status:200, template: 'api/v1/web/organization/department_allocations/fetch_department_data.json.jbuilder'
+  	render status:200, template: 'api/v1/web/organization/department_allocations/fetch_department_data'
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/department_allocations/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/department_allocations/show'
   end
 
   def update

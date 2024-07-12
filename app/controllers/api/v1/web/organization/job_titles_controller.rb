@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::JobTitlesController < ApplicationController
 
-	before_filter :set_job_title, :only => [:show, :update, :destroy]
+	before_action :set_job_title, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::Organization::JobTitlesController < ApplicationController
     else
       @job_titles = JobTitle.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/organization/job_titles/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/job_titles/index'
   end
 
   def filter_data
@@ -22,7 +22,7 @@ class Api::V1::Web::Organization::JobTitlesController < ApplicationController
         @job_titles = JobTitle.where(:id => current_user.employee.job_title_id, :is_active => true).order('id DESC')
       end
     end
-    render status:200, template: 'api/v1/web/organization/job_titles/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/job_titles/index'
   end
 
   def create
@@ -35,7 +35,7 @@ class Api::V1::Web::Organization::JobTitlesController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/job_titles/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/job_titles/show'
   end
 
   def update

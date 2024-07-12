@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::PayItemsController < ApplicationController
 
-	before_filter :set_pay_item, :only => [:show, :update, :destroy]
+	before_action :set_pay_item, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,28 +9,28 @@ class Api::V1::Web::PayrollManagement::PayItemsController < ApplicationControlle
     else
       @pay_items = PayItem.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/pay_items/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_items/index'
   end
 
   def filter_data
     @pay_items = PayItem.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/pay_items/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_items/index'
   end
 
   def filter_pay_item
     items_execution_details = ItemExecutionDetail.get_by_pay_execution(params[:pay_execution_ids].split(',')).allowed.collect(&:pay_item_id)
     @pay_items  	= PayItem.where(:id => items_execution_details).order('sort_order ASC')
-    render status:200, template: 'api/v1/web/payroll_management/pay_items/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_items/index'
   end
 
   def non_static_pay_items
     @pay_items = PayItem.where(:company_id => params[:company_id], :is_static_item => false, :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/pay_items/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_items/index'
   end
 
   def fixed_pay_items
     @pay_items = PayItem.where(:company_id => params[:company_id], :calculation_type => "Fixed", is_active: true).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/pay_items/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_items/index'
   end
 
   def create
@@ -49,7 +49,7 @@ class Api::V1::Web::PayrollManagement::PayItemsController < ApplicationControlle
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/pay_items/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/pay_items/show'
   end
 
   def update

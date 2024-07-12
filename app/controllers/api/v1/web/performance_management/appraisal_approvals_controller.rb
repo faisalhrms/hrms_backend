@@ -1,17 +1,17 @@
 class Api::V1::Web::PerformanceManagement::AppraisalApprovalsController < ApplicationController
 
-  before_filter :set_appraisal_setting, :only => [:show, :update, :destroy]
+  before_action :set_appraisal_setting, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @appraisal_approvals = AppraisalApproval.where(:id => params[:id])
     # @appraisal_approvals = AppraisalApproval.where(:employee_id => employee_id.first.employee_id).order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/appraisal_approval/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/appraisal_approval/index'
   end
 
   # def filter_data
   #   @objective_settings = ObjectiveSetting.where(:is_active => true).order('id DESC')
-  #   render status:200, template: 'api/v1/web/performance_management/objective_settings/index.json.jbuilder'
+  #   render status:200, template: 'api/v1/web/performance_management/objective_settings/index'
   # end
 
   def filter_approvals
@@ -23,7 +23,7 @@ class Api::V1::Web::PerformanceManagement::AppraisalApprovalsController < Applic
       appraisal_approval = appraisal_approval + AppraisalApproval.where(:employee_id => e.id)
     end
     @appraisal_approvals = AppraisalApproval.all.order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/appraisal_approval/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/appraisal_approval/index'
   end
 
   def create
@@ -114,7 +114,7 @@ class Api::V1::Web::PerformanceManagement::AppraisalApprovalsController < Applic
 
 
   def show
-    render status:200, template: 'api/v1/web/performance_management/appraisal_approval/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/appraisal_approval/show'
   end
 
   def update

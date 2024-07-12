@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::AttendanceStructuresController < ApplicationController
 
-	before_filter :set_attendance_structure, :only => [:show, :update, :destroy]
+	before_action :set_attendance_structure, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::AttendanceManagement::AttendanceStructuresController < Appli
     else
       @attendance_structures = AttendanceStructure.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/attendance_management/attendance_structures/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_structures/index'
   end
 
   def filter_data
     @attendance_structures = AttendanceStructure.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_structures/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_structures/index'
   end
 
   def create
@@ -43,7 +43,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceStructuresController < Appli
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/attendance_structures/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_structures/show'
   end
 
   def update

@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::DesignationsController < ApplicationController
 
-	before_filter :set_designation, :only => [:show, :update, :destroy]
+	before_action :set_designation, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::Organization::DesignationsController < ApplicationController
     else
       @designations = Designation.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/organization/designations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/designations/index'
   end
 
   def filter_data
@@ -22,13 +22,13 @@ class Api::V1::Web::Organization::DesignationsController < ApplicationController
         @designations = Designation.where(:id => current_user.employee.designation_id, :is_active => true).order('id DESC')
       end
     end
-    render status:200, template: 'api/v1/web/organization/designations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/designations/index'
   end
 
   def grade_related_designations
     grade_ids = params[:grade_id].kind_of?(Array) ? params[:grade_id].map(&:to_i) : params[:grade_id].to_s.split(',').map(&:to_i)
     @designations = Designation.where(:grade_id => grade_ids, :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/organization/designations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/designations/index'
   end
 
   def multi_filter_data
@@ -38,7 +38,7 @@ class Api::V1::Web::Organization::DesignationsController < ApplicationController
       grade_ids = params[:grade_ids].split(',').map(&:to_i)
     end
     @designations = Designation.where(:grade_id => grade_ids, :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/organization/designations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/designations/index'
   end
 
   def create
@@ -51,7 +51,7 @@ class Api::V1::Web::Organization::DesignationsController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/designations/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/designations/show'
   end
 
   def update

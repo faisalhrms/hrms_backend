@@ -1,6 +1,6 @@
 class Api::V1::Web::IncentiveManagement::IncentivePoliciesController < ApplicationController
 
-	before_filter :set_incentive_policy, :only => [:show, :update, :destroy]
+	before_action :set_incentive_policy, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::IncentiveManagement::IncentivePoliciesController < Applicati
     else
       @incentive_policies = IncentivePolicy.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/incentive_management/incentive_policies/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/incentive_management/incentive_policies/index'
   end
 
   def filter_data
     @incentive_policies = IncentivePolicy.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/incentive_management/incentive_policies/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/incentive_management/incentive_policies/index'
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::Web::IncentiveManagement::IncentivePoliciesController < Applicati
   end
 
   def show
-    render status:200, template: 'api/v1/web/incentive_management/incentive_policies/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/incentive_management/incentive_policies/show'
   end
 
   def update

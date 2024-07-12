@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::FuelCardDetailsController < ApplicationController
 
-	before_filter :set_fuel_card_detail, :only => [:show, :update, :destroy]
+	before_action :set_fuel_card_detail, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::PayrollManagement::FuelCardDetailsController < ApplicationCo
     else
       @fuel_card_details = FuelCardDetail.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/fuel_card_details/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/fuel_card_details/index'
   end
 
   def filter_data
     @fuel_card_details = FuelCardDetail.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/fuel_card_details/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/fuel_card_details/index'
   end
 
   def create
@@ -27,7 +27,7 @@ class Api::V1::Web::PayrollManagement::FuelCardDetailsController < ApplicationCo
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/fuel_card_details/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/fuel_card_details/show'
   end
 
   def update

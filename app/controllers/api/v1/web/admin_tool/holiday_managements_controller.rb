@@ -1,6 +1,6 @@
 class Api::V1::Web::AdminTool::HolidayManagementsController < ApplicationController
 
-	before_filter :set_holiday_management, :only => [:show, :update, :destroy]
+	before_action :set_holiday_management, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::AdminTool::HolidayManagementsController < ApplicationControl
     else
       @holiday_managements = Holiday.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/holiday_managements/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/holiday_managements/index'
   end
 
   def active_list
@@ -18,12 +18,12 @@ class Api::V1::Web::AdminTool::HolidayManagementsController < ApplicationControl
     else
       @holiday_managements = Holiday.where(:company_id => current_user.company_id, :is_active => true).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/holiday_managements/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/holiday_managements/index'
   end
 
   def filter_data
   	@holiday_managements = Holiday.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/admin_tool/holiday_managements/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/holiday_managements/index'
   end
 
   def create
@@ -38,7 +38,7 @@ class Api::V1::Web::AdminTool::HolidayManagementsController < ApplicationControl
   end
 
   def show
-    render status:200, template: 'api/v1/web/admin_tool/holiday_managements/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/holiday_managements/show'
   end
 
   def update

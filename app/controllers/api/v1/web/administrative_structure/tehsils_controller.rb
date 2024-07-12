@@ -1,16 +1,16 @@
 class Api::V1::Web::AdministrativeStructure::TehsilsController < ApplicationController
 
-	before_filter :set_tehsil, :only => [:show, :update, :destroy]
+	before_action :set_tehsil, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @tehsils = Tehsil.all.order('id DESC')
-    render status:200, template: 'api/v1/web/administrative_structure/tehsils/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/administrative_structure/tehsils/index'
   end
 
   def filter_data
     @tehsils = Tehsil.where(:district_id => params[:district_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/administrative_structure/tehsils/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/administrative_structure/tehsils/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::AdministrativeStructure::TehsilsController < ApplicationCont
   end
 
   def show
-    render status:200, template: 'api/v1/web/administrative_structure/tehsils/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/administrative_structure/tehsils/show'
   end
 
   def update

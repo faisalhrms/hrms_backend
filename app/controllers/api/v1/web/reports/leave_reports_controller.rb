@@ -79,7 +79,7 @@ class Api::V1::Web::Reports::LeaveReportsController < ApplicationController
     if @leave_allocations.count > 0
 
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/leave_reports/leave_balance.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/leave_reports/leave_balance'
       elsif params[:report_type].to_i == 2
         time = Time.now
         url_path = ""
@@ -286,7 +286,7 @@ class Api::V1::Web::Reports::LeaveReportsController < ApplicationController
     if @employees.count > 0
 
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/leave_reports/leave_balance.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/leave_reports/leave_balance'
       elsif params[:report_type].to_i == 2
         time = Time.now
         url_path = ""
@@ -614,7 +614,7 @@ class Api::V1::Web::Reports::LeaveReportsController < ApplicationController
 
     if @employees.count > 0
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/leave_reports/leave_balance_detail.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/leave_reports/leave_balance_detail'
       elsif params[:report_type].to_i == 3
         time = Time.now
         book = Axlsx::Package.new
@@ -889,7 +889,7 @@ class Api::V1::Web::Reports::LeaveReportsController < ApplicationController
 
     if @leave_allocations.count > 0
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/leave_reports/leave_encashment.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/leave_reports/leave_encashment'
       elsif params[:report_type].to_i == 2
         time = Time.now
         url_path = ""
@@ -1121,7 +1121,7 @@ class Api::V1::Web::Reports::LeaveReportsController < ApplicationController
 
     if @leave_requests.count > 0
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/leave_reports/leave_ledger.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/leave_reports/leave_ledger'
       elsif params[:report_type].to_i == 2
         time = Time.now
         url_path = ""

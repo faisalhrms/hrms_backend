@@ -1,6 +1,6 @@
 class Api::V1::Web::LeaveManagement::LeaveApprovalRequestsController < ApplicationController
   skip_before_action :authenticate_user_from_token!, only: [:syed_talal_leave_request]
-	before_filter :set_leave_approval_request, :only => [:show]
+	before_action :set_leave_approval_request, :only => [:show]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -11,11 +11,11 @@ class Api::V1::Web::LeaveManagement::LeaveApprovalRequestsController < Applicati
     elsif current_user.is_admin
       @leave_approvals = ApprovalRequest.get_leave_requests.includes(requestable: :employee).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/leave_management/leave_approval_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_approval_requests/index'
   end
 
   def show
-    render status:200, template: 'api/v1/web/leave_management/leave_approval_requests/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_approval_requests/show'
   end
 
   def approved_request

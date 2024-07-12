@@ -1,6 +1,6 @@
 class Api::V1::Web::OfficialDutyManagement::OfficialDutyApprovalRequestsController < ApplicationController
 
-	before_filter :set_official_duty_approval_request, :only => [:show]
+	before_action :set_official_duty_approval_request, :only => [:show]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -11,11 +11,11 @@ class Api::V1::Web::OfficialDutyManagement::OfficialDutyApprovalRequestsControll
     elsif current_user.is_admin
       @official_duty_approvals = ApprovalRequest.get_od_requests.includes(requestable: :employee).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/official_duty_management/official_duty_approval_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/official_duty_management/official_duty_approval_requests/index'
   end
 
   def show
-    render status:200, template: 'api/v1/web/official_duty_management/official_duty_approval_requests/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/official_duty_management/official_duty_approval_requests/show'
   end
 
   def approved_request

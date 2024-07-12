@@ -1,16 +1,16 @@
 class Api::V1::Web::GeneralSetting::CertificationTypesController < ApplicationController
 
-	before_filter :set_certification_type, :only => [:show, :update, :destroy]
+	before_action :set_certification_type, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @certification_types = CertificationType.all.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/certification_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/certification_types/index'
   end
 
   def active_list
     @certification_types = CertificationType.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/certification_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/certification_types/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::GeneralSetting::CertificationTypesController < ApplicationCo
   end
 
   def show
-    render status:200, template: 'api/v1/web/general_setting/certification_types/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/certification_types/show'
   end
 
   def update

@@ -1,6 +1,6 @@
 class Api::V1::Web::AdminTool::SmsTemplatesController < ApplicationController
 
-	before_filter :set_sms_template, :only => [:show, :update, :destroy]
+	before_action :set_sms_template, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::AdminTool::SmsTemplatesController < ApplicationController
     else
       @sms_templates = SmsTemplate.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/sms_templates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_templates/index'
   end
 
   def active_list
@@ -18,17 +18,17 @@ class Api::V1::Web::AdminTool::SmsTemplatesController < ApplicationController
     else
       @sms_templates = SmsTemplate.where(:company_id => current_user.company_id, :is_active => true).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/sms_templates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_templates/index'
   end
 
   def filter_data
     @sms_templates = SmsTemplate.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/admin_tool/sms_templates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_templates/index'
   end
 
   def manual_sms_template
     @sms_templates = SmsTemplate.where(:company_id => params[:company_id], :is_active => true, :trigger => "Manual").order('id DESC')
-    render status:200, template: 'api/v1/web/admin_tool/sms_templates/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_templates/index'
   end
 
   def create
@@ -41,7 +41,7 @@ class Api::V1::Web::AdminTool::SmsTemplatesController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/admin_tool/sms_templates/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_templates/show'
   end
 
   def update

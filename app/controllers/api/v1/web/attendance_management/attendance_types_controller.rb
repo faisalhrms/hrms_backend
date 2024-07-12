@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::AttendanceTypesController < ApplicationController
 
-	before_filter :set_attendance_type, :only => [:show, :update, :destroy]
+	before_action :set_attendance_type, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,23 +9,23 @@ class Api::V1::Web::AttendanceManagement::AttendanceTypesController < Applicatio
     else
       @attendance_types = AttendanceType.where(:company_id => current_user.company_id).order('sort_order ASC')
     end
-    render status:200, template: 'api/v1/web/attendance_management/attendance_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_types/index'
   end
 
   def filter_data
     @attendance_types = AttendanceType.where(:company_id => params[:company_id], :is_active => true).order('sort_order ASC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_types/index'
   end
 
   def request_enabled
     @attendance_types = AttendanceType.where(:company_id => params[:company_id], :is_active => true, :request_enable => true).order('sort_order ASC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_types/index'
   end
 
   def employee_related_request_enabled
     employee = Employee.find (params[:employee_id])
     @attendance_types = AttendanceType.where(:company_id => employee.company_id, :is_active => true, :request_enable => true).order('sort_order ASC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_types/index'
   end
 
   def create
@@ -38,7 +38,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceTypesController < Applicatio
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/attendance_types/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_types/show'
   end
 
   def update

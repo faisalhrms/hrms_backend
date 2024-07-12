@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::EmployeeTaxAdjustmentsController < ApplicationController
 
-	before_filter :set_employee_tax_adjustment, :only => [:show, :update, :destroy]
+	before_action :set_employee_tax_adjustment, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::PayrollManagement::EmployeeTaxAdjustmentsController < Applic
     else
       @employee_tax_adjustments = EmployeeTaxAdjustment.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/employee_tax_adjustments/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_tax_adjustments/index'
   end
 
   def filter_data
     @employee_tax_adjustments = EmployeeTaxAdjustment.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/employee_tax_adjustments/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_tax_adjustments/index'
   end
 
   def create
@@ -28,7 +28,7 @@ class Api::V1::Web::PayrollManagement::EmployeeTaxAdjustmentsController < Applic
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/employee_tax_adjustments/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_tax_adjustments/show'
   end
 
   def update

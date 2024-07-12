@@ -1,7 +1,7 @@
 class Api::V1::MembersController < ApplicationController
 
 	before_action :authenticate_user_from_token!, :except => [:create, :update_password_by_token, :reset_password]
-	before_filter :set_member, :only => [:show, :update, :destroy, :update_password]
+  before_action :set_member, :only => [:show, :update, :destroy, :update_password]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index

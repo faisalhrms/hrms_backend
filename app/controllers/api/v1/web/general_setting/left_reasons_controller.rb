@@ -1,16 +1,16 @@
 class Api::V1::Web::GeneralSetting::LeftReasonsController < ApplicationController
 
-	before_filter :set_left_reason, :only => [:show, :update, :destroy]
+	before_action :set_left_reason, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @left_reasons = LeftReason.all.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/left_reasons/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/left_reasons/index'
   end
 
   def active_list
     @left_reasons = LeftReason.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/left_reasons/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/left_reasons/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::GeneralSetting::LeftReasonsController < ApplicationControlle
   end
 
   def show
-    render status:200, template: 'api/v1/web/general_setting/left_reasons/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/left_reasons/show'
   end
 
   def update

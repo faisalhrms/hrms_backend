@@ -91,7 +91,7 @@ class Api::V1::Web::Reports::IncentiveReportsController < ApplicationController
 			end
 		end
 		if params[:report_type].to_i == 1
-    	render status:200, template: 'api/v1/web/reports/incentive_reports/sale_incentive_report.json.jbuilder'
+    	render status:200, template: 'api/v1/web/reports/incentive_reports/sale_incentive_report'
     elsif params[:report_type].to_i == 3
 
     	time = Time.now

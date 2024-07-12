@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::CostCentersController < ApplicationController
 
-	before_filter :set_cost_center, :only => [:show, :update, :destroy]
+	before_action :set_cost_center, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::Organization::CostCentersController < ApplicationController
     else
       @cost_centers = CostCenter.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/organization/cost_centers/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/cost_centers/index'
   end
 
   def filter_data
@@ -22,7 +22,7 @@ class Api::V1::Web::Organization::CostCentersController < ApplicationController
         @cost_centers = CostCenter.where(:id => current_user.employee.cost_center_id, :is_active => true).order('id DESC')
       end
     end
-    render status:200, template: 'api/v1/web/organization/cost_centers/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/cost_centers/index'
   end
 
   def create
@@ -35,7 +35,7 @@ class Api::V1::Web::Organization::CostCentersController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/cost_centers/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/cost_centers/show'
   end
 
   def update

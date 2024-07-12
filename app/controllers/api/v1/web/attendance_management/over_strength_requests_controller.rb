@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::OverStrengthRequestsController < ApplicationController
 
-	before_filter :set_over_strength_request, :only => [:show]
+	before_action :set_over_strength_request, :only => [:show]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::AttendanceManagement::OverStrengthRequestsController < Appli
     else
       @over_strength_requests = []
     end
-    render status:200, template: 'api/v1/web/attendance_management/over_strength_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/over_strength_requests/index'
   end
 
   def bulk_index
@@ -40,7 +40,7 @@ class Api::V1::Web::AttendanceManagement::OverStrengthRequestsController < Appli
       od_status = ["Cancelled", "Rejected", "Availed", "Waiting For Approval"]
     end
     @over_strength_requests = OverStrengthRequest.where(:company_id => params[:company_id], :request_status => od_status, :employee_id => @employees.collect(&:id)).where(['start_date >= ? AND end_date <= ?', start_date.to_date.beginning_of_day, end_date.to_date.end_of_day]).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/over_strength_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/over_strength_requests/index'
   end
 
   def verify_over_strength_request
@@ -65,7 +65,7 @@ class Api::V1::Web::AttendanceManagement::OverStrengthRequestsController < Appli
 
   def filter_data
     @badli_requests = OverStrengthRequest.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/over_strength_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/over_strength_requests/index'
   end
 
   def create
@@ -112,7 +112,7 @@ class Api::V1::Web::AttendanceManagement::OverStrengthRequestsController < Appli
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/over_strength_requests/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/over_strength_requests/show'
   end
 
 	private

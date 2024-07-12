@@ -1,11 +1,11 @@
 class Api::V1::Web::PerformanceManagement::CompetenciesController < ApplicationController
 
-  before_filter :set_competency, :only => [:show, :update, :destroy]
+  before_action :set_competency, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @competencies = Competency.all.order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/competencies/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/competencies/index'
     # if current_user.is_admin == true
     #   @companies = Company.where(:is_active => true).order('id DESC')
     # elsif current_user.is_company_head == true
@@ -17,17 +17,17 @@ class Api::V1::Web::PerformanceManagement::CompetenciesController < ApplicationC
     # else
     #   @companies = Company.where(:id => current_user.company_id, :is_active => true).order('id DESC')
     # end
-    # render status:200, template: 'api/v1/web/organization/companies/index.json.jbuilder'
+    # render status:200, template: 'api/v1/web/organization/companies/index'
   end
 
   # def complete_list_task
   #   @tasks = Task.all.order('id DESC')
-  #   render status:200, template: 'api/v1/web/performance_management/competencies/index.json.jbuilder'
+  #   render status:200, template: 'api/v1/web/performance_management/competencies/index'
   # end
 
   def org_chart
     @company = Company.find(params[:company_id])
-    render status:200, template: 'api/v1/web/organization/companies/org_chart.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/companies/org_chart'
   end
 
   # def employee_code_prefix
@@ -53,7 +53,7 @@ class Api::V1::Web::PerformanceManagement::CompetenciesController < ApplicationC
   end
 
   def show
-    render status:200, template: 'api/v1/web/performance_management/competencies/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/competencies/show'
   end
 
   def update

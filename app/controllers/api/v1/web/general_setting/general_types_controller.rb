@@ -3,7 +3,7 @@ class Api::V1::Web::GeneralSetting::GeneralTypesController < ApplicationControll
 
   def index
     @general_types = GeneralType.hiring_shifts.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/general_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/general_types/index'
   end
 
   def show
@@ -28,7 +28,7 @@ class Api::V1::Web::GeneralSetting::GeneralTypesController < ApplicationControll
 
   def filter_data
     @general_types = GeneralType.hiring_shifts.get_by_company(params[:company_id]).order('id DESC') # get all hiring shifts
-    render status:200, template: 'api/v1/web/general_setting/general_types/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/general_types/index'
   end
 
   def destroy

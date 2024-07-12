@@ -254,7 +254,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
         end
       end
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/employee_reports/employee_list.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/employee_reports/employee_list'
       elsif params[:report_type].to_i == 2 and params[:report_view] == ""
         time = Time.now
         url_path = ""
@@ -1005,7 +1005,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employees = @employees.where(:is_active => true, :salary_exempted => false).order('id DESC')
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_profile_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_profile_detail'
     elsif params[:report_type].to_i == 2
       time = Time.now
       url_path = ""
@@ -1824,7 +1824,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employees = @employees.where.not(:line_manager_id => nil).order('line_manager_id ASC')
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/line_manager_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/line_manager_detail'
     elsif params[:report_type].to_i == 2
       time = Time.now
       url_path = ""
@@ -2031,7 +2031,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employees = Employee.where(:id => @employees.collect(&:id), :joining_date => params[:start_date].to_date.beginning_of_day..params[:end_date].to_date.end_of_day)
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/joiner_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/joiner_detail'
     elsif params[:report_type].to_i == 2
       time = Time.now
       url_path = ""
@@ -2374,7 +2374,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employees = Employee.where(:id => @employees.collect(&:id), :confirmation_date => nil, :on_probation => true, :is_active => true, :is_contractual => false).where('confimration_due_date <= ?', params[:selected_date].to_date)
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/probation_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/probation_detail'
     elsif params[:report_type].to_i == 2
       time = Time.now
       url_path = ""
@@ -2558,7 +2558,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employee_transactions = EmployeeTransactionHistory.where(:employee_id => @employees.collect(&:id), :transaction_date => params[:start_date].to_date.beginning_of_day..params[:end_date].to_date.end_of_day, :transaction_type => "Transfer")
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/transfer_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/transfer_detail'
     elsif params[:report_type].to_i == 2
       time = Time.now
       url_path = ""
@@ -2909,7 +2909,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     end
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/leaver_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/leaver_detail'
     elsif params[:report_type].to_i == 2
       time = Time.now
       url_path = ""
@@ -3158,7 +3158,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     end
     @employees = Employee.multiple_branch_data(@employees, current_user)
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/benefit_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/benefit_detail'
     elsif params[:report_type].to_i == 3
       time = Time.now
       book = Axlsx::Package.new
@@ -3396,7 +3396,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employees = @employees.where(:employee_type_id => params[:employee_type_ids].map(&:to_i)).health_insurance_employees
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/health_insurance.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/health_insurance'
     elsif params[:report_type].to_i == 2
       time = Time.now
       url_path = ""
@@ -3882,7 +3882,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     end
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_bank_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_bank_detail'
     elsif params[:report_type].to_i == 2
       time = Time.now
       url_path = ""
@@ -4054,7 +4054,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     end
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_contact_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_contact_detail'
     elsif params[:report_type].to_i == 2
       time = Time.now
       url_path = ""
@@ -4329,7 +4329,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employee_references = EmployeeReference.where(:employee_id => @employees.collect(&:id))
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_reference_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_reference_detail'
     elsif params[:report_type].to_i == 3
       time = Time.now
       book = Axlsx::Package.new
@@ -4487,7 +4487,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employee_next_of_kins = EmployeeNextOfKin.where(:employee_id => @employees.collect(&:id))
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_next_of_kin_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_next_of_kin_detail'
     elsif params[:report_type].to_i == 3
       time = Time.now
       book = Axlsx::Package.new
@@ -4638,13 +4638,13 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employee_relatives = EmployeeRelative.where(:employee_id => @employees.collect(&:id))
     if srl_instance? or dtl_instance?
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/employee_reports/employee_relative_detail.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/employee_reports/employee_relative_detail'
       elsif params[:report_type].to_i == 3
         srl_employee_relative
       end
     else
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/employee_reports/employee_relative_detail.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/employee_reports/employee_relative_detail'
       elsif params[:report_type].to_i == 3
         time = Time.now
         book = Axlsx::Package.new
@@ -4836,7 +4836,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employee_qualifications = EmployeeQualification.where(:employee_id => @employees.collect(&:id))
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_qualification_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_qualification_detail'
     elsif params[:report_type].to_i == 3
       time = Time.now
       book = Axlsx::Package.new
@@ -5008,7 +5008,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employee_qualifications = EmployeeQualification.where(:employee_id => @employees.collect(&:id))
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_last_qualification_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_last_qualification_detail'
     elsif params[:report_type].to_i == 3
       time = Time.now
       book = Axlsx::Package.new
@@ -5185,7 +5185,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
 
     if srl_instance? or dtl_instance?
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/employee_reports/employee_experience_detail.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/employee_reports/employee_experience_detail'
       elsif params[:report_type].to_i == 3
         srl_employee_experience_report
       elsif params[:report_type].to_i == 4
@@ -5193,7 +5193,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
       end
     else
       if params[:report_type].to_i == 1
-        render status:200, template: 'api/v1/web/reports/employee_reports/employee_experience_detail.json.jbuilder'
+        render status:200, template: 'api/v1/web/reports/employee_reports/employee_experience_detail'
       elsif params[:report_type].to_i == 3
         time = Time.now
         book = Axlsx::Package.new
@@ -5352,7 +5352,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employee_experiences = EmployeeExperience.where(:employee_id => @employees.collect(&:id))
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_first_experience.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_first_experience'
     elsif params[:report_type].to_i == 3
       time = Time.now
       book = Axlsx::Package.new
@@ -5513,7 +5513,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     @employee_experiences = EmployeeExperience.where(:employee_id => @employees.collect(&:id))
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_last_experience.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_last_experience'
     elsif params[:report_type].to_i == 3
       time = Time.now
       book = Axlsx::Package.new
@@ -5673,7 +5673,7 @@ class Api::V1::Web::Reports::EmployeeReportsController < ApplicationController
     end
 
     if params[:report_type].to_i == 1
-      render status:200, template: 'api/v1/web/reports/employee_reports/employee_asset_detail.json.jbuilder'
+      render status:200, template: 'api/v1/web/reports/employee_reports/employee_asset_detail'
     elsif params[:report_type].to_i == 3
       time = Time.now
       book = Axlsx::Package.new

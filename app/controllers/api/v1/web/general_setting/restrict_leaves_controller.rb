@@ -1,11 +1,11 @@
 class Api::V1::Web::GeneralSetting::RestrictLeavesController < ApplicationController
 
-	before_filter :set_restrict_leave, :only => [:show, :update, :destroy]
+	before_action :set_restrict_leave, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @restrict_leaves = RestrictLeave.all.order('id DESC')
-    render status:200, template: 'api/v1/web/general_setting/restrict_leaves/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/restrict_leaves/index'
   end
 
   def create
@@ -20,7 +20,7 @@ class Api::V1::Web::GeneralSetting::RestrictLeavesController < ApplicationContro
 
   def show
     @users = User.where(company_id: @restrict_leave.company_id)
-    render status:200, template: 'api/v1/web/general_setting/restrict_leaves/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/general_setting/restrict_leaves/show'
   end
 
   def update

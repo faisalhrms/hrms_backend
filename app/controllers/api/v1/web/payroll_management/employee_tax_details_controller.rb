@@ -1,12 +1,12 @@
 class Api::V1::Web::PayrollManagement::EmployeeTaxDetailsController < ApplicationController
 
-	before_filter :set_employee, :only => [:show, :update]
+	before_action :set_employee, :only => [:show, :update]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def show
   	@fiscal_year = FiscalYear.find_by(:company_id => @employee.company_id, :is_active => true)
   	@pay_invoices = PayInvoice.where(:employee_id => @employee.id, :status => true, :fiscal_year_id => @fiscal_year.id).order('id ASC')
-    render status:200, template: 'api/v1/web/payroll_management/employee_tax_details/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/employee_tax_details/show'
   end
 
   def update

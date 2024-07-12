@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::RelaxationApprovalRequestsController < ApplicationController
 
-	before_filter :set_relaxation_approval_request, :only => [:show]
+	before_action :set_relaxation_approval_request, :only => [:show]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -10,11 +10,11 @@ class Api::V1::Web::AttendanceManagement::RelaxationApprovalRequestsController <
     else
       @relaxation_approvals = []
     end
-    render status:200, template: 'api/v1/web/attendance_management/relaxation_approval_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/relaxation_approval_requests/index'
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/relaxation_approval_requests/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/relaxation_approval_requests/show'
   end
 
   def approved_request

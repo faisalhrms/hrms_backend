@@ -1,6 +1,6 @@
 class Api::V1::Web::EmployeeRequest::ApprovalRequestsController < ApplicationController
 
-	before_filter :set_approval_request, :only => [:show]
+  before_action :set_approval_request, :only => [:show]
   skip_before_action :authenticate_user_from_token!, only: [:approve_by_email, :reject_by_email]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
@@ -11,7 +11,7 @@ class Api::V1::Web::EmployeeRequest::ApprovalRequestsController < ApplicationCon
     else
       @approval_requests = []
     end
-    render status:200, template: 'api/v1/web/employee_request/approval_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_request/approval_requests/index'
   end
 
   def bulk_index
@@ -28,11 +28,11 @@ class Api::V1::Web::EmployeeRequest::ApprovalRequestsController < ApplicationCon
       @approval_requests = ApprovalRequest.where(approval_conditions).where('approval_requests.created_at between ? AND ?', params[:start_date].to_date, params[:end_date].to_date.end_of_day)
                                .includes(:request_sender).where(employees: {id: @employees.ids}).order('approval_requests.id DESC')
     end
-    render status:200, template: 'api/v1/web/employee_request/approval_requests/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_request/approval_requests/index'
   end
 
   def show
-    render status:200, template: 'api/v1/web/employee_request/approval_requests/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_request/approval_requests/show'
   end
 
   def approved_request

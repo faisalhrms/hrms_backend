@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::AttendanceDeductionsController < ApplicationController
 
-	before_filter :set_attendance_deduction, :only => [:show, :update, :destroy]
+	before_action :set_attendance_deduction, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::AttendanceManagement::AttendanceDeductionsController < Appli
     else
       @attendance_deductions = AttendanceDeduction.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/attendance_management/attendance_deductions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_deductions/index'
   end
 
   def filter_data
     @attendance_deductions = AttendanceDeduction.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_deductions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_deductions/index'
   end
 
   def create
@@ -27,7 +27,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceDeductionsController < Appli
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/attendance_deductions/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_deductions/show'
   end
 
   def update

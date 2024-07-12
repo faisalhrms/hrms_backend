@@ -1,6 +1,6 @@
 class Api::V1::Web::AdminTool::SmsExecutionsController < ApplicationController
 
-	before_filter :set_sms_execution, :only => [:show, :update, :destroy, :execute_sms]
+	before_action :set_sms_execution, :only => [:show, :update, :destroy, :execute_sms]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::AdminTool::SmsExecutionsController < ApplicationController
     else
       @sms_executions = SmsExecution.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/sms_executions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_executions/index'
   end
 
   def filter_data
     @sms_executions = SmsExecution.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/admin_tool/sms_executions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_executions/index'
   end
 
   def create
@@ -27,7 +27,7 @@ class Api::V1::Web::AdminTool::SmsExecutionsController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/admin_tool/sms_executions/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/sms_executions/show'
   end
 
   def update

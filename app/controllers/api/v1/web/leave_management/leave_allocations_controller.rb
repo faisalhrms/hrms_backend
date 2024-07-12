@@ -1,6 +1,6 @@
 class Api::V1::Web::LeaveManagement::LeaveAllocationsController < ApplicationController
 
-	before_filter :set_leave_allocation, :only => [:show, :adjust_leave_balance, :deactivate_leave, :activate_leave, :destroy]
+	before_action :set_leave_allocation, :only => [:show, :adjust_leave_balance, :deactivate_leave, :activate_leave, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -11,7 +11,7 @@ class Api::V1::Web::LeaveManagement::LeaveAllocationsController < ApplicationCon
     if not system_setting.nil?
       @in_process_leave = system_setting.in_process_leave_allowed
     end
-    render status:200, template: 'api/v1/web/leave_management/leave_allocations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_allocations/index'
   end
 
   def leave_allocation_list
@@ -36,7 +36,7 @@ class Api::V1::Web::LeaveManagement::LeaveAllocationsController < ApplicationCon
     if params[:leave_year_id].present?
       @leave_allocations = @leave_allocations.where(:leave_year_id => params[:leave_year_id])
     end
-    render status:200, template: 'api/v1/web/leave_management/leave_allocations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_allocations/index'
   end
 
   def bulk_export
@@ -342,7 +342,7 @@ class Api::V1::Web::LeaveManagement::LeaveAllocationsController < ApplicationCon
     if not system_setting.nil?
       @in_process_leave = system_setting.in_process_leave_allowed
     end
-    render status:200, template: 'api/v1/web/leave_management/leave_allocations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_allocations/index'
   end
 
   def filter_data
@@ -352,7 +352,7 @@ class Api::V1::Web::LeaveManagement::LeaveAllocationsController < ApplicationCon
     if not system_setting.nil?
       @in_process_leave = system_setting.in_process_leave_allowed
     end
-    render status:200, template: 'api/v1/web/leave_management/leave_allocations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_allocations/index'
   end
 
   def create
@@ -373,7 +373,7 @@ class Api::V1::Web::LeaveManagement::LeaveAllocationsController < ApplicationCon
     if not system_setting.nil?
       @in_process_leave = system_setting.in_process_leave_allowed
     end
-    render status:200, template: 'api/v1/web/leave_management/leave_allocations/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/leave_management/leave_allocations/show'
   end
 
   def adjust_leave_balance

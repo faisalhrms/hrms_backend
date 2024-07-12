@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::MissingPunchesController < ApplicationController
 
-	before_filter :set_missing_punch, :only => [:show, :update, :destroy]
+	before_action :set_missing_punch, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::AttendanceManagement::MissingPunchesController < Application
     else
       @missing_punches = MissingPunch.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/attendance_management/missing_punches/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/missing_punches/index'
   end
 
   def filter_data
     @missing_punches = MissingPunch.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/missing_punches/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/missing_punches/index'
   end
 
   def create
@@ -27,7 +27,7 @@ class Api::V1::Web::AttendanceManagement::MissingPunchesController < Application
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/missing_punches/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/missing_punches/show'
   end
 
   def update

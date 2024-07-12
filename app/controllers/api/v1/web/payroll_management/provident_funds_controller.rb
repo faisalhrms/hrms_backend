@@ -1,6 +1,6 @@
 class Api::V1::Web::PayrollManagement::ProvidentFundsController < ApplicationController
 
-	before_filter :set_provident_fund, :only => [:show, :update, :destroy]
+	before_action :set_provident_fund, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::PayrollManagement::ProvidentFundsController < ApplicationCon
     else
       @provident_funds = ProvidentFund.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/payroll_management/provident_funds/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/provident_funds/index'
   end
 
   def filter_data
     @provident_funds = ProvidentFund.where(:company_id => params[:company_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/payroll_management/provident_funds/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/provident_funds/index'
   end
 
   def create
@@ -27,7 +27,7 @@ class Api::V1::Web::PayrollManagement::ProvidentFundsController < ApplicationCon
   end
 
   def show
-    render status:200, template: 'api/v1/web/payroll_management/provident_funds/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/payroll_management/provident_funds/show'
   end
 
   def update

@@ -1,16 +1,16 @@
 class Api::V1::Web::PerformanceManagement::ObjectiveApprovalsController < ApplicationController
 
-  before_filter :set_objective_setting, :only => [:show, :update, :destroy]
+  before_action :set_objective_setting, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @objective_settings = ObjectiveSetting.all.order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index'
   end
 
   def filter_data
     @objective_settings = ObjectiveSetting.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_approvals/index'
   end
 
   def export_objective_setting_report
@@ -69,7 +69,7 @@ class Api::V1::Web::PerformanceManagement::ObjectiveApprovalsController < Applic
   end
 
   def show
-    render status:200, template: 'api/v1/web/performance_management/objective_approvals/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_approvals/show'
   end
 
   def update_approval
@@ -182,7 +182,7 @@ class Api::V1::Web::PerformanceManagement::ObjectiveApprovalsController < Applic
   def comments
     @objective_setting = ObjectiveSetting.find(params[:id])
     @comments = @objective_setting.objective_comments.where(:comment_type => 1).order(id: :desc)
-    render status:200, template: 'api/v1/web/performance_management/objective_approvals/comments.json.jbuilder'
+    render status:200, template: 'api/v1/web/performance_management/objective_approvals/comments'
   end
 
   def appraisal_comments
@@ -190,7 +190,7 @@ class Api::V1::Web::PerformanceManagement::ObjectiveApprovalsController < Applic
     @objective_setting = ObjectiveSetting.where(:employee_id => params[:id], :fiscal_year_id => fiscal_id)
     @comments = ObjectiveComment.where(:employee_id => params[:id], :comment_type => 2).order(id: :desc)
     if @comments.present?
-      render status:200, template: 'api/v1/web/performance_management/objective_approvals/comments.json.jbuilder'
+      render status:200, template: 'api/v1/web/performance_management/objective_approvals/comments'
     end
   end
 

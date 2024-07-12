@@ -1,6 +1,6 @@
 class Api::V1::Web::AdminTool::EmailExecutionsController < ApplicationController
 
-	before_filter :set_email_execution, :only => [:show, :update, :destroy, :execute_email]
+	before_action :set_email_execution, :only => [:show, :update, :destroy, :execute_email]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,12 +9,12 @@ class Api::V1::Web::AdminTool::EmailExecutionsController < ApplicationController
     else
       @email_executions = EmailExecution.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/admin_tool/email_executions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/email_executions/index'
   end
 
   def filter_data
     @email_executions = EmailExecution.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/admin_tool/email_executions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/email_executions/index'
   end
 
   def create
@@ -27,7 +27,7 @@ class Api::V1::Web::AdminTool::EmailExecutionsController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/admin_tool/email_executions/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/admin_tool/email_executions/show'
   end
 
   def update

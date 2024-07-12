@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::LocationsController < ApplicationController
 
-	before_filter :set_location, :only => [:show, :update, :destroy]
+	before_action :set_location, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -21,7 +21,7 @@ class Api::V1::Web::Organization::LocationsController < ApplicationController
     else
       @locations = []
     end
-    render status:200, template: 'api/v1/web/organization/locations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/locations/index'
   end
 
   def filter_data
@@ -65,7 +65,7 @@ class Api::V1::Web::Organization::LocationsController < ApplicationController
     else
       @locations = []
     end
-    render status:200, template: 'api/v1/web/organization/locations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/locations/index'
   end
 
   def hris_dashboard_filter
@@ -74,7 +74,7 @@ class Api::V1::Web::Organization::LocationsController < ApplicationController
     else
       @locations = []
     end
-    render status:200, template: 'api/v1/web/organization/locations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/locations/index'
   end
 
   def salary_dashboard_filter
@@ -83,7 +83,7 @@ class Api::V1::Web::Organization::LocationsController < ApplicationController
     else
       @locations = []
     end
-    render status:200, template: 'api/v1/web/organization/locations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/locations/index'
   end
 
   def attendance_dashboard_filter
@@ -92,7 +92,7 @@ class Api::V1::Web::Organization::LocationsController < ApplicationController
     else
       @locations = []
     end
-    render status:200, template: 'api/v1/web/organization/locations/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/locations/index'
   end
 
   def create
@@ -105,7 +105,7 @@ class Api::V1::Web::Organization::LocationsController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/locations/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/locations/show'
   end
 
   def update

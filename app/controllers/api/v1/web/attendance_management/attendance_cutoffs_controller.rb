@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::AttendanceCutoffsController < ApplicationController
 
-	before_filter :set_attendance_cutoff, :only => [:show, :update, :destroy, :execute_attendance_cut_off, :download_attendance_cutoff, :cut_off_employee_list, :cut_off_adjustment_list]
+	before_action :set_attendance_cutoff, :only => [:show, :update, :destroy, :execute_attendance_cut_off, :download_attendance_cutoff, :cut_off_employee_list, :cut_off_adjustment_list]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,17 +9,17 @@ class Api::V1::Web::AttendanceManagement::AttendanceCutoffsController < Applicat
     else
       @attendance_cutoffs = AttendanceCutoff.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index'
   end
 
   def filter_data
     @attendance_cutoffs = AttendanceCutoff.where(:company_id => params[:company_id], :is_executed => true).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index'
   end
 
   def locaiton_filter_data
     @attendance_cutoffs = AttendanceCutoff.where(:company_id => current_user.company_id, :is_executed => true).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index'
   end
 
   def check_cutoff_month
@@ -34,12 +34,12 @@ class Api::V1::Web::AttendanceManagement::AttendanceCutoffsController < Applicat
 
   def branch_filter_data
     @attendance_cutoffs = AttendanceCutoff.where(:branch_id => params[:branch_id], :is_executed => true).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index'
   end
 
   def salary_unit_filter_data
     @attendance_cutoffs = AttendanceCutoff.where(:salary_unit_id => params[:salary_unit_id], :is_executed => true).order('id DESC')
-    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/index'
   end
 
   def create
@@ -79,7 +79,7 @@ class Api::V1::Web::AttendanceManagement::AttendanceCutoffsController < Applicat
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/show'
   end
 
   def update
@@ -123,12 +123,12 @@ class Api::V1::Web::AttendanceManagement::AttendanceCutoffsController < Applicat
   def cut_off_employee_list
     employee_ids = @attendance_cutoff.finalize_attendances.collect(&:employee_id).uniq
     @employees = Employee.where(:id => employee_ids, :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'
   end
 
   def cut_off_adjustment_list
     @finalize_attendances = @attendance_cutoff.finalize_attendances.where(:employee_id => params[:employee_id])
-    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/cut_off_adjustment_list.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/attendance_cutoffs/cut_off_adjustment_list'
   end
 
   def save_cut_off_adjustment

@@ -1,6 +1,6 @@
 class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationController
   skip_before_action :authenticate_user_from_token!, only: [:fetch_companies, :fetch_designations, :fetch_departments, :fetch_locations, :fetch_employees]
-  before_filter :set_employee, :only => [:show, :update, :destroy]
+  before_action :set_employee, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   ####### Index #########
@@ -8,7 +8,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
   def current_employee
     @employees = Employee.includes(:designation, :department, :location, :branch, :grade).where(:company_id => params[:company_id], :is_active => true, is_struck_off: false).order('id DESC')
     filter_employee_data_on_request
-    render status:200, template: 'api/v1/web/employee_management/employees/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/index'
   end
 
   def subordinate_employee
@@ -50,26 +50,26 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
       @employees = []
     end
     @employees = Employee.multiple_branch_data(@employees, current_user)
-    render status:200, template: 'api/v1/web/employee_management/employees/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/index'
   end
 
   def archive_employee
     @employees = Employee.where("company_id = ? AND (is_active = ? OR is_struck_off = ?)", params[:company_id], false, true).order('id DESC')
     filter_employee_data_on_request
     @employees = Employee.multiple_branch_data_in_active(@employees, current_user)
-    render status:200, template: 'api/v1/web/employee_management/employees/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/index'
   end
 
   def line_manager_list
     @employees = Employee.where(:company_id => params[:company_id], :is_active => true, :is_line_manager => true).order('id DESC')
     filter_employee_data_on_request
-    render status:200, template: 'api/v1/web/employee_management/employees/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/index'
   end
 
   def head_of_department_list
     @employees = Employee.where(:company_id => params[:company_id], :is_active => true, :is_department_head => true).order('id DESC')
     filter_employee_data_on_request
-    render status:200, template: 'api/v1/web/employee_management/employees/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/index'
   end
 
   def combine_filter_data
@@ -101,7 +101,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     if not params[:employee_type_id].blank?
       @employees = Employee.employee_type_related_employee(@employees, params[:employee_type_id].to_i)
     end 
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'   
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'   
   end
 
   def employee_change_list
@@ -113,7 +113,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     end
     @employees = Employee.where(:company_id => params[:company_id], :is_active => is_active).order('id DESC')
     filter_employee_data_on_request
-    render status:200, template: 'api/v1/web/employee_management/employees/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/index'
   end
 
   def filter_subordinate_employee
@@ -128,7 +128,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     else
       @employees = []
     end
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'
   end
 
 
@@ -161,7 +161,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
         @employees = Employee.where(:id => current_user.employee.id, :excluded_from_reports => false)
       end
     end
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'
   end
 
   def filter_location_data
@@ -192,42 +192,42 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
         @employees = Employee.where(:id => current_user.employee.id, :excluded_from_reports => false)
       end
     end
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'
   end
 
   def filter_combine_data
     @employees = Employee.where(:location_id => params[:location_id], :employee_type_id => params[:employee_type_id], :is_active => true, :excluded_from_reports => false).order('id DESC')
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'
   end
 
   def filter_permanent_data
     @employees = Employee.where(:is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'
   end
 
   def filter_branch_data
     @employees = Employee.where(:branch_id => params[:branch_id], :is_active => true, :excluded_from_reports => false).order('id DESC')
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'
   end
 
   def filter_department_data
     @employees = Employee.where(:department_id => params[:department_id], :is_active => true, :excluded_from_reports => false).order('id DESC')
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'
   end
 
   def filter_langguage_date
     @employee = Employee.find(params[:id])
-    render status:200, template: 'api/v1/web/employee_management/employees/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/show'
   end
 
   def filter_incharge_data
     @employees = Employee.where(:is_incharge => true, :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/employee_management/employees/filter_data.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/filter_data'
   end
 
   # def employee_combine_information
   #   @employee = Employee.find(params[:employee_id])
-  #   render status:200, template: 'api/v1/web/employee_management/employees/employee_combine_information.json.jbuilder'
+  #   render status:200, template: 'api/v1/web/employee_management/employees/employee_combine_information'
   # end
 
   def employee_combine_information
@@ -261,7 +261,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     end
     if employees.collect(&:id).include?(params[:employee_id].to_i) == true
       @employee = Employee.find(params[:employee_id])
-      render status:200, template: 'api/v1/web/employee_management/employees/employee_combine_information.json.jbuilder'
+      render status:200, template: 'api/v1/web/employee_management/employees/employee_combine_information'
     else
       render status:404, json: {message: "No Record Found"}
     end
@@ -302,7 +302,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     if @employees.count > 0
       @employees = @employees.where("first_name ILIKE ? OR last_name ILIKE ? OR employee_code ILIKE ? OR concat(first_name, ' ', last_name) ILIKE ?", "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%")  
     end
-    render status:200, template: 'api/v1/web/employee_management/employees/get_employees.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/get_employees'
   end
 
   def get_subordinate_employees
@@ -345,7 +345,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     if @employees.count > 0
       @employees = @employees.where("first_name ILIKE ? OR last_name ILIKE ? OR employee_code ILIKE ? OR concat(first_name, ' ', last_name) ILIKE ?", "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%")  
     end
-    render status:200, template: 'api/v1/web/employee_management/employees/get_employees.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/get_employees'
   end
 
   ####### Picture or File Attachment #########
@@ -483,7 +483,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
   ####### View #########
 
   # def show
-  #   render status:200, template: 'api/v1/web/employee_management/employees/show.json.jbuilder'
+  #   render status:200, template: 'api/v1/web/employee_management/employees/show'
   # end
 
   def show
@@ -521,7 +521,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     # else 
     #   render status:404, json: {message: "No Record Found"}
     # end
-    render status:200, template: 'api/v1/web/employee_management/employees/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/employee_management/employees/show'
   end
 
   def get_updated_confimration_due_date

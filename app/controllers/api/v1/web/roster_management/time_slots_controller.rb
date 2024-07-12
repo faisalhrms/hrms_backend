@@ -1,6 +1,6 @@
 class Api::V1::Web::RosterManagement::TimeSlotsController < ApplicationController
 
-	before_filter :set_time_slot, :only => [:show, :update, :destroy]
+	before_action :set_time_slot, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,33 +9,33 @@ class Api::V1::Web::RosterManagement::TimeSlotsController < ApplicationControlle
     else
       @time_slots = TimeSlot.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/roster_management/time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/time_slots/index'
   end
 
   def filter_data
     @time_slots = TimeSlot.where(:company_id => params[:company_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/roster_management/time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/time_slots/index'
   end
 
   def location_related_time_slots
     @time_slots = TimeSlot.where(:location_id => params[:location_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/roster_management/time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/time_slots/index'
   end
 
   def branch_related_time_slots
     @time_slots = TimeSlot.where(:branch_id => params[:branch_id], :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/roster_management/time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/time_slots/index'
   end
 
   def flexi_branch_related_time_slots
     @time_slots = TimeSlot.where(:branch_id => params[:branch_id], :is_active => true, :is_flexi => true).order('id DESC')
-    render status:200, template: 'api/v1/web/roster_management/time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/time_slots/index'
   end
 
   def employee_related_time_slots
     employee = Employee.find(params[:employee_id])
     @time_slots = TimeSlot.where(:branch_id => employee.branch_id, :is_active => true).order('id DESC')
-    render status:200, template: 'api/v1/web/roster_management/time_slots/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/time_slots/index'
   end
 
   def create
@@ -77,7 +77,7 @@ class Api::V1::Web::RosterManagement::TimeSlotsController < ApplicationControlle
   end
 
   def show
-    render status:200, template: 'api/v1/web/roster_management/time_slots/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/roster_management/time_slots/show'
   end
 
   def update

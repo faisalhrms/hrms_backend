@@ -1,6 +1,6 @@
 class Api::V1::Web::AttendanceManagement::EmployeeArrearsController < ApplicationController
 
-	before_filter :set_employee_arrear, :only => [:show, :update, :disabled_employee_arrear]
+	before_action :set_employee_arrear, :only => [:show, :update, :disabled_employee_arrear]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::AttendanceManagement::EmployeeArrearsController < Applicatio
     else
       @employee_arrears = EmployeeArrear.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/attendance_management/employee_arrears/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/employee_arrears/index'
   end
 
   def create
@@ -26,7 +26,7 @@ class Api::V1::Web::AttendanceManagement::EmployeeArrearsController < Applicatio
   end
 
   def show
-    render status:200, template: 'api/v1/web/attendance_management/employee_arrears/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/attendance_management/employee_arrears/show'
   end
 
   def update

@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::SalaryUnitsController < ApplicationController
 
-	before_filter :set_salary_unit, :only => [:show, :update, :destroy]
+	before_action :set_salary_unit, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::Organization::SalaryUnitsController < ApplicationController
     else
       @salary_units = SalaryUnit.where(:company_id => current_user.company_id).order('id DESC')
     end
-    render status:200, template: 'api/v1/web/organization/salary_units/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/salary_units/index'
   end
 
   def filter_data
@@ -22,7 +22,7 @@ class Api::V1::Web::Organization::SalaryUnitsController < ApplicationController
         @salary_units = SalaryUnit.where(:id => current_user.employee.salary_unit_id, :is_active => true).order('id DESC')
       end
     end
-    render status:200, template: 'api/v1/web/organization/salary_units/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/salary_units/index'
   end
 
   def filter_data_user
@@ -31,7 +31,7 @@ class Api::V1::Web::Organization::SalaryUnitsController < ApplicationController
     else
       @users = []
     end
-    render status:200, template: 'api/v1/web/organization/salary_units/user.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/salary_units/user'
   end
 
   def create
@@ -44,7 +44,7 @@ class Api::V1::Web::Organization::SalaryUnitsController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/salary_units/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/salary_units/show'
   end
 
   def update

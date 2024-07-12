@@ -1,16 +1,16 @@
 class Api::V1::Web::AdministrativeStructure::DivisionsController < ApplicationController
 
-	before_filter :set_division, :only => [:show, :update, :destroy]
+	before_action :set_division, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
     @divisions = Division.all.order('id DESC')
-    render status:200, template: 'api/v1/web/administrative_structure/divisions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/administrative_structure/divisions/index'
   end
 
   def filter_data
     @divisions = Division.where(:state_id => params[:state_id]).order('id DESC')
-    render status:200, template: 'api/v1/web/administrative_structure/divisions/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/administrative_structure/divisions/index'
   end
 
   def create
@@ -23,7 +23,7 @@ class Api::V1::Web::AdministrativeStructure::DivisionsController < ApplicationCo
   end
 
   def show
-    render status:200, template: 'api/v1/web/administrative_structure/divisions/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/administrative_structure/divisions/show'
   end
 
   def update

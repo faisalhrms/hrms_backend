@@ -1,6 +1,6 @@
 class Api::V1::Web::Organization::GradesController < ApplicationController
 
-	before_filter :set_grade, :only => [:show, :update, :destroy]
+	before_action :set_grade, :only => [:show, :update, :destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def index
@@ -9,7 +9,7 @@ class Api::V1::Web::Organization::GradesController < ApplicationController
     else
       @grades = Grade.where(:company_id => current_user.company_id).order('sort_order ASC')
     end
-    render status:200, template: 'api/v1/web/organization/grades/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/grades/index'
   end
 
   def filter_data
@@ -48,7 +48,7 @@ class Api::V1::Web::Organization::GradesController < ApplicationController
     else
       @grades = []
     end
-    render status:200, template: 'api/v1/web/organization/grades/index.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/grades/index'
   end
 
   def create
@@ -61,7 +61,7 @@ class Api::V1::Web::Organization::GradesController < ApplicationController
   end
 
   def show
-    render status:200, template: 'api/v1/web/organization/grades/show.json.jbuilder'
+    render status:200, template: 'api/v1/web/organization/grades/show'
   end
 
   def update

@@ -4,7 +4,6 @@ class Api::V1::CustomDevise::SessionsController < Devise::SessionsController
   skip_before_action :verify_signed_out_user
   skip_before_action :verify_authenticity_token
   include Devise::Controllers::Helpers
-
   respond_to :json
 
   def create
@@ -21,7 +20,7 @@ class Api::V1::CustomDevise::SessionsController < Devise::SessionsController
           if not @user_session.role.nil?
             @user_permissions = @user_session.role.role_permissions
           end
-          render status:200, template: 'api/v1/custom_devise/sessions/create.json.jbuilder'
+          render template: 'api/v1/custom_devise/sessions/create'
         else
           render json: {:message => "Account is In-Active. Contact to Admin"}, :status => 422
         end

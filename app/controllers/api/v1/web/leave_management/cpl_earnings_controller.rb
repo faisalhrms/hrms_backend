@@ -1,5 +1,5 @@
 class Api::V1::Web::LeaveManagement::CplEarningsController < ApplicationController
-	before_filter :set_employee_id, :only => [:get_cpl_earning, :create]
+	before_action :set_employee_id, :only => [:get_cpl_earning, :create]
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def get_cpl_earning
