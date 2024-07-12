@@ -86,6 +86,7 @@ gem 'unicorn', group: :production
 gem 'exception_notification'
 gem "paranoia"
 gem 'paper_trail'
+gem 'turbolinks'
 #
 #
 # # Attachments
@@ -113,7 +114,7 @@ gem 'dropbox_api'
 # CSV File Reading
 gem 'smarter_csv'
 #
-gem 'apidoco'
+gem 'apidoco', '1.5.0'
 #
 # PDF
 gem 'wicked_pdf'

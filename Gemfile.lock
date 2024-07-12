@@ -85,11 +85,13 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     andpush (0.2.1)
       net-http-persistent (>= 3.0.0)
+    angularjs-rails (1.8.0)
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
-    apidoco (1.6.4)
-      rails (>= 5.0.0)
+    apidoco (1.5.0)
+      angularjs-rails
+      rails (>= 4.0.0)
     axlsx (2.0.1)
       htmlentities (~> 4.3.1)
       nokogiri (>= 1.4.1)
@@ -408,6 +410,9 @@ GEM
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
       railties (>= 6.0.0)
+    turbolinks (5.2.1)
+      turbolinks-source (~> 5.2)
+    turbolinks-source (5.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
@@ -454,7 +459,7 @@ DEPENDENCIES
   acts_as_tenant
   andpush
   annotate
-  apidoco
+  apidoco (= 1.5.0)
   axlsx
   bcrypt
   better_errors
@@ -499,6 +504,7 @@ DEPENDENCIES
   stimulus-rails
   time_difference
   turbo-rails
+  turbolinks
   tzinfo-data
   uglifier
   unicorn
