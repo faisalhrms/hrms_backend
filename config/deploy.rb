@@ -26,7 +26,7 @@ set :pty, true
 set :ssh_options, { forward_agent: true, user: :alche}
 set :use_sudo, false
 
-set :deploy_port, 80
+set :deploy_port, 81
 # files we want symlinking to specific entries in shared.
 set :linked_files, %w{config/database.yml config/local_env.yml}
 

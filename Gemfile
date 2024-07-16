@@ -77,10 +77,10 @@ gem 'devise'
 #
 gem 'rack-cors'
 #
-gem 'capistrano'
-gem 'capistrano-rails'
-gem 'capistrano-bundler'
-gem 'capistrano-rbenv'
+gem 'capistrano', '~> 3.18.1', require: false
+gem 'capistrano-rails', require: false
+gem 'capistrano-bundler', require: false
+gem 'capistrano-rbenv', require: false
 gem 'unicorn', group: :production
 #
 gem 'exception_notification'

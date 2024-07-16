@@ -12,7 +12,6 @@ module TAKBackEnd
     config.active_record.default_timezone = :local # Or :utc
     config.generators.stylesheets = false
     config.generators.javascripts = false
-    config.eager_load_paths << "#{Rails.root}/lib/modules"
     config.eager_load_paths << "#{Rails.root}/lib/concerns"
     config.active_job.queue_adapter = :delayed_job
 

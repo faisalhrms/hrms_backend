@@ -109,7 +109,7 @@ GEM
     bootsnap (1.18.3)
       msgpack (~> 1.2)
     builder (3.3.0)
-    capistrano (3.19.1)
+    capistrano (3.18.1)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -465,7 +465,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootsnap
-  capistrano
+  capistrano (~> 3.18.1)
   capistrano-bundler
   capistrano-rails
   capistrano-rbenv
