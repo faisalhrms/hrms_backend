@@ -82,8 +82,8 @@ class Api::V1::Web::EmployeeManagement::TemporaryStaffsController < ApplicationC
 
   def download_temp_staff
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/employee_management/temporary_staffs/temp_staff_pdf_formats/temp_staff_info.pdf.erb"),
-      :header => { content: render_to_string("api/v1/web/employee_management/temporary_staffs/temp_staff_pdf_formats/temp_staff_info_header.pdf.erb")},
+      render_to_string("api/v1/web/employee_management/temporary_staffs/temp_staff_pdf_formats/temp_staff_info.pdf.erb", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
+      :header => { content: render_to_string("api/v1/web/employee_management/temporary_staffs/temp_staff_pdf_formats/temp_staff_info_header.pdf.erb", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf])},
       :margin => {
         :top      => '0.5in',
         :bottom   => '0.5in',

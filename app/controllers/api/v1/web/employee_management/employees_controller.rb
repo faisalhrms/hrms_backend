@@ -907,7 +907,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     time = Time.now
     url_path = ""
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_tag_info.pdf.erb"),
+      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_tag_info", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
       :margin => {
         :top      => '0.5in',
         :bottom   => '0.5in',
@@ -928,8 +928,8 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     time = Time.now
     url_path = ""
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_joining_info.pdf.erb"),
-      footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_joining_info", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
+      footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf])},
       :margin => {
         :top      => '0.5in',
         :bottom   => '0.5in',
@@ -950,8 +950,8 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     time = Time.now
     url_path = ""
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_next_of_kin_info.pdf.erb"),
-      footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_next_of_kin_info", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
+      footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf])},
       :margin => {
         :top      => '0.5in',
         :bottom   => '0.5in',
@@ -971,7 +971,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     time = Time.now 
     url_path = ""
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_personal_info.pdf.erb"),
+      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_personal_info", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
       :margin => {
         :top      => '0.5in',
         :bottom   => '0.5in',
@@ -992,7 +992,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     
     url_path = ""
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_asset_info.pdf.erb"),
+      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_asset_info", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
       :margin => {
         :top      => '0.5in',
         :bottom   => '0.5in',
@@ -1013,7 +1013,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     
     url_path = ""
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/mode_of_collection_settlement.pdf.erb"),
+      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/mode_of_collection_settlement", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
       :margin => {
         :top      => '0.5in',
         :bottom   => '0.5in',
@@ -1034,7 +1034,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     
     url_path = ""
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_clearance_form.pdf.erb"),
+      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_clearance_form", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
       dpi: 320
     )
 
@@ -1049,7 +1049,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     
     url_path = ""
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/exit_interview_form.pdf.erb"),
+      render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/exit_interview_form", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
       dpi: 320
     )
 
@@ -1062,7 +1062,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     employee = Employee.find(employee_id)
     @employees = [employee]
     pdf = WickedPdf.new.pdf_from_string(
-        render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_card.pdf.erb"),
+        render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_card", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
         :margin => {
             :top      => '0.5in',
             :bottom   => '0.5in',
@@ -1080,7 +1080,7 @@ class Api::V1::Web::EmployeeManagement::EmployeesController < ApplicationControl
     @employees = Employee.includes(:designation, :department, :location, :branch, :grade).where(:company_id => params[:company_id], :is_active => true).order('id DESC')
     filter_employee_data_on_request
     pdf = WickedPdf.new.pdf_from_string(
-        render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_card.pdf.erb"),
+        render_to_string("api/v1/web/employee_management/employees/employee_pdf_formats/employee_card", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
         :margin => {
             :top      => '0.1in',
             :bottom   => '0.1in',

@@ -21,8 +21,8 @@ class Api::V1::Web::AttendanceManagement::AttendanceExecutionsController < Appli
 			leverage_minute_policy
 	    check_directory("#{Rails.public_path}/pdf")
 	    pdf = WickedPdf.new.pdf_from_string(
-	      render_to_string("api/v1/web/reports/attendance_reports/time_card.pdf.erb"),
-	      footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+	      render_to_string("api/v1/web/reports/attendance_reports/time_card", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
+	      footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf])},
 	      :margin => {
 	        :top      => '0.1in',
 	        :bottom   => '0.1in',
@@ -48,8 +48,8 @@ class Api::V1::Web::AttendanceManagement::AttendanceExecutionsController < Appli
 	    url_path = ""
 	    check_directory("#{Rails.public_path}/pdf")
 	    pdf = WickedPdf.new.pdf_from_string(
-	      render_to_string("api/v1/web/reports/attendance_reports/bulk_time_card.pdf.erb"),
-	      footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+	      render_to_string("api/v1/web/reports/attendance_reports/bulk_time_card", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
+	      footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf])},
 	      :margin => {
 	        :top      => '0.1in',
 	        :bottom   => '0.1in',

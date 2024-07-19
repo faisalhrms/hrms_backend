@@ -85,8 +85,8 @@ class Api::V1::Web::Reports::LeaveReportsController < ApplicationController
         url_path = ""
         check_directory("#{Rails.public_path}/pdf")
         pdf = WickedPdf.new.pdf_from_string(
-          render_to_string("api/v1/web/reports/leave_reports/leave_balance.pdf.erb"),
-          footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+          render_to_string("api/v1/web/reports/leave_reports/leave_balance", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+          footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
           :margin => {
             :top      => '0.1in',
             :bottom   => '0.1in',
@@ -292,8 +292,8 @@ class Api::V1::Web::Reports::LeaveReportsController < ApplicationController
         url_path = ""
         check_directory("#{Rails.public_path}/pdf")
         pdf = WickedPdf.new.pdf_from_string(
-          render_to_string("api/v1/web/reports/leave_reports/leave_balance.pdf.erb"),
-          footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+          render_to_string("api/v1/web/reports/leave_reports/leave_balance", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+          footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
           :margin => {
             :top      => '0.1in',
             :bottom   => '0.1in',
@@ -895,8 +895,8 @@ class Api::V1::Web::Reports::LeaveReportsController < ApplicationController
         url_path = ""
         check_directory("#{Rails.public_path}/pdf")
         pdf = WickedPdf.new.pdf_from_string(
-          render_to_string("api/v1/web/reports/leave_reports/leave_encashment.pdf.erb"),
-          footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+          render_to_string("api/v1/web/reports/leave_reports/leave_encashment", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+          footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
           :margin => {
             :top      => '0.1in',
             :bottom   => '0.1in',
@@ -1127,8 +1127,8 @@ class Api::V1::Web::Reports::LeaveReportsController < ApplicationController
         url_path = ""
         check_directory("#{Rails.public_path}/pdf")
         pdf = WickedPdf.new.pdf_from_string(
-          render_to_string("api/v1/web/reports/leave_reports/leave_ledger.pdf.erb"),
-          footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+          render_to_string("api/v1/web/reports/leave_reports/leave_ledger", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+          footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
           :margin => {
             :top      => '0.1in',
             :bottom   => '0.1in',

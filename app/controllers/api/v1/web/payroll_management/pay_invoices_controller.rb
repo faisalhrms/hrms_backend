@@ -65,8 +65,8 @@ class Api::V1::Web::PayrollManagement::PayInvoicesController < ApplicationContro
     file_name = 'srl_invoice' if srl_instance? or dtl_instance?
     check_directory("#{Rails.public_path}/pdf")
     pdf = WickedPdf.new.pdf_from_string(
-      render_to_string("api/v1/web/reports/payroll_reports/#{file_name}.pdf.erb"),
-      footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+      render_to_string("api/v1/web/reports/payroll_reports/#{file_name}", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]),
+      footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf])},
       :margin => {
         :top      => '0.1in',
         :bottom   => '0.1in',

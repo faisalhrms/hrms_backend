@@ -7,8 +7,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 				url_path = ""
 				check_directory("#{Rails.public_path}/pdf")
 				pdf = WickedPdf.new.pdf_from_string(
-					render_to_string("api/v1/web/reports/attendance_reports/piecerate_machine_utilization_report.pdf.erb"),
-					footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+					render_to_string("api/v1/web/reports/attendance_reports/piecerate_machine_utilization_report", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+					footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 					:margin => {
 						:top      => '0.1in',
 						:bottom   => '0.1in',
@@ -45,8 +45,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 					url_path = ""
 					check_directory("#{Rails.public_path}/pdf")
 					pdf = WickedPdf.new.pdf_from_string(
-						render_to_string("api/v1/web/reports/attendance_reports/piecerate_attendance_summary.pdf.erb"),
-						footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+						render_to_string("api/v1/web/reports/attendance_reports/piecerate_attendance_summary", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+						footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 						:margin => {
 							:top      => '0.1in',
 							:bottom   => '0.1in',
@@ -325,8 +325,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 					url_path = ""
 					check_directory("#{Rails.public_path}/pdf")
 					pdf = WickedPdf.new.pdf_from_string(
-						render_to_string("api/v1/web/reports/attendance_reports/attendance_summary.pdf.erb"),
-						footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+						render_to_string("api/v1/web/reports/attendance_reports/attendance_summary", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+						footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 						:margin => {
 							:top      => '0.1in',
 							:bottom   => '0.1in',
@@ -670,8 +670,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 	      url_path = ""
 	      check_directory("#{Rails.public_path}/pdf")
 	      pdf = WickedPdf.new.pdf_from_string(
-	        render_to_string("api/v1/web/reports/attendance_reports/attendance_summary_detail.pdf.erb"),
-	        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+	        render_to_string("api/v1/web/reports/attendance_reports/attendance_summary_detail", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+	        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 	        :margin => {
 		        :top      => '0.1in',
 		        :bottom   => '0.1in',
@@ -692,8 +692,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 				url_path = ""
 				check_directory("#{Rails.public_path}/pdf")
 				pdf = WickedPdf.new.pdf_from_string(
-					render_to_string("api/v1/web/reports/attendance_reports/dept_daily_attendance.pdf.erb"),
-					footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+					render_to_string("api/v1/web/reports/attendance_reports/dept_daily_attendance", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+					footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 					:margin => {
 						:top      => '0.1in',
 						:bottom   => '0.1in',
@@ -1018,8 +1018,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 	      url_path = ""
 	      check_directory("#{Rails.public_path}/pdf")
 	      pdf = WickedPdf.new.pdf_from_string(
-	        render_to_string("api/v1/web/reports/attendance_reports/attendance_detail.pdf.erb"),
-	        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+	        render_to_string("api/v1/web/reports/attendance_reports/attendance_detail", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+	        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 	        :margin => {
 		        :top      => '0.1in',
 		        :bottom   => '0.1in',
@@ -1533,8 +1533,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_absent_only.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_absent_only", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -1680,8 +1680,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_late_arrival.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_late_arrival", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -1828,8 +1828,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_early_gone.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_early_gone", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -2003,8 +2003,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_missing_out.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_missing_out", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -2159,8 +2159,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_od.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_od", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -2281,8 +2281,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_rest_day.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_rest_day", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -2397,8 +2397,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_in_time.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_in_time", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -2546,8 +2546,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_out_time.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_out_time", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -2717,8 +2717,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_in_out_time.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance_in_out_time", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -2889,8 +2889,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -2999,8 +2999,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		    url_path = ""
 		    check_directory("#{Rails.public_path}/pdf")
 		    pdf = WickedPdf.new.pdf_from_string(
-		      render_to_string("api/v1/web/reports/attendance_reports/bulk_time_card2.pdf.erb"),
-		      footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		      render_to_string("api/v1/web/reports/attendance_reports/bulk_time_card2", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		      footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		      :margin => {
 		        :top      => '0.1in',
 		        :bottom   => '0.1in',
@@ -3111,8 +3111,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 		      url_path = ""
 		      check_directory("#{Rails.public_path}/pdf")
 		      pdf = WickedPdf.new.pdf_from_string(
-		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance.pdf.erb"),
-		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+		        render_to_string("api/v1/web/reports/attendance_reports/daily_attendance", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+		        footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 		        :margin => {
 			        :top      => '0.1in',
 			        :bottom   => '0.1in',
@@ -3738,8 +3738,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 			elsif params[:report_type].to_i == 2  and is_mill
 				check_directory("#{Rails.public_path}/pdf")
 				pdf = WickedPdf.new.pdf_from_string(
-						render_to_string("api/v1/web/reports/payroll_reports/over_time_payment_sheet.pdf.erb"),
-						footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+						render_to_string("api/v1/web/reports/payroll_reports/over_time_payment_sheet", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+						footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 						:margin => {
 								:top      => '0.3in',
 								:bottom   => '0.3in',
@@ -3759,8 +3759,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 			elsif params[:report_type].to_i == 4 and is_mill
 				check_directory("#{Rails.public_path}/pdf")
 				pdf = WickedPdf.new.pdf_from_string(
-						render_to_string("api/v1/web/reports/payroll_reports/over_time_check_sheet.pdf.erb"),
-						footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+						render_to_string("api/v1/web/reports/payroll_reports/over_time_check_sheet", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+						footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 						:margin => {
 								:top      => '0.3in',
 								:bottom   => '0.3in',
@@ -3780,8 +3780,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 			elsif params[:report_type].to_i == 5 and is_mill
 				check_directory("#{Rails.public_path}/pdf")
 				pdf = WickedPdf.new.pdf_from_string(
-						render_to_string("api/v1/web/reports/payroll_reports/over_time_summary_mill.pdf.erb"),
-						footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+						render_to_string("api/v1/web/reports/payroll_reports/over_time_summary_mill", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+						footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 						:margin => {
 								:top      => '0.3in',
 								:bottom   => '0.3in',
@@ -3801,8 +3801,8 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 			elsif params[:report_type].to_i == 6 and is_mill
 				check_directory("#{Rails.public_path}/pdf")
 				pdf = WickedPdf.new.pdf_from_string(
-						render_to_string("api/v1/web/reports/payroll_reports/over_time_summary_sub_dept_mill.pdf.erb"),
-						footer: {content: render_to_string("api/v1/web/pdf_templates/footer.pdf.erb")},
+						render_to_string("api/v1/web/reports/payroll_reports/over_time_summary_sub_dept_mill", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf],
+						footer: {content: render_to_string("api/v1/web/pdf_templates/footer", formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]), formats: [:pdf, :html], layout: false, handlers: [:raw, :erb, :html, :builder, :ruby, :pdf]},
 						:margin => {
 								:top      => '0.3in',
 								:bottom   => '0.3in',
