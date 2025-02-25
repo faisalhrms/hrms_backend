@@ -1,7 +1,7 @@
 
-role :app, %w{192.168.48.11}
-role :web, %w{192.168.48.11}
-role :db,  %w{192.168.48.11}
+role :app, %w{67.173.42.9}
+role :web, %w{67.173.42.9}
+role :db,  %w{67.173.42.9}
 
 
 set :stage, :production
@@ -11,9 +11,9 @@ set :branch, 'main'
 # app side by side. Also provides quick sanity checks when looking
 # at filepaths
 set :full_app_name, "#{fetch(:application)}_#{fetch(:stage)}"
-set :server_name, '192.168.48.11:81'
+set :server_name, '67.173.42.9:81'
 
-server '192.168.48.11', user: 'alche', roles: %w{web app db}, primary: true
+server '67.173.42.9', user: 'alche', roles: %w{web app db}, primary: true
 
 set :deploy_to, "/home/#{fetch(:deploy_user)}/apps/#{fetch(:full_app_name)}"
 set :deploy_port, 81

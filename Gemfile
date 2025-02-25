@@ -107,6 +107,7 @@ gem 'delayed_job_active_record'
 gem 'daemons'
 #
 gem 'acts_as_tenant'
+gem 'uri', '0.10.1'
 
 gem 'bcrypt'
 gem 'dropbox_api'
