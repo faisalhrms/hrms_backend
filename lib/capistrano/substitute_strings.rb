@@ -1,5 +1,3 @@
-# we often want to refer to variables which
-# are defined in subsequent stage files. This
 # let's us use the {{var}} to represent fetch(:var)
 # in strings which are only evaluated at runtime.
 
@@ -21,3 +19,8 @@ def sub_strings(input_string)
   puts "Result Generated: #{output_string}"
   output_string
 end
+
+
+
+
+

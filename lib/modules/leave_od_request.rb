@@ -12,9 +12,9 @@ module LeaveOdRequest
     end
     if class_name.name == LeaveRequest.name
       @resulted_data = @resulted_data.includes(:leave_type)
-      json_template = 'api/v1/web/leave_management/leave_requests/index.json.jbuilder'
+      json_template = 'api/v1/web/leave_management/leave_requests/index'
     end
-    render status:200, template: json_template || 'api/v1/web/official_duty_management/official_duty_requests/index.json.jbuilder'
+    render status:200, template: json_template || 'api/v1/web/official_duty_management/official_duty_requests/index'
   end
 
   def bulk_index
@@ -48,7 +48,7 @@ module LeaveOdRequest
         @resulted_data = @resulted_data.includes(:leave_type)
       end
     end
-    template = params[:leave_status].present? ? 'api/v1/web/leave_management/leave_requests/index.json.jbuilder' : 'api/v1/web/official_duty_management/official_duty_requests/index.json.jbuilder'
+    template = params[:leave_status].present? ? 'api/v1/web/leave_management/leave_requests/index' : 'api/v1/web/official_duty_management/official_duty_requests/index'
     render status:200, template: template
   end
 
