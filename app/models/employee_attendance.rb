@@ -12,7 +12,7 @@ class EmployeeAttendance < ApplicationRecord
 	belongs_to 	:salary_unit
 	belongs_to 	:cost_center
 	belongs_to 	:employee
-  belongs_to :cpl_earning
+	belongs_to :cpl_earning
 	belongs_to 	:sub_time_slot
 	belongs_to	:employee_roster, foreign_key: :roster_id, 	:class_name => "EmployeeRoster"
 	TOTAL_LEVERAGE_MIN = 250
@@ -45,19 +45,19 @@ class EmployeeAttendance < ApplicationRecord
 
 	def sub_time_slot_name
 		if self.sub_time_slot.nil?
-  		return "-"
-  	else
-  		return self.sub_time_slot.name
-  	end	
+			return "-"
+		else
+			return self.sub_time_slot.name
+		end
 	end
 
 	def company_code
-  	if self.company.nil?
-  		return "-"
-  	else
-  		return self.company.code
-  	end
-  end
+		if self.company.nil?
+			return "-"
+		else
+			return self.company.code
+		end
+	end
 
 	########## Filter Employee Attendance using Location ##########
 	def self.location_related_employee_attendance(employee_attendance_list, location_id)
@@ -105,7 +105,7 @@ class EmployeeAttendance < ApplicationRecord
 		employee_attendances = employee_attendance_list.where(:salary_unit_id => salary_unit_id)
 		return employee_attendances
 	end
-	
+
 	def self.cost_center_related_employee_attendance(employee_attendance_list, cost_center_id)
 		employee_attendances = employee_attendance_list.where(:cost_center_id => cost_center_id)
 		return employee_attendances
@@ -134,8 +134,8 @@ class EmployeeAttendance < ApplicationRecord
 
 	########## Empty Row Creation for Attendance ##########
 	def self.create_empty_attenance_record(single_date, employee)
-    if not EmployeeAttendance.exists?(:attendance_date => single_date,:employee_id => employee.id)
-      employee_attendance = EmployeeAttendance.new(:attendance_date => single_date, :in_time => nil, :out_time => nil)
+		if not EmployeeAttendance.exists?(:attendance_date => single_date,:employee_id => employee.id)
+			employee_attendance = EmployeeAttendance.new(:attendance_date => single_date, :in_time => nil, :out_time => nil)
 			employee_attendance.employee_id 				= employee.id
 			employee_attendance.company_id 					= employee.company_id
 			employee_attendance.location_id 				= employee.location_id
@@ -159,7 +159,7 @@ class EmployeeAttendance < ApplicationRecord
 			employee_attendance.designation_name		= employee.designation_name
 			employee_attendance.salary_unit_name		= employee.salary_unit_name
 			employee_attendance.cost_center_name		= employee.cost_center_name
-			employee_attendance.attendance_date   	= single_date 
+			employee_attendance.attendance_date   	= single_date
 			employee_attendance.is_overtime					= employee.is_overtime
 			employee_attendance.is_off_day_working	= employee.is_off_day_working
 			employee_attendance.is_cpl							= employee.is_cpl
@@ -170,12 +170,12 @@ class EmployeeAttendance < ApplicationRecord
 			employee_attendance.is_holiday_overtime 		 = employee.is_holiday_overtime
 			employee_attendance.approval_base_overtime	= employee.approval_base_overtime
 			employee_attendance.save
-    end
-  end
+		end
+	end
 
-  ########## Update Employee Information for Attendance ##########
-  def self.update_employee_detail(employee_attendance, employee)
-  	employee_attendance.is_overtime								= employee.is_overtime
+	########## Update Employee Information for Attendance ##########
+	def self.update_employee_detail(employee_attendance, employee)
+		employee_attendance.is_overtime								= employee.is_overtime
 		employee_attendance.is_off_day_working				= employee.is_off_day_working
 		employee_attendance.is_cpl										= employee.is_cpl
 		employee_attendance.regular_quota_encashment	= employee.regular_quota_encashment
@@ -189,8 +189,8 @@ class EmployeeAttendance < ApplicationRecord
 		employee_attendance.employee_code							= employee.employee_code
 		employee_attendance.gross_salary							= employee.gross_salary
 		employee_attendance.approval_base_overtime		= employee.approval_base_overtime
-  	transfer_status = employee_attendance.roster_transfer_impact
-  	if transfer_status == false
+		transfer_status = employee_attendance.roster_transfer_impact
+		if transfer_status == false
 			employee_attendance.company_id 							= employee.company_id
 			employee_attendance.location_id 						= employee.location_id
 			employee_attendance.branch_id 							= employee.branch_id
@@ -221,16 +221,16 @@ class EmployeeAttendance < ApplicationRecord
 			end
 		end
 		employee_attendance.save
-  end
+	end
 
-  ########## Clear Attendance Record ##########
-  def self.clear_attendance_record(employee_attendance)
-  	employee_attendance.attendance_status = ""
-    employee_attendance.early_left_status = ""
-    employee_attendance.remarks						= ""
-    employee_attendance.other_remarks			= ""
-    employee_attendance.encashable_quota 					= 0.0
-    employee_attendance.checkout_deduction 				= 0.0
+	########## Clear Attendance Record ##########
+	def self.clear_attendance_record(employee_attendance)
+		employee_attendance.attendance_status = ""
+		employee_attendance.early_left_status = ""
+		employee_attendance.remarks						= ""
+		employee_attendance.other_remarks			= ""
+		employee_attendance.encashable_quota 					= 0.0
+		employee_attendance.checkout_deduction 				= 0.0
 		employee_attendance.checkin_deduction 				= 0.0
 		if employee_attendance.is_ot_approved == false
 			employee_attendance.approved_overtime 				= 0.0
@@ -255,18 +255,18 @@ class EmployeeAttendance < ApplicationRecord
 		employee_attendance.is_leave_without_pay 			= false
 		employee_attendance.is_public_holiday 			= false
 		employee_attendance.save
-  end
+	end
 
-  ########## Clear Attendance Record ##########
-  def self.clear_attendance_record_for_request_impact(employee_attendance)
-  	employee_attendance.in_time = nil
-    employee_attendance.out_time = nil
-  	employee_attendance.attendance_status = ""
-    employee_attendance.early_left_status = ""
-    employee_attendance.remarks						= ""
-    employee_attendance.other_remarks			= ""
-    employee_attendance.encashable_quota 					= 0.0
-    employee_attendance.checkout_deduction 				= 0.0
+	########## Clear Attendance Record ##########
+	def self.clear_attendance_record_for_request_impact(employee_attendance)
+		employee_attendance.in_time = nil
+		employee_attendance.out_time = nil
+		employee_attendance.attendance_status = ""
+		employee_attendance.early_left_status = ""
+		employee_attendance.remarks						= ""
+		employee_attendance.other_remarks			= ""
+		employee_attendance.encashable_quota 					= 0.0
+		employee_attendance.checkout_deduction 				= 0.0
 		employee_attendance.checkin_deduction 				= 0.0
 		if employee_attendance.is_ot_approved == false
 			employee_attendance.approved_overtime 				= 0.0
@@ -290,15 +290,15 @@ class EmployeeAttendance < ApplicationRecord
 		employee_attendance.deduction_from_salary			= false
 		employee_attendance.is_leave_without_pay 			= false
 		employee_attendance.save
-  end
+	end
 
-  def self.request_clear_attendance_record(employee_attendance)
-  	employee_attendance.attendance_status = ""
-    employee_attendance.early_left_status = ""
-    employee_attendance.remarks						= ""
-    employee_attendance.other_remarks			= ""
-    employee_attendance.encashable_quota 					= 0.0
-    employee_attendance.checkout_deduction 				= 0.0
+	def self.request_clear_attendance_record(employee_attendance)
+		employee_attendance.attendance_status = ""
+		employee_attendance.early_left_status = ""
+		employee_attendance.remarks						= ""
+		employee_attendance.other_remarks			= ""
+		employee_attendance.encashable_quota 					= 0.0
+		employee_attendance.checkout_deduction 				= 0.0
 		employee_attendance.checkin_deduction 				= 0.0
 		if employee_attendance.is_ot_approved == false
 			employee_attendance.approved_overtime 				= 0.0
@@ -322,9 +322,9 @@ class EmployeeAttendance < ApplicationRecord
 		employee_attendance.deduction_from_salary			= false
 		employee_attendance.is_leave_without_pay 			= false
 		employee_attendance.save
-  end
+	end
 
-  ########## Single Employee Process Attendance ##########
+	########## Single Employee Process Attendance ##########
 	def self.single_employee_process_attendance(employee_attendance)
 		if employee_attendance.roster_exist == true
 			if employee_attendance.attendance_exempted == true
@@ -345,7 +345,7 @@ class EmployeeAttendance < ApplicationRecord
 				public_holiday = Holiday.verify_public_holiday(employee_attendance, employee_attendance.attendance_date.to_date)
 				if employee_attendance.is_rest_day == true
 					if employee_attendance.is_official_duty == false and employee_attendance.is_relaxation == false
-						employee_attendance.attendance_status = "Rest Day"	
+						employee_attendance.attendance_status = "Rest Day"
 					end
 					if not employee_attendance.in_time.nil?
 						employee_attendance.incentive_verified = true
@@ -416,24 +416,24 @@ class EmployeeAttendance < ApplicationRecord
 											employee_attendance.deduction_impact(employee_attendance, absent_deduction, "CheckIn", 1.0)
 										else
 											system_setting = SystemSetting.find_by(:company_id => employee_attendance.company_id)
-  										if not system_setting.nil?
-  											if system_setting.pay_deduction_on_missing_in == true
-  												employee_attendance.deduction_impact(employee_attendance, absent_deduction, "CheckIn", 1.0)
-  											else
+											if not system_setting.nil?
+												if system_setting.pay_deduction_on_missing_in == true
+													employee_attendance.deduction_impact(employee_attendance, absent_deduction, "CheckIn", 1.0)
+												else
 													employee_attendance.checkin_deduction 		= 1
-										  		employee_attendance.deduction_from_quota 	= true
-										  		employee_attendance.save
-										  	end
-										  else
-										  	employee_attendance.checkin_deduction 		= 1
-									  		employee_attendance.deduction_from_quota 	= true
-									  		employee_attendance.save
-									  	end
+													employee_attendance.deduction_from_quota 	= true
+													employee_attendance.save
+												end
+											else
+												employee_attendance.checkin_deduction 		= 1
+												employee_attendance.deduction_from_quota 	= true
+												employee_attendance.save
+											end
 										end
 									else
 										if employee_attendance.remarks != "No Roster"
 											employee_attendance.remarks = "Exempted"
-											employee_attendance.save	
+											employee_attendance.save
 										end
 									end
 								else
@@ -441,19 +441,19 @@ class EmployeeAttendance < ApplicationRecord
 										employee_attendance.deduction_impact(employee_attendance, absent_deduction, "CheckIn", 1.0)
 									else
 										system_setting = SystemSetting.find_by(:company_id => employee_attendance.company_id)
-  									if not system_setting.nil?
+										if not system_setting.nil?
 											if system_setting.pay_deduction_on_missing_in == true
 												employee_attendance.deduction_impact(employee_attendance, absent_deduction, "CheckIn", 1.0)
 											else
 												employee_attendance.checkin_deduction 		= 1
-									  		employee_attendance.deduction_from_quota 	= true
-									  		employee_attendance.save
-									  	end
-									  else
-									  	employee_attendance.checkin_deduction 		= 1
-								  		employee_attendance.deduction_from_quota 	= true
-								  		employee_attendance.save
-								  	end
+												employee_attendance.deduction_from_quota 	= true
+												employee_attendance.save
+											end
+										else
+											employee_attendance.checkin_deduction 		= 1
+											employee_attendance.deduction_from_quota 	= true
+											employee_attendance.save
+										end
 									end
 								end
 							end
@@ -468,10 +468,10 @@ class EmployeeAttendance < ApplicationRecord
 											employee_attendance.incentive_verified = true
 											employee_attendance.remarks = "Late Exempted"
 										else
-											employee_attendance.apply_relaxation_policy(employee_attendance, attendance_relaxation, cut_off_date_range, attendance_structure)	
+											employee_attendance.apply_relaxation_policy(employee_attendance, attendance_relaxation, cut_off_date_range, attendance_structure)
 										end
 									else
-										employee_attendance.apply_relaxation_policy(employee_attendance, attendance_relaxation, cut_off_date_range, attendance_structure)	
+										employee_attendance.apply_relaxation_policy(employee_attendance, attendance_relaxation, cut_off_date_range, attendance_structure)
 									end
 								end
 							end
@@ -488,7 +488,7 @@ class EmployeeAttendance < ApplicationRecord
 								if not employee_attendance.out_time.nil?
 									if employee_attendance.is_official_duty == false
 										if employee_attendance.late_exempted == false
-											employee_attendance.apply_early_left_policy(employee_attendance, early_left, cut_off_date_range, attendance_structure)	
+											employee_attendance.apply_early_left_policy(employee_attendance, early_left, cut_off_date_range, attendance_structure)
 										end
 									end
 								end
@@ -508,70 +508,70 @@ class EmployeeAttendance < ApplicationRecord
 					end
 				end
 			end
-	    employee_attendance.save
-	  else
-	  	employee_attendance.remarks 							= "No Roster"
-	  	employee_attendance.attendance_status 		= "Absent"
-	  	employee_attendance.incentive_verified 		= false
-	  	employee_attendance.checkin_deduction 		= 1.0
+			employee_attendance.save
+		else
+			employee_attendance.remarks 							= "No Roster"
+			employee_attendance.attendance_status 		= "Absent"
+			employee_attendance.incentive_verified 		= false
+			employee_attendance.checkin_deduction 		= 1.0
 			employee_attendance.pay_deduction 				= 1.0
-  		employee_attendance.deduction_from_salary = true
-  		employee_attendance.save
+			employee_attendance.deduction_from_salary = true
+			employee_attendance.save
 			employee_attendance.save
 		end
-  end
+	end
 
-  ########## Clear Attendance Exception ##########
-  def check_attendance_exception(employee_attendance, exception_value)
-    grace_time = 0
-    ##### Checking Attendance Exception #####
-		
+	########## Clear Attendance Exception ##########
+	def check_attendance_exception(employee_attendance, exception_value)
+		grace_time = 0
+		##### Checking Attendance Exception #####
+
 		###################################################
-    #################### Old Logic ####################
-    ###################################################
+		#################### Old Logic ####################
+		###################################################
 
-    # attendance_exceptions = AttendanceException.where(:company_id => employee_attendance.company_id, :location_id => employee_attendance.location_id, :branch_id => employee_attendance.branch_id, :attendance_exception_type => exception_value).where("Date(start_date) <= ? AND Date(end_date) >= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date)
-    # grace_time = attendance_exceptions.sum(:grace_time)
-    # if grace_time > 0
-    # 	employee_attendance.other_remarks = attendance_exceptions.collect(&:name).join(',')
-    # 	employee_attendance.save
-    # end
-    # return grace_time
+		# attendance_exceptions = AttendanceException.where(:company_id => employee_attendance.company_id, :location_id => employee_attendance.location_id, :branch_id => employee_attendance.branch_id, :attendance_exception_type => exception_value).where("Date(start_date) <= ? AND Date(end_date) >= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date)
+		# grace_time = attendance_exceptions.sum(:grace_time)
+		# if grace_time > 0
+		# 	employee_attendance.other_remarks = attendance_exceptions.collect(&:name).join(',')
+		# 	employee_attendance.save
+		# end
+		# return grace_time
 
-    ###################################################
-    #################### Old Logic ####################
-    ###################################################
+		###################################################
+		#################### Old Logic ####################
+		###################################################
 
 
-    ###################################################
-    #################### New Logic ####################
-    ###################################################
+		###################################################
+		#################### New Logic ####################
+		###################################################
 
-    attendance_exceptions = AttendanceException.where(:company_id => employee_attendance.company_id, :salary_unit_id => employee_attendance.salary_unit_id, :salary_unit_wise => true, :attendance_exception_type => exception_value).where("Date(start_date) <= ? AND Date(end_date) >= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date)
-    if attendance_exceptions.count > 0
-    	grace_time = attendance_exceptions.sum(:grace_time)
-	    if grace_time > 0
-	    	employee_attendance.other_remarks = attendance_exceptions.collect(&:name).join(',')
-	    	employee_attendance.save
-	    end
-	    return grace_time
-	  else
-	  	attendance_exceptions = AttendanceException.where(:company_id => employee_attendance.company_id, :salary_unit_wise => false, :location_id => employee_attendance.location_id, :branch_id => employee_attendance.branch_id, :attendance_exception_type => exception_value).where("Date(start_date) <= ? AND Date(end_date) >= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date)
-	    grace_time = attendance_exceptions.sum(:grace_time)
-	    if grace_time > 0
-	    	employee_attendance.other_remarks = attendance_exceptions.collect(&:name).join(',')
-	    	employee_attendance.save
-	    end
-	    return grace_time
-    end
+		attendance_exceptions = AttendanceException.where(:company_id => employee_attendance.company_id, :salary_unit_id => employee_attendance.salary_unit_id, :salary_unit_wise => true, :attendance_exception_type => exception_value).where("Date(start_date) <= ? AND Date(end_date) >= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date)
+		if attendance_exceptions.count > 0
+			grace_time = attendance_exceptions.sum(:grace_time)
+			if grace_time > 0
+				employee_attendance.other_remarks = attendance_exceptions.collect(&:name).join(',')
+				employee_attendance.save
+			end
+			return grace_time
+		else
+			attendance_exceptions = AttendanceException.where(:company_id => employee_attendance.company_id, :salary_unit_wise => false, :location_id => employee_attendance.location_id, :branch_id => employee_attendance.branch_id, :attendance_exception_type => exception_value).where("Date(start_date) <= ? AND Date(end_date) >= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date)
+			grace_time = attendance_exceptions.sum(:grace_time)
+			if grace_time > 0
+				employee_attendance.other_remarks = attendance_exceptions.collect(&:name).join(',')
+				employee_attendance.save
+			end
+			return grace_time
+		end
 
-    ###################################################
-    #################### New Logic ####################
-    ###################################################
+		###################################################
+		#################### New Logic ####################
+		###################################################
 
-  end
+	end
 
-  ########## Attendance Structure ##########
+	########## Attendance Structure ##########
 	def attendance_master_policy(employee_attendance)
 		if (srl_instance?) and !(Department.where(name: ['Audit', 'Retail Stores']).ids.include?(employee_attendance.department_id)) and employee_attendance.department_id and employee_attendance.try(:employee).try(:gross_salary).to_i <= 28000
 			return AttendanceStructure.find_by_name('Less than 28000')
@@ -600,135 +600,135 @@ class EmployeeAttendance < ApplicationRecord
 		end
 	end
 
-  def verification_of_special_rule_in_attendance_structure(attendance_structure)
-  	if attendance_structure.special_rule == true
-  		if attendance_structure.is_flexi == true
-  			return attendance_structure.serve_minutes
-  		else
-  			return 0
-  		end
-  	else
-  		return 0
-  	end
-  end
+	def verification_of_special_rule_in_attendance_structure(attendance_structure)
+		if attendance_structure.special_rule == true
+			if attendance_structure.is_flexi == true
+				return attendance_structure.serve_minutes
+			else
+				return 0
+			end
+		else
+			return 0
+		end
+	end
 
-  def attendance_structure_total_working_minutes(attendance_structure)
-  	if attendance_structure.special_rule == true
-  		if attendance_structure.is_flexi == true
-  			return attendance_structure.total_working_minutes
-  		else
-  			return 0
-  		end
-  	else
-  		return 0
-  	end
-  end
+	def attendance_structure_total_working_minutes(attendance_structure)
+		if attendance_structure.special_rule == true
+			if attendance_structure.is_flexi == true
+				return attendance_structure.total_working_minutes
+			else
+				return 0
+			end
+		else
+			return 0
+		end
+	end
 
-  ########## Attendance Deduction ##########
-  def deduction_impact(employee_attendance, attendance_deduction, deduction_status, minute_wise_deduction)
-  	# if not attendance_deduction.nil?
+	########## Attendance Deduction ##########
+	def deduction_impact(employee_attendance, attendance_deduction, deduction_status, minute_wise_deduction)
+		# if not attendance_deduction.nil?
 		if attendance_deduction.deduction_from == "Quota"
-  		if attendance_deduction.deduction_type == "Flat"
-  			employee_attendance.flat_deduction(employee_attendance, deduction_status, attendance_deduction.deduction_value, attendance_deduction.deduction_from)
-  		elsif attendance_deduction.deduction_type == "As Per Actual"
-  			employee_attendance.actual_deduction(employee_attendance, deduction_status, minute_wise_deduction, attendance_deduction.deduction_from)
-  		end
-  	elsif attendance_deduction.deduction_from == "Salary"
 			if attendance_deduction.deduction_type == "Flat"
 				employee_attendance.flat_deduction(employee_attendance, deduction_status, attendance_deduction.deduction_value, attendance_deduction.deduction_from)
-  		elsif attendance_deduction.deduction_type == "As Per Actual"
-  			employee_attendance.actual_deduction(employee_attendance, deduction_status, minute_wise_deduction, attendance_deduction.deduction_from)
-  		end
-  	end
-  	# end
-  end
+			elsif attendance_deduction.deduction_type == "As Per Actual"
+				employee_attendance.actual_deduction(employee_attendance, deduction_status, minute_wise_deduction, attendance_deduction.deduction_from)
+			end
+		elsif attendance_deduction.deduction_from == "Salary"
+			if attendance_deduction.deduction_type == "Flat"
+				employee_attendance.flat_deduction(employee_attendance, deduction_status, attendance_deduction.deduction_value, attendance_deduction.deduction_from)
+			elsif attendance_deduction.deduction_type == "As Per Actual"
+				employee_attendance.actual_deduction(employee_attendance, deduction_status, minute_wise_deduction, attendance_deduction.deduction_from)
+			end
+		end
+		# end
+	end
 
-  ########## Flat Deduction ##########
-  def flat_deduction(employee_attendance, deduction_status, deduction_value, deduction_from)
-  	if deduction_from == "Quota"
-  		if deduction_status == "CheckIn"
-  			employee_attendance.checkin_deduction 		= deduction_value
-	  		employee_attendance.deduction_from_quota 	= true
-	  		employee_attendance.save
-	  	elsif deduction_status == "Checkout"
-	  		employee_attendance.checkout_deduction 		= deduction_value
-	  		employee_attendance.deduction_from_quota 	= true
-	  		employee_attendance.save
-  		end
-  	elsif deduction_from == "Salary"
-  		if deduction_status == "CheckIn"
-  			employee_attendance.checkin_deduction 		= deduction_value
-  			employee_attendance.pay_deduction 				= deduction_value
-	  		employee_attendance.deduction_from_salary = true
-	  		employee_attendance.save
-	  	elsif deduction_status == "Checkout"
-	  		employee_attendance.checkout_deduction 		= deduction_value
-	  		employee_attendance.pay_deduction 				= deduction_value
-	  		employee_attendance.deduction_from_salary = true
-	  		employee_attendance.save
-  		end
-  	end	
-  end
+	########## Flat Deduction ##########
+	def flat_deduction(employee_attendance, deduction_status, deduction_value, deduction_from)
+		if deduction_from == "Quota"
+			if deduction_status == "CheckIn"
+				employee_attendance.checkin_deduction 		= deduction_value
+				employee_attendance.deduction_from_quota 	= true
+				employee_attendance.save
+			elsif deduction_status == "Checkout"
+				employee_attendance.checkout_deduction 		= deduction_value
+				employee_attendance.deduction_from_quota 	= true
+				employee_attendance.save
+			end
+		elsif deduction_from == "Salary"
+			if deduction_status == "CheckIn"
+				employee_attendance.checkin_deduction 		= deduction_value
+				employee_attendance.pay_deduction 				= deduction_value
+				employee_attendance.deduction_from_salary = true
+				employee_attendance.save
+			elsif deduction_status == "Checkout"
+				employee_attendance.checkout_deduction 		= deduction_value
+				employee_attendance.pay_deduction 				= deduction_value
+				employee_attendance.deduction_from_salary = true
+				employee_attendance.save
+			end
+		end
+	end
 
-  ########## Actual Deduction ##########
-  def actual_deduction(employee_attendance, deduction_status, deduction_value, deduction_from)
-  	if deduction_from == "Quota"
-  		if deduction_status == "CheckIn"
-  			employee_attendance.checkin_deduction 		= deduction_value
-  			employee_attendance.minute_deducted 			= employee_attendance.minute_deducted + deduction_value
-	  		employee_attendance.deduction_from_quota 	= true
-	  		employee_attendance.save
-	  	elsif deduction_status == "Checkout"
-	  		employee_attendance.minute_deducted 			= deduction_value
-	  		employee_attendance.checkout_deduction 		= employee_attendance.minute_deducted + deduction_value
-	  		employee_attendance.deduction_from_quota 	= true
-	  		employee_attendance.save
-  		end
-  	elsif deduction_from == "Salary"
-  		if deduction_status == "CheckIn"
-  			employee_attendance.minute_deducted 			= employee_attendance.minute_deducted + deduction_value
-  			employee_attendance.checkin_deduction 		= deduction_value
-  			employee_attendance.pay_deduction 				= deduction_value
-	  		employee_attendance.deduction_from_salary = true
-	  		employee_attendance.save
-	  	elsif deduction_status == "Checkout"
-	  		employee_attendance.minute_deducted 			= employee_attendance.minute_deducted + deduction_value
-	  		employee_attendance.checkout_deduction 		= deduction_value
-	  		employee_attendance.pay_deduction 				= deduction_value
-	  		employee_attendance.deduction_from_salary = true
-	  		employee_attendance.save
-  		end
-  	end	
-  end
+	########## Actual Deduction ##########
+	def actual_deduction(employee_attendance, deduction_status, deduction_value, deduction_from)
+		if deduction_from == "Quota"
+			if deduction_status == "CheckIn"
+				employee_attendance.checkin_deduction 		= deduction_value
+				employee_attendance.minute_deducted 			= employee_attendance.minute_deducted + deduction_value
+				employee_attendance.deduction_from_quota 	= true
+				employee_attendance.save
+			elsif deduction_status == "Checkout"
+				employee_attendance.minute_deducted 			= deduction_value
+				employee_attendance.checkout_deduction 		= employee_attendance.minute_deducted + deduction_value
+				employee_attendance.deduction_from_quota 	= true
+				employee_attendance.save
+			end
+		elsif deduction_from == "Salary"
+			if deduction_status == "CheckIn"
+				employee_attendance.minute_deducted 			= employee_attendance.minute_deducted + deduction_value
+				employee_attendance.checkin_deduction 		= deduction_value
+				employee_attendance.pay_deduction 				= deduction_value
+				employee_attendance.deduction_from_salary = true
+				employee_attendance.save
+			elsif deduction_status == "Checkout"
+				employee_attendance.minute_deducted 			= employee_attendance.minute_deducted + deduction_value
+				employee_attendance.checkout_deduction 		= deduction_value
+				employee_attendance.pay_deduction 				= deduction_value
+				employee_attendance.deduction_from_salary = true
+				employee_attendance.save
+			end
+		end
+	end
 
-  ########## As Per Actual Deduction ##########
-  def as_per_actual_deduction_value(employee_attendance, checkin_checkout_time_difference)
+	########## As Per Actual Deduction ##########
+	def as_per_actual_deduction_value(employee_attendance, checkin_checkout_time_difference)
 		excluded_break_hours = 0.0
-  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-  	time_slot 		= employee_attendance.employee_roster.time_slot
-  	no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
-  	no_of_hours.each do |single_item|
-  		excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
-  	end
-  	working_hours = working_hours - excluded_break_hours
-  	total_working_minutes = working_hours * 60
+		working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+		time_slot 		= employee_attendance.employee_roster.time_slot
+		no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
+		no_of_hours.each do |single_item|
+			excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
+		end
+		working_hours = working_hours - excluded_break_hours
+		total_working_minutes = working_hours * 60
 		deduction_factor = (checkin_checkout_time_difference.to_f/total_working_minutes.to_f).round(3)
 		return deduction_factor
 	end
 
-  ########## Relaxation Policy ##########
-  def apply_relaxation_policy(employee_attendance, attendance_relaxation, cut_off_date_range, attendance_structure)
-  	in_time_difference = 0
-  	temp_time_difference = 0
+	########## Relaxation Policy ##########
+	def apply_relaxation_policy(employee_attendance, attendance_relaxation, cut_off_date_range, attendance_structure)
+		in_time_difference = 0
+		temp_time_difference = 0
 
-  	special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
-  	if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
-  		temp_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes
-  	else
-  		temp_time_difference = 0
-  	end
-  	if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
-  		if not employee_attendance.in_time.nil?
+		special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
+		if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
+			temp_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes
+		else
+			temp_time_difference = 0
+		end
+		if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
+			if not employee_attendance.in_time.nil?
 				if not employee_attendance.out_time.nil?
 					served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 					total_working_minutes = employee_attendance.attendance_structure_total_working_minutes(attendance_structure)
@@ -744,21 +744,21 @@ class EmployeeAttendance < ApplicationRecord
 						in_time_difference = time_difference - grace_time
 					end
 				end
-			end	
-  	else
-	  	if employee_attendance.is_flexi == false
-		  	if employee_attendance.in_time <= employee_attendance.office_in_time
-		      in_time_difference = 0
-		    else
-		      in_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes    
-		      grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Arrival")
-		      in_time_difference = in_time_difference - grace_time
-		    end
-		  elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
-		  	if employee_attendance.in_time <= employee_attendance.office_in_time
-		      in_time_difference = 0
-		    end
-		  else
+			end
+		else
+			if employee_attendance.is_flexi == false
+				if employee_attendance.in_time <= employee_attendance.office_in_time
+					in_time_difference = 0
+				else
+					in_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes
+					grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Arrival")
+					in_time_difference = in_time_difference - grace_time
+				end
+			elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
+				if employee_attendance.in_time <= employee_attendance.office_in_time
+					in_time_difference = 0
+				end
+			else
 				if not employee_attendance.in_time.nil?
 					if not employee_attendance.out_time.nil?
 						served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
@@ -785,8 +785,8 @@ class EmployeeAttendance < ApplicationRecord
 		if in_time_difference < 0
 			in_time_difference = 0
 		end
-    minute_wise_deduction = employee_attendance.as_per_actual_deduction_value(employee_attendance, in_time_difference)
-    attendance_relaxation_slabs = attendance_relaxation.attendance_relaxation_slabs.where("start_minute <= ? AND end_minute >= ?", in_time_difference, in_time_difference)
+		minute_wise_deduction = employee_attendance.as_per_actual_deduction_value(employee_attendance, in_time_difference)
+		attendance_relaxation_slabs = attendance_relaxation.attendance_relaxation_slabs.where("start_minute <= ? AND end_minute >= ?", in_time_difference, in_time_difference)
 		minute_policy = SystemSetting.find_by(:company_id => employee_attendance.company_id).try(:leverage_minutes)
 		minute_policy = (mill_instance? and employee_attendance.grade_id == 4) if mill_instance?
 		if minute_policy
@@ -814,10 +814,10 @@ class EmployeeAttendance < ApplicationRecord
 			end
 		end
 		# todo add proper message if no slabs found
-    attendance_relaxation_slabs.each do |attendance_relaxation_slab|
-    	relaxation_deduction = attendance_relaxation_slab.attendance_deduction
-    	attendance_type_name = relaxation_deduction.attendance_type_name
-    	if not cut_off_date_range.nil?
+		attendance_relaxation_slabs.each do |attendance_relaxation_slab|
+			relaxation_deduction = attendance_relaxation_slab.attendance_deduction
+			attendance_type_name = relaxation_deduction.attendance_type_name
+			if not cut_off_date_range.nil?
 				attendance_count = EmployeeAttendance.where(:employee_id => employee_attendance.employee_id, :attendance_date => cut_off_date_range, :attendance_status => attendance_type_name).count
 				if relaxation_deduction.exempted_in_month <= attendance_count
 					employee_attendance.attendance_status = attendance_type_name
@@ -833,14 +833,14 @@ class EmployeeAttendance < ApplicationRecord
 				employee_attendance.attendance_status = attendance_type_name
 				employee_attendance.deduction_impact(employee_attendance, relaxation_deduction, "CheckIn", minute_wise_deduction)
 			end
-    end
-  end
+		end
+	end
 
-  ########## Missing Punch Policy ##########
-	def apply_missing_punch_policy(employee_attendance, missing_punch, cut_off_date_range)    
-    missing_punch_deduction = missing_punch.attendance_deduction
-  	attendance_type_name = missing_punch_deduction.attendance_type_name
-  	if not cut_off_date_range.nil?
+	########## Missing Punch Policy ##########
+	def apply_missing_punch_policy(employee_attendance, missing_punch, cut_off_date_range)
+		missing_punch_deduction = missing_punch.attendance_deduction
+		attendance_type_name = missing_punch_deduction.attendance_type_name
+		if not cut_off_date_range.nil?
 			if missing_punch_deduction.exempted_in_month <= EmployeeAttendance.where(:employee_id => employee_attendance.employee_id, :attendance_date => cut_off_date_range, :early_left_status => attendance_type_name).count
 				employee_attendance.early_left_status = attendance_type_name
 				employee_attendance.deduction_impact(employee_attendance, missing_punch_deduction, "Checkout", 0.0)
@@ -861,15 +861,15 @@ class EmployeeAttendance < ApplicationRecord
 		temp_time_difference = 0
 
 		special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
-  	if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
-  		temp_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes
-  	else
-  		temp_time_difference = 0
-  	end
-  	
-  	if employee_attendance.is_flexi == false
-  		if attendance_structure.is_flexi_in_early_gone == true
-  			if not employee_attendance.in_time.nil?
+		if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
+			temp_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes
+		else
+			temp_time_difference = 0
+		end
+
+		if employee_attendance.is_flexi == false
+			if attendance_structure.is_flexi_in_early_gone == true
+				if not employee_attendance.in_time.nil?
 					if not employee_attendance.out_time.nil?
 						served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 						total_working_minutes = attendance_structure.early_gone_total_working_minute
@@ -886,33 +886,33 @@ class EmployeeAttendance < ApplicationRecord
 						end
 					end
 				end
-  		else
-	  		if special_relaxation_minute > 0 and temp_time_difference > special_relaxation_minute
-		  		new_office_out_time = employee_attendance.office_out_time + attendance_structure.addional_minutes.minute
-		  		if new_office_out_time <= employee_attendance.out_time
-			      out_time_difference = 0
-			    else
-			      out_time_difference = TimeDifference.between(new_office_out_time, employee_attendance.out_time).in_minutes    
-			      grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Departure")
-			      out_time_difference = out_time_difference - grace_time
-			    end
-		  	else
-		  		if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
-		  			########## Auto Flexi Deduction Already Done ##########
-		  		else
-				  	if employee_attendance.office_out_time <= employee_attendance.out_time
-				      out_time_difference = 0
-				    else
-				      out_time_difference = TimeDifference.between(employee_attendance.office_out_time, employee_attendance.out_time).in_minutes    
-				      grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Departure")
-				      out_time_difference = out_time_difference - grace_time
-				    end
-				  end
-			  end
+			else
+				if special_relaxation_minute > 0 and temp_time_difference > special_relaxation_minute
+					new_office_out_time = employee_attendance.office_out_time + attendance_structure.addional_minutes.minute
+					if new_office_out_time <= employee_attendance.out_time
+						out_time_difference = 0
+					else
+						out_time_difference = TimeDifference.between(new_office_out_time, employee_attendance.out_time).in_minutes
+						grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Departure")
+						out_time_difference = out_time_difference - grace_time
+					end
+				else
+					if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
+						########## Auto Flexi Deduction Already Done ##########
+					else
+						if employee_attendance.office_out_time <= employee_attendance.out_time
+							out_time_difference = 0
+						else
+							out_time_difference = TimeDifference.between(employee_attendance.office_out_time, employee_attendance.out_time).in_minutes
+							grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Departure")
+							out_time_difference = out_time_difference - grace_time
+						end
+					end
+				end
 			end
 		elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
 			if attendance_structure.is_flexi_in_early_gone == true
-  			if not employee_attendance.in_time.nil?
+				if not employee_attendance.in_time.nil?
 					if not employee_attendance.out_time.nil?
 						served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 						total_working_minutes = attendance_structure.early_gone_total_working_minute
@@ -929,41 +929,41 @@ class EmployeeAttendance < ApplicationRecord
 						end
 					end
 				end
-  		else
-	  		if special_relaxation_minute > 0 and temp_time_difference > special_relaxation_minute
-		  		new_office_out_time = employee_attendance.office_out_time + attendance_structure.addional_minutes.minute
-		  		if new_office_out_time <= employee_attendance.out_time
-			      out_time_difference = 0
-			    else
-			      out_time_difference = TimeDifference.between(new_office_out_time, employee_attendance.out_time).in_minutes    
-			      grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Departure")
-			      out_time_difference = out_time_difference - grace_time
-			    end
-		  	else
-		  		if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
-		  			########## Auto Flexi Deduction Already Done ##########
-		  		else
-				  	if employee_attendance.office_out_time <= employee_attendance.out_time
-				      out_time_difference = 0
-				    else
-				      out_time_difference = TimeDifference.between(employee_attendance.office_out_time, employee_attendance.out_time).in_minutes    
-				      grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Departure")
-				      out_time_difference = out_time_difference - grace_time
-				    end
-				  end
-			  end
+			else
+				if special_relaxation_minute > 0 and temp_time_difference > special_relaxation_minute
+					new_office_out_time = employee_attendance.office_out_time + attendance_structure.addional_minutes.minute
+					if new_office_out_time <= employee_attendance.out_time
+						out_time_difference = 0
+					else
+						out_time_difference = TimeDifference.between(new_office_out_time, employee_attendance.out_time).in_minutes
+						grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Departure")
+						out_time_difference = out_time_difference - grace_time
+					end
+				else
+					if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
+						########## Auto Flexi Deduction Already Done ##########
+					else
+						if employee_attendance.office_out_time <= employee_attendance.out_time
+							out_time_difference = 0
+						else
+							out_time_difference = TimeDifference.between(employee_attendance.office_out_time, employee_attendance.out_time).in_minutes
+							grace_time = employee_attendance.check_attendance_exception(employee_attendance, "Departure")
+							out_time_difference = out_time_difference - grace_time
+						end
+					end
+				end
 			end
-  	end
+		end
 
-  	if out_time_difference > 0
-    	out_time_difference = out_time_difference.to_i
-    	minute_wise_deduction = as_per_actual_deduction_value(employee_attendance, out_time_difference)
-	    
-	    early_left_slabs = early_left.early_left_slabs.where("start_minute <= ? AND end_minute >= ?", out_time_difference, out_time_difference)
-	    early_left_slabs.each do |early_left_slab|
-	    	early_left_deduction = early_left_slab.attendance_deduction
-	    	attendance_type_name = early_left_deduction.attendance_type_name
-	    	if not cut_off_date_range.nil?
+		if out_time_difference > 0
+			out_time_difference = out_time_difference.to_i
+			minute_wise_deduction = as_per_actual_deduction_value(employee_attendance, out_time_difference)
+
+			early_left_slabs = early_left.early_left_slabs.where("start_minute <= ? AND end_minute >= ?", out_time_difference, out_time_difference)
+			early_left_slabs.each do |early_left_slab|
+				early_left_deduction = early_left_slab.attendance_deduction
+				attendance_type_name = early_left_deduction.attendance_type_name
+				if not cut_off_date_range.nil?
 					if early_left_deduction.exempted_in_month <= EmployeeAttendance.where(:employee_id => employee_attendance.employee_id, :attendance_date => cut_off_date_range, :early_left_status => attendance_type_name).count
 						employee_attendance.early_left_status = attendance_type_name
 						employee_attendance.deduction_impact(employee_attendance, early_left_deduction, "Checkout", minute_wise_deduction)
@@ -976,8 +976,8 @@ class EmployeeAttendance < ApplicationRecord
 					employee_attendance.early_left_status = attendance_type_name
 					employee_attendance.deduction_impact(employee_attendance, early_left_deduction, "Checkout", minute_wise_deduction)
 				end
-	    end
-    end
+			end
+		end
 	end
 
 	########## Overtime Policy ##########
@@ -987,51 +987,51 @@ class EmployeeAttendance < ApplicationRecord
 		########### New Overtime Policy Regular Working Day ###########
 		if employee_attendance.is_rest_day == false and employee_attendance.is_public_holiday == false
 			overtime_working_day = false
-			
+
 			if employee_attendance.regular_quota_encashment == true
 				if employee_attendance.gross_salary >= attendance_structure.regular_min_salary and employee_attendance.gross_salary <= attendance_structure.regular_max_salary
 					overtime_working_day = true
 					if not employee_attendance.in_time.nil?
-		        if not employee_attendance.out_time.nil?
-		        	served_hours = 0
-		        	working_hours = 0
-					  	
-					  	temp_time_difference = 0
-					  	special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
-					  	if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
-					  		temp_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes
-					  	else
-					  		temp_time_difference = 0
-					  	end
-					  	if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
-					  		served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+						if not employee_attendance.out_time.nil?
+							served_hours = 0
+							working_hours = 0
+
+							temp_time_difference = 0
+							special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
+							if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
+								temp_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes
+							else
+								temp_time_difference = 0
+							end
+							if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
+								served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 								total_working_minutes = employee_attendance.attendance_structure_total_working_minutes(attendance_structure)
 								working_hours = (total_working_minutes.to_f/60.0)
-					  	else
-						  	if employee_attendance.is_flexi == false
-						  		excluded_break_hours = 0.0
-							  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-							  	time_slot 		= employee_attendance.employee_roster.time_slot
-							  	no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
-							  	no_of_hours.each do |single_item|
-							  		excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
-							  	end
-							  	working_hours = working_hours - excluded_break_hours
-							  	total_working_minutes = working_hours * 60
-							  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
-						  	elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
-						  		excluded_break_hours = 0.0
-							  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-							  	excluded_break_hours = 0
-							  	working_hours = working_hours - excluded_break_hours
-							  	total_working_minutes = working_hours * 60
-							  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
-						  	else
-						  		served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+							else
+								if employee_attendance.is_flexi == false
+									excluded_break_hours = 0.0
+									working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+									time_slot 		= employee_attendance.employee_roster.time_slot
+									no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
+									no_of_hours.each do |single_item|
+										excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
+									end
+									working_hours = working_hours - excluded_break_hours
+									total_working_minutes = working_hours * 60
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+								elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
+									excluded_break_hours = 0.0
+									working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+									excluded_break_hours = 0
+									working_hours = working_hours - excluded_break_hours
+									total_working_minutes = working_hours * 60
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+								else
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 									total_working_minutes = employee_attendance.employee_roster.time_slot.total_working_minutes
 									working_hours = (total_working_minutes.to_f/60.0)
-						  	end	
-						  end
+								end
+							end
 
 							if served_hours > working_hours
 								over_time_hours = (served_hours - working_hours).round(2)
@@ -1040,26 +1040,26 @@ class EmployeeAttendance < ApplicationRecord
 									regular_overtime = attendance_structure.regular_overtime
 									if not regular_overtime.nil?
 										attendance_overtime_slabs = regular_overtime.attendance_overtime_slabs.where("min_minute <= ? AND max_minute >= ?", over_time_minutes, over_time_minutes)
-					    			attendance_overtime_slabs.each do |attendance_overtime_slab|
-					    				attendance_earning = attendance_overtime_slab.attendance_earning
-					    				employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
-					    			end	
+										attendance_overtime_slabs.each do |attendance_overtime_slab|
+											attendance_earning = attendance_overtime_slab.attendance_earning
+											employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
+										end
 									end
 								end
-			    		end
-		    		end
-		    	end
-	    	end
+							end
+						end
+					end
+				end
 			end
-			
+
 			if employee_attendance.is_overtime == true
 				if overtime_working_day == false
 					overtime_working_day = true
 					if not employee_attendance.in_time.nil?
-		        if not employee_attendance.out_time.nil?
-		        	served_hours = 0
-		        	working_hours = 0
-					  	
+						if not employee_attendance.out_time.nil?
+							served_hours = 0
+							working_hours = 0
+
 							temp_time_difference = 0
 							special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
 							if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
@@ -1067,69 +1067,69 @@ class EmployeeAttendance < ApplicationRecord
 							else
 								temp_time_difference = 0
 							end
-					  	if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
-					  		served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+							if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
+								served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 								total_working_minutes = employee_attendance.attendance_structure_total_working_minutes(attendance_structure)
 								working_hours = (total_working_minutes.to_f/60.0)
-					  	else
-						  	if employee_attendance.is_flexi == false
-						  		excluded_break_hours = 0.0
-							  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-							  	time_slot 		= employee_attendance.employee_roster.time_slot
-							  	no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
-							  	no_of_hours.each do |single_item|
-							  		excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
-							  	end
-							  	working_hours = working_hours - excluded_break_hours
-							  	total_working_minutes = working_hours * 60
-							  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
-						  	elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
-						  		excluded_break_hours = 0.0
-							  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-							  	excluded_break_hours = 0
-							  	working_hours = working_hours - excluded_break_hours
-							  	total_working_minutes = working_hours * 60
-							  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
-						  	else
-						  		served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+							else
+								if employee_attendance.is_flexi == false
+									excluded_break_hours = 0.0
+									working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+									time_slot 		= employee_attendance.employee_roster.time_slot
+									no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
+									no_of_hours.each do |single_item|
+										excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
+									end
+									working_hours = working_hours - excluded_break_hours
+									total_working_minutes = working_hours * 60
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+								elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
+									excluded_break_hours = 0.0
+									working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+									excluded_break_hours = 0
+									working_hours = working_hours - excluded_break_hours
+									total_working_minutes = working_hours * 60
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+								else
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 									total_working_minutes = employee_attendance.employee_roster.time_slot.total_working_minutes
 									working_hours = (total_working_minutes.to_f/60.0)
-						  	end	
-						  end
+								end
+							end
 
-						  if attendance_overtime.overtime_after_office_end == false
+							if attendance_overtime.overtime_after_office_end == false
 								if served_hours > working_hours
 									over_time_hours = (served_hours - working_hours).round(2)
 									if over_time_hours > 0
 										over_time_minutes = over_time_hours * 60
 										attendance_overtime_slabs = attendance_overtime.attendance_overtime_slabs.where("min_minute <= ? AND max_minute >= ?", over_time_minutes, over_time_minutes)
 										# todo add proper message if no slabs found
-					    			attendance_overtime_slabs.each do |attendance_overtime_slab|
-					    				attendance_earning = attendance_overtime_slab.attendance_earning
-					    				employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
-					    			end
+										attendance_overtime_slabs.each do |attendance_overtime_slab|
+											attendance_earning = attendance_overtime_slab.attendance_earning
+											employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
+										end
 									end
-				    		end
-				    	else
-				    		if not employee_attendance.out_time.nil?
+								end
+							else
+								if not employee_attendance.out_time.nil?
 									if not employee_attendance.office_out_time.nil?
 										if employee_attendance.out_time > employee_attendance.office_out_time
 											over_time_hours = TimeDifference.between(employee_attendance.out_time, employee_attendance.office_out_time).in_hours
 											over_time_minutes = TimeDifference.between(employee_attendance.out_time, employee_attendance.office_out_time).in_minutes
 											if over_time_minutes > 0
 												attendance_overtime_slabs = attendance_overtime.attendance_overtime_slabs.where("min_minute <= ? AND max_minute >= ?", over_time_minutes, over_time_minutes)
-							    			attendance_overtime_slabs.each do |attendance_overtime_slab|
-							    				attendance_earning = attendance_overtime_slab.attendance_earning
-							    				employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
-							    			end
+												attendance_overtime_slabs.each do |attendance_overtime_slab|
+													attendance_earning = attendance_overtime_slab.attendance_earning
+													employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
+												end
 											end
 										end
 									end
 								end
-				    	end
-		    		end
-		    	end
-		    end
+							end
+						end
+					end
+				end
 			end
 
 			##### Hamza Working #########
@@ -1213,159 +1213,159 @@ class EmployeeAttendance < ApplicationRecord
 			# 	end
 			# end
 			##### ///Hamza Working #########
-			
+
 			if employee_attendance.is_regular_cpl == true
 				if overtime_working_day == false
 					overtime_working_day = true
 					if not employee_attendance.in_time.nil?
-				    if not employee_attendance.out_time.nil?
-		        	served_hours = 0
-		        	working_hours = 0
-					  	
-					  	temp_time_difference = 0
-					  	special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
-					  	if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
-					  		temp_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes
-					  	else
-					  		temp_time_difference = 0
-					  	end
-					  	if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
-					  		served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+						if not employee_attendance.out_time.nil?
+							served_hours = 0
+							working_hours = 0
+
+							temp_time_difference = 0
+							special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
+							if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
+								temp_time_difference = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.in_time).in_minutes
+							else
+								temp_time_difference = 0
+							end
+							if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
+								served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 								total_working_minutes = employee_attendance.attendance_structure_total_working_minutes(attendance_structure)
 								working_hours = (total_working_minutes.to_f/60.0)
-					  	else
-						  	if employee_attendance.is_flexi == false
-						  		excluded_break_hours = 0.0
-							  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-							  	time_slot 		= employee_attendance.employee_roster.time_slot
-							  	no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
-							  	no_of_hours.each do |single_item|
-							  		excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
-							  	end
-							  	working_hours = working_hours - excluded_break_hours
-							  	total_working_minutes = working_hours * 60
-							  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
-						  	elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
-						  		excluded_break_hours = 0.0
-							  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-							  	excluded_break_hours = 0
-							  	working_hours = working_hours - excluded_break_hours
-							  	total_working_minutes = working_hours * 60
-							  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
-						  	else
-						  		served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+							else
+								if employee_attendance.is_flexi == false
+									excluded_break_hours = 0.0
+									working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+									time_slot 		= employee_attendance.employee_roster.time_slot
+									no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
+									no_of_hours.each do |single_item|
+										excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
+									end
+									working_hours = working_hours - excluded_break_hours
+									total_working_minutes = working_hours * 60
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+								elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
+									excluded_break_hours = 0.0
+									working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+									excluded_break_hours = 0
+									working_hours = working_hours - excluded_break_hours
+									total_working_minutes = working_hours * 60
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+								else
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 									total_working_minutes = employee_attendance.employee_roster.time_slot.total_working_minutes
 									working_hours = (total_working_minutes.to_f/60.0)
-						  	end	
-						  end
+								end
+							end
 
 							if served_hours > working_hours
 								over_time_hours = (served_hours - working_hours).round(2)
 								if over_time_hours > 0
 									over_time_minutes = over_time_hours * 60
 									attendance_overtime_slabs = attendance_overtime.attendance_overtime_slabs.where("min_minute <= ? AND max_minute >= ?", over_time_minutes, over_time_minutes)
-				    			attendance_overtime_slabs.each do |attendance_overtime_slab|
-				    				attendance_earning = attendance_overtime_slab.attendance_earning
-				    				employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
-				    			end
+									attendance_overtime_slabs.each do |attendance_overtime_slab|
+										attendance_earning = attendance_overtime_slab.attendance_earning
+										employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
+									end
 								end
-			    		end
+							end
 						end
 					end
 				end
 			end
 
 		end
-		
+
 		########### New Overtime Policy Rest and Public Holiday ###########
 		if employee_attendance.is_rest_day == true or employee_attendance.is_public_holiday == true
 			overtime_holiday_day = false
-			
+
 			if employee_attendance.holiday_quota_encashment == true
 				if employee_attendance.gross_salary >= attendance_structure.holiday_min_salary and employee_attendance.gross_salary <= attendance_structure.holiday_max_salary
 					overtime_holiday_day = true
 					if not employee_attendance.in_time.nil?
-		        if not employee_attendance.out_time.nil?
-		        	excluded_break_hours = 0.0
-					  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-					  	time_slot 		= employee_attendance.employee_roster.time_slot
-					  	no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
-					  	no_of_hours.each do |single_item|
-					  		excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
-					  	end
-					  	working_hours = working_hours - excluded_break_hours
-					  	total_working_minutes = working_hours * 60
-					  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+						if not employee_attendance.out_time.nil?
+							excluded_break_hours = 0.0
+							working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+							time_slot 		= employee_attendance.employee_roster.time_slot
+							no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
+							no_of_hours.each do |single_item|
+								excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
+							end
+							working_hours = working_hours - excluded_break_hours
+							total_working_minutes = working_hours * 60
+							served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 							if served_hours > 0
 								total_served_minutes = served_hours * 60
 								holiday_overtime = attendance_structure.holiday_overtime
 								if not holiday_overtime.nil?
 									attendance_overtime_slabs = holiday_overtime.attendance_overtime_slabs.where("min_minute <= ? AND max_minute >= ?", total_served_minutes, total_served_minutes)
-				    			attendance_overtime_slabs.each do |attendance_overtime_slab|
-				    				attendance_earning = attendance_overtime_slab.attendance_earning
-				    				employee_attendance.overtime_impact(employee_attendance, attendance_earning, served_hours, working_hours)
-				    			end
-				    		end
-			    		end
-		    		end
-		    	end
-		    end
+									attendance_overtime_slabs.each do |attendance_overtime_slab|
+										attendance_earning = attendance_overtime_slab.attendance_earning
+										employee_attendance.overtime_impact(employee_attendance, attendance_earning, served_hours, working_hours)
+									end
+								end
+							end
+						end
+					end
+				end
 			end
-			
+
 			if employee_attendance.is_holiday_overtime == true
 				if overtime_holiday_day == false
 					overtime_holiday_day = true
 					if not employee_attendance.in_time.nil?
-		        if not employee_attendance.out_time.nil?
-		        	served_hours = 0
-		        	working_hours = 0
-					  	
-					  	temp_time_difference = 0
-					  	special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
-					  	if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
-					  		temp_time_difference = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_minutes
-					  	else
-					  		temp_time_difference = 0
-					  	end
-					  	if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
-					  		served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+						if not employee_attendance.out_time.nil?
+							served_hours = 0
+							working_hours = 0
+
+							temp_time_difference = 0
+							special_relaxation_minute = employee_attendance.verification_of_special_rule_in_attendance_structure(attendance_structure)
+							if not (employee_attendance.office_in_time.nil? and employee_attendance.in_time.nil?)
+								temp_time_difference = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_minutes
+							else
+								temp_time_difference = 0
+							end
+							if special_relaxation_minute > 0 and temp_time_difference < special_relaxation_minute
+								served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 								total_working_minutes = employee_attendance.attendance_structure_total_working_minutes(attendance_structure)
 								working_hours = (total_working_minutes.to_f/60.0)
-					  	else
-						  	if employee_attendance.is_flexi == false
-						  		excluded_break_hours = 0.0
-							  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-							  	time_slot 		= employee_attendance.employee_roster.time_slot
-							  	no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
-							  	no_of_hours.each do |single_item|
-							  		excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
-							  	end
-							  	working_hours = working_hours - excluded_break_hours
-							  	total_working_minutes = working_hours * 60
-							  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
-						  	elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
-						  		excluded_break_hours = 0.0
-							  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-							  	excluded_break_hours = 0
-							  	working_hours = working_hours - excluded_break_hours
-							  	total_working_minutes = working_hours * 60
-							  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
-						  	else
-						  		served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+							else
+								if employee_attendance.is_flexi == false
+									excluded_break_hours = 0.0
+									working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+									time_slot 		= employee_attendance.employee_roster.time_slot
+									no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
+									no_of_hours.each do |single_item|
+										excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
+									end
+									working_hours = working_hours - excluded_break_hours
+									total_working_minutes = working_hours * 60
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+								elsif employee_attendance.is_flexi == true and employee_attendance.sub_time_slot_id != nil
+									excluded_break_hours = 0.0
+									working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+									excluded_break_hours = 0
+									working_hours = working_hours - excluded_break_hours
+									total_working_minutes = working_hours * 60
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+								else
+									served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 									total_working_minutes = employee_attendance.employee_roster.time_slot.total_working_minutes
 									working_hours = (total_working_minutes.to_f/60.0)
-						  	end	
-						  end
+								end
+							end
 
-						 	# if attendance_overtime.overtime_after_office_end == false
+							# if attendance_overtime.overtime_after_office_end == false
 							over_time_hours = served_hours.round(2)
 							if over_time_hours > 0
 								over_time_minutes = over_time_hours * 60
 								attendance_overtime_slabs = attendance_overtime.attendance_overtime_slabs.where("min_minute <= ? AND max_minute >= ?", over_time_minutes, over_time_minutes)
-			    			attendance_overtime_slabs.each do |attendance_overtime_slab|
-			    				attendance_earning = attendance_overtime_slab.attendance_earning
-			    				employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
-			    			end
+								attendance_overtime_slabs.each do |attendance_overtime_slab|
+									attendance_earning = attendance_overtime_slab.attendance_earning
+									employee_attendance.overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
+								end
 							end
 							# else
 							# 	if not employee_attendance.out_time.nil?
@@ -1385,88 +1385,88 @@ class EmployeeAttendance < ApplicationRecord
 							# 	end
 							# end
 
-		    		end
-		    	end
-		    end
+						end
+					end
+				end
 			end
-			
+
 			if employee_attendance.is_cpl == true
 				if overtime_holiday_day == false
 					overtime_holiday_day = true
 					if not employee_attendance.in_time.nil?
-		        if not employee_attendance.out_time.nil?
-		        	excluded_break_hours = 0.0
-					  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-					  	time_slot 		= employee_attendance.employee_roster.time_slot
-					  	no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
-					  	no_of_hours.each do |single_item|
-					  		excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
-					  	end
-					  	working_hours = working_hours - excluded_break_hours
-					  	total_working_minutes = working_hours * 60
-					  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+						if not employee_attendance.out_time.nil?
+							excluded_break_hours = 0.0
+							working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+							time_slot 		= employee_attendance.employee_roster.time_slot
+							no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
+							no_of_hours.each do |single_item|
+								excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
+							end
+							working_hours = working_hours - excluded_break_hours
+							total_working_minutes = working_hours * 60
+							served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 							if served_hours > 0
 								total_served_minutes = served_hours * 60
 								attendance_overtime_slabs = attendance_overtime.attendance_overtime_slabs.where("min_minute <= ? AND max_minute >= ?", total_served_minutes, total_served_minutes)
-			    			attendance_overtime_slabs.each do |attendance_overtime_slab|
-			    				attendance_earning = attendance_overtime_slab.attendance_earning
-			    				employee_attendance.overtime_impact(employee_attendance, attendance_earning, served_hours, working_hours)
-			    			end
-			    		end
-		    		end
-		    	end
-		    end
+								attendance_overtime_slabs.each do |attendance_overtime_slab|
+									attendance_earning = attendance_overtime_slab.attendance_earning
+									employee_attendance.overtime_impact(employee_attendance, attendance_earning, served_hours, working_hours)
+								end
+							end
+						end
+					end
+				end
 			end
 
 			if employee_attendance.is_off_day_working == true
 				if overtime_holiday_day == false
 					overtime_holiday_day = true
 					if not employee_attendance.in_time.nil?
-		        if not employee_attendance.out_time.nil?
-		        	excluded_break_hours = 0.0
-					  	working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
-					  	time_slot 		= employee_attendance.employee_roster.time_slot
-					  	no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
-					  	no_of_hours.each do |single_item|
-					  		excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
-					  	end
-					  	working_hours = working_hours - excluded_break_hours
-					  	total_working_minutes = working_hours * 60
-					  	served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
+						if not employee_attendance.out_time.nil?
+							excluded_break_hours = 0.0
+							working_hours = TimeDifference.between(employee_attendance.office_in_time, employee_attendance.office_out_time).in_hours
+							time_slot 		= employee_attendance.employee_roster.time_slot
+							no_of_hours 	= time_slot.break_times.where(:excluded => true).map {|detail| {:no_of_hours => TimeDifference.between(detail.start_time, detail.end_time).in_hours }}
+							no_of_hours.each do |single_item|
+								excluded_break_hours = excluded_break_hours + single_item[:no_of_hours].to_f
+							end
+							working_hours = working_hours - excluded_break_hours
+							total_working_minutes = working_hours * 60
+							served_hours = TimeDifference.between(employee_attendance.in_time, employee_attendance.out_time).in_hours
 							if served_hours > 0
 								total_served_minutes = served_hours * 60
 								attendance_overtime_slabs = attendance_overtime.attendance_overtime_slabs.where("min_minute <= ? AND max_minute >= ?", total_served_minutes, total_served_minutes)
-			    			attendance_overtime_slabs.each do |attendance_overtime_slab|
-			    				attendance_earning = attendance_overtime_slab.attendance_earning
-			    				employee_attendance.overtime_impact(employee_attendance, attendance_earning, served_hours, working_hours)
-			    			end
-			    		end
-		    		end
-		    	end
-		    end
+								attendance_overtime_slabs.each do |attendance_overtime_slab|
+									attendance_earning = attendance_overtime_slab.attendance_earning
+									employee_attendance.overtime_impact(employee_attendance, attendance_earning, served_hours, working_hours)
+								end
+							end
+						end
+					end
+				end
 			end
 
 		end
 	end
 
 	########## Overtime ##########
-  def overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
-  	if attendance_earning.earning_from == "Quota"
-  		if attendance_earning.earning_type == "Flat"
-  			if attendance_earning.multiplex_allowed == true
-  				multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
-  				if multiplex_verification == true
-  					employee_attendance.flat_overtime(employee_attendance, (attendance_earning.earning_value * attendance_earning.multiplex), attendance_earning.earning_from)	
-  				else
-  					employee_attendance.flat_overtime(employee_attendance, attendance_earning.earning_value, attendance_earning.earning_from)		
-  				end
-  			else
-  				employee_attendance.flat_overtime(employee_attendance, attendance_earning.earning_value, attendance_earning.earning_from)		
-  			end
-  		elsif attendance_earning.earning_type == "As Per Actual"
-  			if attendance_earning.upper_cap == true
-	  			if over_time_hours > attendance_earning.upper_cap_limit
-	  				over_time_hours = attendance_earning.upper_cap_limit
+	def overtime_impact(employee_attendance, attendance_earning, over_time_hours, working_hours)
+		if attendance_earning.earning_from == "Quota"
+			if attendance_earning.earning_type == "Flat"
+				if attendance_earning.multiplex_allowed == true
+					multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
+					if multiplex_verification == true
+						employee_attendance.flat_overtime(employee_attendance, (attendance_earning.earning_value * attendance_earning.multiplex), attendance_earning.earning_from)
+					else
+						employee_attendance.flat_overtime(employee_attendance, attendance_earning.earning_value, attendance_earning.earning_from)
+					end
+				else
+					employee_attendance.flat_overtime(employee_attendance, attendance_earning.earning_value, attendance_earning.earning_from)
+				end
+			elsif attendance_earning.earning_type == "As Per Actual"
+				if attendance_earning.upper_cap == true
+					if over_time_hours > attendance_earning.upper_cap_limit
+						over_time_hours = attendance_earning.upper_cap_limit
 					end
 				end
 				if dtl_instance?
@@ -1492,22 +1492,22 @@ class EmployeeAttendance < ApplicationRecord
 						over_time_hours = 0.0
 					end
 				end
-  			if attendance_earning.multiplex_allowed == true
-  				multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
-  				if multiplex_verification == true
-  					employee_attendance.actual_overtime(employee_attendance, ((attendance_earning.multiplex * over_time_hours).to_f/working_hours).to_f.round(2), attendance_earning.earning_from)
-  				else
-  					employee_attendance.actual_overtime(employee_attendance, (over_time_hours.to_f/working_hours.to_f).to_f.round(2), attendance_earning.earning_from)
-  				end
-  			else
-  				employee_attendance.actual_overtime(employee_attendance, (over_time_hours.to_f/working_hours.to_f).to_f.round(2), attendance_earning.earning_from)
-  			end
-  		end
+				if attendance_earning.multiplex_allowed == true
+					multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
+					if multiplex_verification == true
+						employee_attendance.actual_overtime(employee_attendance, ((attendance_earning.multiplex * over_time_hours).to_f/working_hours).to_f.round(2), attendance_earning.earning_from)
+					else
+						employee_attendance.actual_overtime(employee_attendance, (over_time_hours.to_f/working_hours.to_f).to_f.round(2), attendance_earning.earning_from)
+					end
+				else
+					employee_attendance.actual_overtime(employee_attendance, (over_time_hours.to_f/working_hours.to_f).to_f.round(2), attendance_earning.earning_from)
+				end
+			end
 		elsif attendance_earning.earning_from == "Salary"
 			if attendance_earning.earning_type == "Flat"
 				if attendance_earning.multiplex_allowed == true
-  				multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
-  				if multiplex_verification == true
+					multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
+					if multiplex_verification == true
 						employee_attendance.flat_overtime(employee_attendance, (attendance_earning.earning_value * attendance_earning.multiplex), attendance_earning.earning_from)
 					else
 						employee_attendance.flat_overtime(employee_attendance, attendance_earning.multiplex, attendance_earning.earning_from)
@@ -1544,22 +1544,22 @@ class EmployeeAttendance < ApplicationRecord
 						over_time_hours = 0.0
 					end
 				end
-  			if attendance_earning.multiplex_allowed == true
-  				multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
-  				if multiplex_verification == true
-  					employee_attendance.actual_overtime(employee_attendance, (attendance_earning.multiplex * over_time_hours), attendance_earning.earning_from)
-  				else
-  					employee_attendance.actual_overtime(employee_attendance, over_time_hours, attendance_earning.earning_from)
-  				end
-  			else
-  				employee_attendance.actual_overtime(employee_attendance, over_time_hours, attendance_earning.earning_from)
-  			end
-  		end
-  	elsif attendance_earning.earning_from == "Encashable Quota"
+				if attendance_earning.multiplex_allowed == true
+					multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
+					if multiplex_verification == true
+						employee_attendance.actual_overtime(employee_attendance, (attendance_earning.multiplex * over_time_hours), attendance_earning.earning_from)
+					else
+						employee_attendance.actual_overtime(employee_attendance, over_time_hours, attendance_earning.earning_from)
+					end
+				else
+					employee_attendance.actual_overtime(employee_attendance, over_time_hours, attendance_earning.earning_from)
+				end
+			end
+		elsif attendance_earning.earning_from == "Encashable Quota"
 			if attendance_earning.earning_type == "Flat"
 				if attendance_earning.multiplex_allowed == true
-  				multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
-  				if multiplex_verification == true
+					multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
+					if multiplex_verification == true
 						employee_attendance.flat_overtime(employee_attendance, (attendance_earning.earning_value * attendance_earning.multiplex), attendance_earning.earning_from)
 					else
 						employee_attendance.flat_overtime(employee_attendance, attendance_earning.multiplex, attendance_earning.earning_from)
@@ -1567,7 +1567,7 @@ class EmployeeAttendance < ApplicationRecord
 				else
 					employee_attendance.flat_overtime(employee_attendance, attendance_earning.multiplex, attendance_earning.earning_from)
 				end
-  		elsif attendance_earning.earning_type == "As Per Actual"
+			elsif attendance_earning.earning_type == "As Per Actual"
 				if attendance_earning.upper_cap == true
 					if over_time_hours > attendance_earning.upper_cap_limit
 						over_time_hours = attendance_earning.upper_cap_limit
@@ -1596,21 +1596,21 @@ class EmployeeAttendance < ApplicationRecord
 						over_time_hours = 0.0
 					end
 				end
-  			if attendance_earning.multiplex_allowed == true
-  				multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
-  				if multiplex_verification == true
-  					employee_attendance.actual_overtime(employee_attendance, (attendance_earning.multiplex * over_time_hours), attendance_earning.earning_from)
-  				else
-  					employee_attendance.actual_overtime(employee_attendance, over_time_hours, attendance_earning.earning_from)
-  				end
-  			else
-  				employee_attendance.actual_overtime(employee_attendance, over_time_hours, attendance_earning.earning_from)
-  			end
-  		end
-  	end
-  end
+				if attendance_earning.multiplex_allowed == true
+					multiplex_verification = Holiday.verify_public_holiday_for_overtime(employee_attendance, employee_attendance.attendance_date.to_date, attendance_earning.holiday_ids)
+					if multiplex_verification == true
+						employee_attendance.actual_overtime(employee_attendance, (attendance_earning.multiplex * over_time_hours), attendance_earning.earning_from)
+					else
+						employee_attendance.actual_overtime(employee_attendance, over_time_hours, attendance_earning.earning_from)
+					end
+				else
+					employee_attendance.actual_overtime(employee_attendance, over_time_hours, attendance_earning.earning_from)
+				end
+			end
+		end
+	end
 
-  ########## Overtime Flat Deduction ##########
+	########## Overtime Flat Deduction ##########
 	def flat_overtime(employee_attendance, earning_value, earning_from)
 		if earning_from == "Quota"
 			employee_attendance.no_of_cpl = earning_value
@@ -1664,13 +1664,13 @@ class EmployeeAttendance < ApplicationRecord
 				# 		earning_value = 0.0
 				# 	end
 				# end
-					over_time_minutes = (earning_value * 60).round(2)
-					over_time_seconds = (earning_value * 60 * 60).round(2)
-					employee_attendance.actual_overtime_hours 	= earning_value
-					employee_attendance.actual_overtime_minutes = over_time_minutes
-					employee_attendance.over_time_minutes = over_time_minutes
-					employee_attendance.over_time_seconds = over_time_seconds
-					employee_attendance.minute_earned 		= over_time_minutes
+				over_time_minutes = (earning_value * 60).round(2)
+				over_time_seconds = (earning_value * 60 * 60).round(2)
+				employee_attendance.actual_overtime_hours 	= earning_value
+				employee_attendance.actual_overtime_minutes = over_time_minutes
+				employee_attendance.over_time_minutes = over_time_minutes
+				employee_attendance.over_time_seconds = over_time_seconds
+				employee_attendance.minute_earned 		= over_time_minutes
 				if dtl_instance?
 					if employee_attendance.employee.gross_salary <= 28000.0
 						##### For Security Dept Rest Day #####
@@ -1790,7 +1790,7 @@ class EmployeeAttendance < ApplicationRecord
 					employee_attendance.over_time_hours 	= earning_value
 					employee_attendance.remarks = "Normal OverTime"
 				end
-					employee_attendance.save
+				employee_attendance.save
 			end
 		elsif earning_from == "Encashable Quota"
 			over_time_minutes = (earning_value * 60).round(2)
@@ -1800,61 +1800,61 @@ class EmployeeAttendance < ApplicationRecord
 		end
 	end
 
-  ########## Add CPL Quota In Employee Leave Ledger ##########
-  def add_earned_quota_to_employee(employee_attendance)  	
-  	if employee_attendance.quota_earned == false
-  		if employee_attendance.no_of_cpl > 0
-  			system_setting = SystemSetting.find_by(:company_id => employee_attendance.company_id)
-  			if not system_setting.nil?
-  				if system_setting.live_leave_earning == true
-  					leave_type = LeaveType.find_by(:company_id => employee_attendance.employee.company_id, :location_id => employee_attendance.employee.location_id, :is_active => true, :auto_allocation => true, :earned_quota => true)
-				  	if not leave_type.nil?	
-				  		leave_allocation = LeaveAllocation.find_by(:employee_id => employee_attendance.employee_id, :is_active => true, :leave_type_id => leave_type.id)
-				  		if not leave_allocation.nil?
-				  			if leave_allocation.allocated_quota < leave_type.earned_quota_max_limit
-				  				leave_allocation.add_earned_quota_to_employee(employee_attendance.no_of_cpl, leave_type.id, employee_attendance.employee_id, leave_allocation.leave_year_id)		
-				  				employee_attendance.quota_earned = true
-		  						employee_attendance.save
-				  			end
+	########## Add CPL Quota In Employee Leave Ledger ##########
+	def add_earned_quota_to_employee(employee_attendance)
+		if employee_attendance.quota_earned == false
+			if employee_attendance.no_of_cpl > 0
+				system_setting = SystemSetting.find_by(:company_id => employee_attendance.company_id)
+				if not system_setting.nil?
+					if system_setting.live_leave_earning == true
+						leave_type = LeaveType.find_by(:company_id => employee_attendance.employee.company_id, :location_id => employee_attendance.employee.location_id, :is_active => true, :auto_allocation => true, :earned_quota => true)
+						if not leave_type.nil?
+							leave_allocation = LeaveAllocation.find_by(:employee_id => employee_attendance.employee_id, :is_active => true, :leave_type_id => leave_type.id)
+							if not leave_allocation.nil?
+								if leave_allocation.allocated_quota < leave_type.earned_quota_max_limit
+									leave_allocation.add_earned_quota_to_employee(employee_attendance.no_of_cpl, leave_type.id, employee_attendance.employee_id, leave_allocation.leave_year_id)
+									employee_attendance.quota_earned = true
+									employee_attendance.save
+								end
 
-				  			# if leave_allocation.allocated_quota < leave_type.earned_quota_max_limit
-				  			# 	if (leave_allocation.allocated_quota + employee_attendance.no_of_cpl) < leave_type.earned_quota_max_limit
-				  			# 		leave_allocation.add_earned_quota_to_employee(employee_attendance.no_of_cpl, leave_type.id, employee_attendance.employee_id, leave_allocation.leave_year_id)		
-					  		# 		employee_attendance.quota_earned = true
-			  				# 		employee_attendance.save
-			  				# 	else
-			  				# 		no_of_cpl = leave_type.earned_quota_max_limit - leave_allocation.allocated_quota
-			  				# 		leave_allocation.add_earned_quota_to_employee(no_of_cpl, leave_type.id, employee_attendance.employee_id, leave_allocation.leave_year_id)		
-					  		# 		employee_attendance.quota_earned = true
-			  				# 		employee_attendance.save
-				  			# 	end
-				  			# end
-				  			
-				  		end
-				  	end
-  				end
-  			end
-  		end
-  	end
-  end
+								# if leave_allocation.allocated_quota < leave_type.earned_quota_max_limit
+								# 	if (leave_allocation.allocated_quota + employee_attendance.no_of_cpl) < leave_type.earned_quota_max_limit
+								# 		leave_allocation.add_earned_quota_to_employee(employee_attendance.no_of_cpl, leave_type.id, employee_attendance.employee_id, leave_allocation.leave_year_id)
+								# 		employee_attendance.quota_earned = true
+								# 		employee_attendance.save
+								# 	else
+								# 		no_of_cpl = leave_type.earned_quota_max_limit - leave_allocation.allocated_quota
+								# 		leave_allocation.add_earned_quota_to_employee(no_of_cpl, leave_type.id, employee_attendance.employee_id, leave_allocation.leave_year_id)
+								# 		employee_attendance.quota_earned = true
+								# 		employee_attendance.save
+								# 	end
+								# end
 
-  ########## Leave Deduction Revision ##########
-  def self.revision_of_leave_deducted(employee_attendance)
-  	system_setting = SystemSetting.find_by(:company_id => employee_attendance.company_id)
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	########## Leave Deduction Revision ##########
+	def self.revision_of_leave_deducted(employee_attendance)
+		system_setting = SystemSetting.find_by(:company_id => employee_attendance.company_id)
 		if not system_setting.nil?
 			if system_setting.live_leave_deduction == true
-		  	leave_requests = LeaveRequest.where("start_date >= ? AND end_date <= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date).where(:is_cancelled => false, :request_status => "System Deducted", :employee_id => employee_attendance.employee_id).order('id ASC')  
-		    leave_requests.each do |leave_request|
-		    	leave_request.is_cancelled = true
-		    	leave_request.request_status = "Cancelled"
-		    	leave_request.save
-		    end
-		  end
+				leave_requests = LeaveRequest.where("start_date >= ? AND end_date <= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date).where(:is_cancelled => false, :request_status => "System Deducted", :employee_id => employee_attendance.employee_id).order('id ASC')
+				leave_requests.each do |leave_request|
+					leave_request.is_cancelled = true
+					leave_request.request_status = "Cancelled"
+					leave_request.save
+				end
+			end
 		end
 	end
 
 	########## Employee Attendance Leaves wrt Cutoff ##########
-  def self.employee_leaves(pay_invoices)
+	def self.employee_leaves(pay_invoices)
 		cl_status = []
 		LeaveType.where(short_name: "CL").each do |leave_type|
 			cl_status << "On Leave (#{leave_type.name})"
@@ -1888,26 +1888,26 @@ class EmployeeAttendance < ApplicationRecord
 			leave_data[pay_invoice.id] = emp_leave_details
 		end
 		leave_data
-  end
-  
-  ########## Finalize Deduction ##########
-  def self.finalize_deuction(employee_attendance)
-  	system_setting = SystemSetting.find_by(:company_id => employee_attendance.company_id)
+	end
+
+	########## Finalize Deduction ##########
+	def self.finalize_deuction(employee_attendance)
+		system_setting = SystemSetting.find_by(:company_id => employee_attendance.company_id)
 		if not system_setting.nil?
-			if system_setting.live_leave_deduction == true 	  	
-		  	if employee_attendance.deduction_from_quota == true
-		  		deduction_value = (employee_attendance.checkout_deduction.to_f + employee_attendance.checkin_deduction.to_f).round(2)
-		  		if deduction_value > 0
-			  		if deduction_value > 1
-			  			deduction_value = 1.0
-			  		end
-			  		deduction_completed = false
-			  		leave_types = LeaveType.where(:is_active => true, :is_deductible => true, :is_composite => false, :special_leave => false).order('sort_order ASC')
-			  		leave_types.each do |leave_type|
-			  			if deduction_completed == false
-			  				leave_allocation = LeaveAllocation.find_by(:employee_id => employee_attendance.employee_id, :is_active => true, :leave_type_id => leave_type.id)	
-			  				if not leave_allocation.nil?
-			  					if leave_allocation.remaining_quota > 0
+			if system_setting.live_leave_deduction == true
+				if employee_attendance.deduction_from_quota == true
+					deduction_value = (employee_attendance.checkout_deduction.to_f + employee_attendance.checkin_deduction.to_f).round(2)
+					if deduction_value > 0
+						if deduction_value > 1
+							deduction_value = 1.0
+						end
+						deduction_completed = false
+						leave_types = LeaveType.where(:is_active => true, :is_deductible => true, :is_composite => false, :special_leave => false).order('sort_order ASC')
+						leave_types.each do |leave_type|
+							if deduction_completed == false
+								leave_allocation = LeaveAllocation.find_by(:employee_id => employee_attendance.employee_id, :is_active => true, :leave_type_id => leave_type.id)
+								if not leave_allocation.nil?
+									if leave_allocation.remaining_quota > 0
 										if deduction_value <= leave_allocation.remaining_quota
 											puts "\n\n #{employee_attendance.attendance_date} \n\n"
 											puts "\n\n #{deduction_value} \n\n"
@@ -1925,47 +1925,47 @@ class EmployeeAttendance < ApplicationRecord
 											employee_attendance.generate_deduction_request(employee_attendance, leave_allocation.remaining_quota, leave_allocation, leave_type)
 										end
 									end
-			  				end
-			  			end
-			  		end
-			  		if deduction_value > 0 && deduction_completed == false
-			  			employee_attendance.deduction_from_salary = true
-			  			employee_attendance.pay_deduction = deduction_value
-			  			employee_attendance.save
-			  		end
-			  	end
-		  	end
-		  end
+								end
+							end
+						end
+						if deduction_value > 0 && deduction_completed == false
+							employee_attendance.deduction_from_salary = true
+							employee_attendance.pay_deduction = deduction_value
+							employee_attendance.save
+						end
+					end
+				end
+			end
 		end
-  end
+	end
 
-  ########## Leave Deduction Request Generation ##########
-  def generate_deduction_request(employee_attendance, deducted_quota, leave_allocation, leave_type)
-  	leave_request = LeaveRequest.new
-    leave_request.company_id       = employee_attendance.company_id
-    leave_request.employee_id      = employee_attendance.employee_id
-    leave_request.leave_type_id    = leave_type.id
-    leave_request.allocated_quota  = leave_allocation.allocated_quota.to_f
-    leave_request.used_quota       = leave_allocation.used_quota.to_f
-    leave_request.remaining_quota  = leave_allocation.remaining_quota.to_f
-    leave_request.request_count    = deducted_quota.to_f
-    leave_request.sandwich_count   = 0.0
-    leave_request.min_apply_date   = employee_attendance.attendance_date.to_date - leave_type.back_date_limit.day
-    leave_request.start_date       = employee_attendance.attendance_date.to_date
-    leave_request.end_date         = employee_attendance.attendance_date.to_date
-    leave_request.reason           = "Attendance Deduction"
-    leave_request.leave_category   = "Full Day"
-    leave_request.request_status   = "System Deducted"
-    leave_request.is_composite   	 = false
-    leave_request.apply_status     = "System"
-    leave_request.is_cancelled     = false
-    leave_request.save
-  end
+	########## Leave Deduction Request Generation ##########
+	def generate_deduction_request(employee_attendance, deducted_quota, leave_allocation, leave_type)
+		leave_request = LeaveRequest.new
+		leave_request.company_id       = employee_attendance.company_id
+		leave_request.employee_id      = employee_attendance.employee_id
+		leave_request.leave_type_id    = leave_type.id
+		leave_request.allocated_quota  = leave_allocation.allocated_quota.to_f
+		leave_request.used_quota       = leave_allocation.used_quota.to_f
+		leave_request.remaining_quota  = leave_allocation.remaining_quota.to_f
+		leave_request.request_count    = deducted_quota.to_f
+		leave_request.sandwich_count   = 0.0
+		leave_request.min_apply_date   = employee_attendance.attendance_date.to_date - leave_type.back_date_limit.day
+		leave_request.start_date       = employee_attendance.attendance_date.to_date
+		leave_request.end_date         = employee_attendance.attendance_date.to_date
+		leave_request.reason           = "Attendance Deduction"
+		leave_request.leave_category   = "Full Day"
+		leave_request.request_status   = "System Deducted"
+		leave_request.is_composite   	 = false
+		leave_request.apply_status     = "System"
+		leave_request.is_cancelled     = false
+		leave_request.save
+	end
 
-  ########## Auto Impact on Attendance of Request Availed ##########
-  def self.auto_impact_on_attendance_of_request(request_type, start_date, end_date, employee)
-  	date_range = (start_date.to_date..end_date.to_date).to_a.map{|x| x.to_date}
-  	########## Empty Row Creation for Attendance ##########
+	########## Auto Impact on Attendance of Request Availed ##########
+	def self.auto_impact_on_attendance_of_request(request_type, start_date, end_date, employee)
+		date_range = (start_date.to_date..end_date.to_date).to_a.map{|x| x.to_date}
+		########## Empty Row Creation for Attendance ##########
 		date_range.each do |single_date|
 			if EmployeeAttendance.where(:employee_id => employee.id, :attendance_date => single_date).empty?
 				if employee.joining_date.to_date <= single_date
@@ -1982,7 +1982,7 @@ class EmployeeAttendance < ApplicationRecord
 		EmployeeAttendance.where(:is_finalized => false, :employee_id => employee.id, :attendance_date => date_range).order('attendance_date ASC').each do |employee_attendance|
 			EmployeeAttendance.update_employee_detail(employee_attendance, employee)
 		end
-		
+
 		########## Leave Impact on Attendance ##########
 		if request_type == "leave_request"
 			EmployeeAttendance.where(:is_finalized => false, :employee_id => employee.id, :attendance_date => date_range, :is_on_leave => true).each do |employee_attendance|
@@ -2034,7 +2034,7 @@ class EmployeeAttendance < ApplicationRecord
 			end
 		end
 
-  end
+	end
 
 	def get_leverage_minutes
 		leverage_minutes = 0

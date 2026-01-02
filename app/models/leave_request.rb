@@ -10,11 +10,11 @@ class LeaveRequest < ApplicationRecord
 	has_many		:leave_request_details, 				:dependent => :restrict_with_error
 
 	########## Validation ############
-  validate 		:validate_the_apply_date
+	validate 		:validate_the_apply_date
 
-  after_save 	:leave_approval_request
+	after_save 	:leave_approval_request
 
-  ########## Validation of Leave Application ##########
+	########## Validation of Leave Application ##########
 	def validate_the_apply_date
 		applied_status = false
 		if self.request_status == "Waiting For Approval"
@@ -42,7 +42,7 @@ class LeaveRequest < ApplicationRecord
 				end
 			end
 		end
-		
+
 		if self.request_status == "Waiting For Approval"
 			employee_leave_ledger = LeaveAllocation.find_by(:company_id => self.company_id, :is_active => true, :leave_type_id => self.leave_type_id, :employee_id => self.employee_id)
 			if not employee_leave_ledger.leave_year_start_date.nil?
@@ -85,7 +85,7 @@ class LeaveRequest < ApplicationRecord
 		sandwich_count = 0
 		date_range = (start_date.to_date..end_date.to_date).to_a.map{|x| x.to_date}
 		request_count  = date_range.count
-		
+
 		################ Leave Category for Leave Division ###############
 		if leave_category == "Short Day"
 			request_count = request_count * 0.25
@@ -93,7 +93,7 @@ class LeaveRequest < ApplicationRecord
 			request_count = request_count * 0.5
 		elsif leave_category == "Full Day"
 			request_count = request_count * 1.0
-		else			
+		else
 			request_count = 0
 		end
 		splitable = true
@@ -111,7 +111,7 @@ class LeaveRequest < ApplicationRecord
 			request_count = request_count - sandwich_count
 			sandwich_count = 0
 		end
-		
+
 		if leave_type.splitable == true
 			splitable = true
 		else
@@ -121,7 +121,7 @@ class LeaveRequest < ApplicationRecord
 				splitable = false
 			end
 		end
-		
+
 		############## Verification of Leave Request	##############
 		request_flow_status = RequestFlow.verification_of_request_flow(employee, "Leave Request")
 
@@ -191,7 +191,7 @@ class LeaveRequest < ApplicationRecord
 		sandwich_count = 0
 		date_range = (start_date.to_date..end_date.to_date).to_a.map{|x| x.to_date}
 		request_count  = date_range.count
-		
+
 		################ Leave Category for Leave Division ###############
 		if leave_category == "Short Day"
 			request_count = request_count * 0.25
@@ -199,7 +199,7 @@ class LeaveRequest < ApplicationRecord
 			request_count = request_count * 0.5
 		elsif leave_category == "Full Day"
 			request_count = request_count * 1.0
-		else			
+		else
 			request_count = 0
 		end
 
@@ -209,7 +209,7 @@ class LeaveRequest < ApplicationRecord
 				sandwich_count = sandwich_count + 1
 			end
 		end
-		
+
 		sandwich_count = sandwich_count + Holiday.calculate_holidays(start_date, end_date, employee)
 
 		if leave_type.sandwich == false
@@ -260,7 +260,7 @@ class LeaveRequest < ApplicationRecord
 			########################################################################
 			############## Verification of Leave Request on Probation ##############
 			########################################################################
-				
+
 		else
 			sandwich_count 	= 0
 			request_count 	= 0
@@ -383,7 +383,7 @@ class LeaveRequest < ApplicationRecord
 						#############################################
 						########## Notification Generation ##########
 						#############################################
-					end	
+					end
 				end
 			elsif self.request_status == "System Deducted"
 				########## Deducted Leave Quota ##########
@@ -549,7 +549,7 @@ class LeaveRequest < ApplicationRecord
 						#############################################
 						########## Notification Generation ##########
 						#############################################
-					end	
+					end
 				end
 			elsif self.request_status == "Cancelled"
 				########## Revert Leave Quota ##########
@@ -633,12 +633,12 @@ class LeaveRequest < ApplicationRecord
 	########## Leave Impact on Employee Attendance ##########
 	def self.employee_wise_leave_impact(employee_attendance)
 		LeaveRequest.where(:employee_id => employee_attendance.employee_id, :request_status => "Availed").where("Date(start_date) <= ? AND Date(end_date) >= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date).each do |leave_request|
-			employee_attendance.attendance_status = "On Leave (#{leave_request.leave_type_name})"	    
-	    employee_attendance.early_left_status = ""
-	    employee_attendance.remarks						= ""
-	    employee_attendance.other_remarks			= ""
-	    employee_attendance.encashable_quota 					= 0.0
-	    employee_attendance.checkout_deduction 				= 0.0
+			employee_attendance.attendance_status = "On Leave (#{leave_request.leave_type_name})"
+			employee_attendance.early_left_status = ""
+			employee_attendance.remarks						= ""
+			employee_attendance.other_remarks			= ""
+			employee_attendance.encashable_quota 					= 0.0
+			employee_attendance.checkout_deduction 				= 0.0
 			employee_attendance.checkin_deduction 				= 0.0
 			if employee_attendance.is_ot_approved == false
 				employee_attendance.approved_overtime 				= 0.0
@@ -671,7 +671,7 @@ class LeaveRequest < ApplicationRecord
 				employee_attendance.deduction_from_salary		= true
 				employee_attendance.pay_deduction						= leave_request.request_count > 1 ? 1.0 : leave_request.request_count
 			end
-	    employee_attendance.save
+			employee_attendance.save
 		end
 	end
 
