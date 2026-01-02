@@ -33,3 +33,10 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+config/local_env.yml
+
+
+config/local_env.yml
+hrms_db_09-07-2024.sql
+
