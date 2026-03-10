@@ -8,4 +8,5 @@ default: &default
 
 development:
   <<: *default
-  database: hrms_new
+#  database: hrms_new
+  database: hrms_inf

@@ -419,7 +419,7 @@ class AttendanceMachineLog < ApplicationRecord
 
   def self.att_machine_data_insertion(device_url, attendance_device, log_id, machine_name, att_variable)
     begin
-      daily_attendance_data = RestClient::Request.execute(:method => :get, :url => device_url, :timeout => 90000000)
+      daily_attendance_data = RestClient::Request.execute(:method => :get, :url => device_url, :timeout => 90000000, verify_ssl: false)
       daily_attendances = JSON.parse(JSON.parse(daily_attendance_data.body)["daily_attendances"].to_json)
     rescue ActiveRecord::RecordNotFound => e
       daily_attendances = []

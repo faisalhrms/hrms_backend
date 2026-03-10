@@ -45,7 +45,7 @@
 # "grunt-contrib-imagemin": "^0.9.2",
 # 106CC4 Blue 
 # 641E16 Red
-# User.create(:email => "khawaja.tayyab@admin.com", :password => "avaya@1209", :first_name => "Khawaja", :last_name => "Tayyab", :is_confirmed => true, :is_admin => true, :company_id => 1, :role_id => 1)
+# User.create(:email => "portals@syscon.cc", :password => "Portals@123", :first_name => "portals", :last_name => "syscon", :is_confirmed => true, :is_admin => true, :company_id => 1, :role_id => 1)
 # User.create(:email => "ahsan.ali@admin.com", :password => "yahoo@1209", :first_name => "Ahsan", :last_name => "Ali", :is_confirmed => true, :is_admin => true, :company_id => 1, :role_id => 1)
 # User.create(:email => "saqib.shahzad@admin.com", :password => "yahoo@1209", :first_name => "Saqib", :last_name => "Shahzad", :is_confirmed => true, :is_admin => true, :company_id => 1, :role_id => 1)
 # User.create(:email => "syed.talal@admin.com", :password => "yahoo@1209", :first_name => "Syed", :last_name => "Talal", :is_confirmed => true, :is_admin => true, :company_id => 1, :role_id => 1)
@@ -53,7 +53,7 @@
 # Company.create(:name => "Sapphire Textile Mill Limited", :code => "STML", :short_name => "STML", :address => "7A-K, Gulberg, Lahore, Pakistan", :description => "")
 # Company.create(:name => "Diamond Fabrics Limited", :code => "DFL", :short_name => "DFL", :address => "", :description => "")
 
-# Company.create(:name => "Interloop Dairies Ltd.", :code => "Interloop Dairies Ltd.", :short_name => "IDL", :address => "", :description => "")
+# Company.create(:name => "Inferifi LLC.", :code => "Inferifi LLC.", :short_name => "Inferifi", :address => "", :description => "")
 
 # countries_file = File.read "#{Rails.public_path}/countries.json"
 # countries_data = JSON.parse(countries_file)
@@ -253,13 +253,13 @@ early_left = attendance_structure.early_left
 # end
 
 
-files = Dir.glob(File.join("#{Rails.public_path}/srl_data/employee_pictures2", '**', '*')).select { |file| File.file?(file) }
+files = Dir.glob(File.join("#{Rails.public_path}/employee_pictures", '**', '*')).select { |file| File.file?(file) }
 files.each do |file|
 file_name = file.split('/').last
 employee_code = file_name.split('.').first
 employee = Employee.find_by(:employee_code => employee_code)
 if not employee.nil?
-image = File.new("#{Rails.public_path}/srl_data/employee_pictures2/#{file_name}", "r")
+image = File.new("#{Rails.public_path}/employee_pictures/#{file_name}", "r")
 employee.avatar = image
 employee.save
 end
@@ -387,7 +387,7 @@ employee_codes = ['102128', '102845', '109016', '109148', '109210', '109227', '1
 Employee.where(:employee_code => employee_codes).each do |employee|
 employee.is_medical_allowance = true
 employee.save
-end_date
+end
 
 
 pay_execution = PayExecution.find 34
@@ -661,6 +661,5 @@ l.destroy
 
 
 employee_codes = ["771723", "771724", "771725", "771547", "771663", "771667", "771670", "771666", "771658", "771653", "771664", "771668", "771665"]
-
 
 

@@ -221,7 +221,7 @@
             <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
             <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
             <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
-            <% total_deduction = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", 'Miscellaneous Deduction', "Insurance Premium GLI", "Canteen Deduction"]).sum(:amount).round.to_f + @pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round %>
+            <% total_deduction = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Attendance Deduction", 'Miscellaneous Deduction', "Insurance Premium GLI", "Canteen Deduction"]).sum(:amount).round.to_f + @pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round %>
             <td style="text-align: center;"> <%= number_with_precision(total_deduction, :precision => 2, :delimiter => ',') %> </td>
             <td style="text-align: center;"> <%= number_with_precision((PayInvoice.find(pay_invoice_ids).sum(&:total_earning) - total_deduction), :precision => 2, :delimiter => ',') %> </td>
           </tr>
@@ -257,7 +257,7 @@
           <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
           <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
           <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
-          <% total_deductions = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Miscellaneous Deduction", "Insurance Premium GLI", "Canteen Deduction"]).sum(:amount).round.to_f + @pay_invoices.sum(:monthly_tax).to_f.round %>
+          <% total_deductions = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Attendance Deduction", "Miscellaneous Deduction", "Insurance Premium GLI", "Canteen Deduction"]).sum(:amount).round.to_f + @pay_invoices.sum(:monthly_tax).to_f.round %>
           <td style="text-align: center;"> <%= number_with_precision(total_deductions, :precision => 2, :delimiter => ',') %> </td>
           <% net_pay =  total_earning - total_deductions%>
           <td style="text-align: center;"> <%= number_with_precision((net_pay), :precision => 2, :delimiter => ',') %> </td>
@@ -294,7 +294,7 @@
         <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
         <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
         <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
-        <% total_deductions = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Miscellaneous Deduction", "Insurance Premium GLI", "Canteen Deduction"]).sum(:amount).round.to_f + @pay_invoices.sum(:monthly_tax).to_f.round %>
+        <% total_deductions = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Attendance Deduction", "Miscellaneous Deduction", "Insurance Premium GLI", "Canteen Deduction"]).sum(:amount).round.to_f + @pay_invoices.sum(:monthly_tax).to_f.round %>
         <td style="text-align: center;"> <%= number_with_precision(total_deductions, :precision => 2, :delimiter => ',') %> </td>
         <% net_pay =  total_earning - total_deductions%>
         <td style="text-align: center;"> <%= number_with_precision((net_pay), :precision => 2, :delimiter => ',') %> </td>
@@ -333,7 +333,7 @@
         <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
         <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
         <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
-        <% total_deduction = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", 'Miscellaneous Deduction', "Canteen Deduction", "Insurance Premium GLI"]).sum(:amount).round.to_f + @pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round %>
+        <% total_deduction = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Attendance Deduction", 'Miscellaneous Deduction', "Canteen Deduction", "Insurance Premium GLI"]).sum(:amount).round.to_f + @pay_invoices.where(:department_id => department.id).sum(:monthly_tax).to_f.round %>
         <td style="text-align: center;"> <%= number_with_precision(total_deduction, :precision => 2, :delimiter => ',') %> </td>
         <td style="text-align: center;"> <%= number_with_precision((PayInvoice.find(pay_invoice_ids).sum(&:total_earning) - total_deduction), :precision => 2, :delimiter => ',') %> </td>
       </tr>
@@ -372,7 +372,7 @@
           <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Miscellaneous Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
           <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => "Canteen Deduction").sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
           <td style="text-align: center;"> <%= number_with_precision(PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Provident Fund"]).sum(:amount).round.to_f, :precision => 2, :delimiter => ',') %> </td>
-          <% total_deductions = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Miscellaneous Deduction", "Canteen Deduction", "Insurance Premium GLI"]).sum(:amount).round.to_f + @pay_invoices.sum(:monthly_tax).to_f.round %>
+          <% total_deductions = PayInvoiceDetail.where(:pay_invoice_id => pay_invoice_ids, :item_name => ["Loan", "Advance", "EOBI", "Provident Fund", 'Mess Deduction', "Electric Bill", "Attendance Deduction", "Miscellaneous Deduction", "Canteen Deduction", "Insurance Premium GLI"]).sum(:amount).round.to_f + @pay_invoices.sum(:monthly_tax).to_f.round %>
           <td style="text-align: center;"> <%= number_with_precision(total_deductions, :precision => 2, :delimiter => ',') %> </td>
           <% net_pay =  total_earning - total_deductions%>
           <td style="text-align: center;"> <%= number_with_precision((net_pay), :precision => 2, :delimiter => ',') %> </td>

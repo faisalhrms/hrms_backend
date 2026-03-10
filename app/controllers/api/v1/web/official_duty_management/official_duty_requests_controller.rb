@@ -54,7 +54,7 @@ class Api::V1::Web::OfficialDutyManagement::OfficialDutyRequestsController < App
 
     header_style = sheet.styles.add_style(:border => Axlsx::STYLE_THIN_BORDER, :bg_color => "c2c7c1", :sz => 10, :height =>15, :alignment => { :horizontal=> :center }, :font_name => 'Tahoma', :b => true)
     bold_column_format = wb.styles.add_style(:bg_color => "E2C9F1", :fg_color=> "000000", :sz => 10,  :border=> {:style => :thin, :color => "000000"}, :alignment => { :horizontal => :center, :vertical => :center}, :b => true)
-    sheet.add_row ["Sr #", "Employee Code", "Employee Name", "Department", "Apply Date", "Applied By", "Request Status", "No of Days", "Start Date", "End Date", "Full Day", "Start Time", "End Time", "Forwarded To", "Remarks"], :style => header_style
+    sheet.add_row ["Sr #", "Employee Code", "Employee Name", "Department", "Apply Date", "Applied By", "Request Status", "Official Duty Mode", "No of Days", "Start Date", "End Date", "Full Day", "Start Time", "End Time", "Forwarded To", "Remarks"], :style => header_style
     old_row_format = wb.styles.add_style(:bg_color => "ffffff", :fg_color=> "000000", :sz => 8,  :border=> {:style => :thin, :color => "000000"}, :alignment => { :horizontal => :center, :vertical => :center})
     even_row_format = wb.styles.add_style(:bg_color => "ffffff", :fg_color=> "000000", :sz => 8,  :border=> {:style => :thin, :color => "000000"}, :alignment => { :horizontal => :center, :vertical => :center})
     count = 0
@@ -97,6 +97,10 @@ class Api::V1::Web::OfficialDutyManagement::OfficialDutyRequestsController < App
       current_row_type << :string
 
       current_row_value << official_duty_request.request_status
+      current_row_style << row_format
+      current_row_type << :string
+
+      current_row_value << official_duty_request.normalized_official_duty_mode
       current_row_style << row_format
       current_row_type << :string
 
@@ -226,12 +230,14 @@ class Api::V1::Web::OfficialDutyManagement::OfficialDutyRequestsController < App
     end
     official_duty.reason            = params[:reason]
     official_duty.is_full_day       = params[:is_full_day]
-    # if params[:auto_approved] == "true"
-    #   official_duty.request_status    = "Availed"
-    # else
-    #   official_duty.request_status    = "Waiting For Approval"  
-    # end
-    official_duty.request_status    = "Waiting For Approval"  
+    official_duty.official_duty_mode = params[:official_duty_mode]
+    if ActiveModel::Type::Boolean.new.cast(params[:auto_approved])
+      official_duty.request_status    = "Availed"
+      request_user_full_name          = ReportFormat.request_user_full_name(current_user)
+      official_duty.approval_name     = request_user_full_name
+    else
+      official_duty.request_status    = "Waiting For Approval"
+    end
 		if not current_user.employee.nil?
       if current_user.employee.id == employee.id
         official_duty.apply_status    = "Employee"
@@ -280,7 +286,8 @@ class Api::V1::Web::OfficialDutyManagement::OfficialDutyRequestsController < App
         end
         official_duty.reason            = offical_duty_details[index.to_s][:reason]
         official_duty.is_full_day       = offical_duty_details[index.to_s][:is_full_day]
-        if params[:auto_approved] == "true"
+        official_duty.official_duty_mode = offical_duty_details[index.to_s][:official_duty_mode]
+        if ActiveModel::Type::Boolean.new.cast(params[:auto_approved])
           official_duty.request_status    = "Availed"
           request_user_full_name          = ReportFormat.request_user_full_name(current_user)
           official_duty.approval_name     = request_user_full_name

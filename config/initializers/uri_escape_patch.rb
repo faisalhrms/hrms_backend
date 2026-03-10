@@ -1,9 +1,22 @@
-# config/initializers/uri_escape_patch.rb
-require 'uri'
-require 'cgi'
+require "uri"
 
+# Backward compatibility for gems or legacy code still calling URI.escape/URI.unescape.
 module URI
-  def self.escape(url)
-    CGI.escape(url)
+  class << self
+    unless respond_to?(:escape)
+      def escape(value, unsafe = nil)
+        return if value.nil?
+
+        unsafe ? DEFAULT_PARSER.escape(value.to_s, unsafe) : DEFAULT_PARSER.escape(value.to_s)
+      end
+    end
+
+    unless respond_to?(:unescape)
+      def unescape(value)
+        return if value.nil?
+
+        DEFAULT_PARSER.unescape(value.to_s)
+      end
+    end
   end
 end

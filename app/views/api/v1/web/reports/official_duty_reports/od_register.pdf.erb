@@ -40,6 +40,7 @@
             <th style="text-align:left;text-transform:uppercase;font-weight:300;font-size:12px;padding:6px;width:130px">Status </th>
             <th style="text-align:left;text-transform:uppercase;font-weight:300;font-size:12px;padding:6px;width:130px">Location </th>
             <th style="text-align:left;text-transform:uppercase;font-weight:300;font-size:12px;padding:6px;width:130px">Branch </th>
+            <th style="text-align:left;text-transform:uppercase;font-weight:300;font-size:12px;padding:6px;width:130px">Official Duty Mode </th>
           </tr>
         </thead>
         <tbody style="text-align:left;font-size:10px">
@@ -61,6 +62,7 @@
               <td style="padding:6px;word-wrap: break-word;"><%= ReportFormat.date_format(official_duty.created_at) %> </td>
               <td style="padding:6px;word-wrap: break-word;"><%= ReportFormat.date_format(official_duty.start_date) %> </td>
               <td style="padding:6px;word-wrap: break-word;"><%= ReportFormat.date_format(official_duty.end_date) %> </td>
+              <td style="padding:6px;word-wrap: break-word;"><%= official_duty.normalized_official_duty_mode %> </td>
             </tr>
           <% end %>
         </tbody>

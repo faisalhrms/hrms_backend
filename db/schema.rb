@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_09_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "absent_policies", id: :serial, force: :cascade do |t|
+  create_table "absent_policies", force: :cascade do |t|
     t.integer "company_id"
     t.integer "attendance_deduction_id"
     t.integer "fallback_id"
@@ -22,8 +22,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "code"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["attendance_deduction_id"], name: "index_absent_policies_on_attendance_deduction_id"
     t.index ["company_id"], name: "index_absent_policies_on_company_id"
     t.index ["fallback_id"], name: "index_absent_policies_on_fallback_id"
@@ -69,7 +69,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "line_manager_rating"
   end
 
-  create_table "approval_requests", id: :serial, force: :cascade do |t|
+  create_table "approval_requests", force: :cascade do |t|
     t.integer "company_id"
     t.integer "request_sender_id"
     t.integer "request_receiver_id"
@@ -77,9 +77,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "approval_request_status"
     t.boolean "is_approved", default: false
     t.string "requestable_type"
-    t.integer "requestable_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.bigint "requestable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "token"
     t.boolean "is_hod_approved", default: false
     t.boolean "is_hod_submitted", default: false
@@ -87,16 +87,16 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["request_flow_id"], name: "index_approval_requests_on_request_flow_id"
     t.index ["request_receiver_id"], name: "index_approval_requests_on_request_receiver_id"
     t.index ["request_sender_id"], name: "index_approval_requests_on_request_sender_id"
-    t.index ["requestable_type", "requestable_id"], name: "index_approval_requests_on_requestable_type_and_requestable_id"
+    t.index ["requestable_type", "requestable_id"], name: "index_approval_requests_on_requestable"
   end
 
-  create_table "asset_details", id: :serial, force: :cascade do |t|
+  create_table "asset_details", force: :cascade do |t|
     t.integer "company_id"
     t.string "item_name"
     t.string "item_type"
     t.string "item_model"
-    t.datetime "purchase_date", precision: nil
-    t.datetime "expiry_date", precision: nil
+    t.datetime "purchase_date"
+    t.datetime "expiry_date"
     t.float "item_amount", default: 0.0
     t.string "maturity_period"
     t.string "engine_capacity"
@@ -109,29 +109,29 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "card_number"
     t.boolean "is_active", default: false
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_asset_details_on_company_id"
   end
 
-  create_table "asset_types", id: :serial, force: :cascade do |t|
+  create_table "asset_types", force: :cascade do |t|
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "attendance_cutoffs", id: :serial, force: :cascade do |t|
+  create_table "attendance_cutoffs", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
     t.string "name"
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_executed", default: false
     t.integer "salary_unit_id"
     t.boolean "salary_unit_wise", default: false
@@ -140,7 +140,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["location_id"], name: "index_attendance_cutoffs_on_location_id"
   end
 
-  create_table "attendance_deductions", id: :serial, force: :cascade do |t|
+  create_table "attendance_deductions", force: :cascade do |t|
     t.integer "company_id"
     t.integer "attendance_type_id"
     t.string "name"
@@ -149,13 +149,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "exempted_in_month", default: 0.0
     t.float "deduction_value", default: 0.0
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["attendance_type_id"], name: "index_attendance_deductions_on_attendance_type_id"
     t.index ["company_id"], name: "index_attendance_deductions_on_company_id"
   end
 
-  create_table "attendance_devices", id: :serial, force: :cascade do |t|
+  create_table "attendance_devices", force: :cascade do |t|
     t.string "name"
     t.string "code"
     t.integer "company_id"
@@ -164,13 +164,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "device_type"
     t.string "device_url"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "auto_fetch_allowed", default: false
     t.index ["company_id"], name: "index_attendance_devices_on_company_id"
   end
 
-  create_table "attendance_earnings", id: :serial, force: :cascade do |t|
+  create_table "attendance_earnings", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "earning_from"
@@ -178,8 +178,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "multiplex", default: 1.0
     t.float "earning_value", default: 0.0
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "multiplex_allowed", default: false
     t.text "holiday_ids"
     t.boolean "upper_cap", default: false
@@ -192,18 +192,18 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["company_id"], name: "index_attendance_earnings_on_company_id"
   end
 
-  create_table "attendance_exceptions", id: :serial, force: :cascade do |t|
+  create_table "attendance_exceptions", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
     t.string "name"
     t.string "attendance_exception_type"
-    t.float "grace_time"
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.float "grace_time", default: 0.0
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "salary_unit_id"
     t.boolean "salary_unit_wise", default: false
     t.index ["branch_id"], name: "index_attendance_exceptions_on_branch_id"
@@ -211,19 +211,19 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["location_id"], name: "index_attendance_exceptions_on_location_id"
   end
 
-  create_table "attendance_execution_transactions", id: :serial, force: :cascade do |t|
+  create_table "attendance_execution_transactions", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
     t.string "company_name"
     t.string "location_name"
     t.string "branch_name"
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
-    t.datetime "execution_start_time", precision: nil
-    t.datetime "execution_end_time", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "execution_start_time"
+    t.datetime "execution_end_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "department_id", default: ""
     t.text "department_name", default: ""
     t.index ["branch_id"], name: "index_attendance_execution_transactions_on_branch_id"
@@ -231,12 +231,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["location_id"], name: "index_attendance_execution_transactions_on_location_id"
   end
 
-  create_table "attendance_machine_logs", id: :serial, force: :cascade do |t|
+  create_table "attendance_machine_logs", force: :cascade do |t|
     t.string "employee_full_name"
     t.string "employee_code"
     t.string "machine_name"
-    t.datetime "attendance_datetime", precision: nil
-    t.datetime "attendance_date", precision: nil
+    t.datetime "attendance_datetime"
+    t.datetime "attendance_date"
     t.string "actual_attendance_date"
     t.integer "formatted_hour"
     t.integer "formatted_minute"
@@ -244,61 +244,61 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "log_id"
     t.integer "company_id"
     t.integer "employee_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "device_id", default: ""
     t.index ["company_id"], name: "index_attendance_machine_logs_on_company_id"
     t.index ["employee_id"], name: "index_attendance_machine_logs_on_employee_id"
   end
 
-  create_table "attendance_overtime_slabs", id: :serial, force: :cascade do |t|
+  create_table "attendance_overtime_slabs", force: :cascade do |t|
     t.integer "attendance_overtime_id"
     t.integer "attendance_earning_id"
     t.float "min_minute", default: 0.0
     t.float "max_minute", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["attendance_earning_id"], name: "index_attendance_overtime_slabs_on_attendance_earning_id"
     t.index ["attendance_overtime_id"], name: "index_attendance_overtime_slabs_on_attendance_overtime_id"
   end
 
-  create_table "attendance_overtimes", id: :serial, force: :cascade do |t|
+  create_table "attendance_overtimes", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "code"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "overtime_after_office_end", default: false
     t.index ["company_id"], name: "index_attendance_overtimes_on_company_id"
   end
 
-  create_table "attendance_relaxation_slabs", id: :serial, force: :cascade do |t|
+  create_table "attendance_relaxation_slabs", force: :cascade do |t|
     t.integer "attendance_relaxation_id"
     t.integer "attendance_deduction_id"
     t.integer "fallback_id"
     t.float "start_minute", default: 0.0
     t.float "end_minute", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["attendance_deduction_id"], name: "index_attendance_relaxation_slabs_on_attendance_deduction_id"
     t.index ["attendance_relaxation_id"], name: "index_attendance_relaxation_slabs_on_attendance_relaxation_id"
     t.index ["fallback_id"], name: "index_attendance_relaxation_slabs_on_fallback_id"
   end
 
-  create_table "attendance_relaxations", id: :serial, force: :cascade do |t|
+  create_table "attendance_relaxations", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "code"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_attendance_relaxations_on_company_id"
   end
 
-  create_table "attendance_structures", id: :serial, force: :cascade do |t|
+  create_table "attendance_structures", force: :cascade do |t|
     t.string "name"
     t.string "code"
     t.integer "company_id"
@@ -307,16 +307,16 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.integer "branch_id"
     t.integer "department_id"
     t.integer "grade_id"
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.integer "absent_policy_id"
     t.integer "attendance_overtime_id"
     t.integer "attendance_relaxation_id"
     t.integer "early_left_id"
     t.integer "missing_punch_id"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "department_ids", default: ""
     t.boolean "special_rule", default: false
     t.boolean "is_flexi", default: false
@@ -345,20 +345,20 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["missing_punch_id"], name: "index_attendance_structures_on_missing_punch_id"
   end
 
-  create_table "attendance_types", id: :serial, force: :cascade do |t|
+  create_table "attendance_types", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "code"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "sort_order", default: 0
     t.boolean "request_enable", default: false
     t.index ["company_id"], name: "index_attendance_types_on_company_id"
   end
 
-  create_table "benefit_structures", id: :serial, force: :cascade do |t|
+  create_table "benefit_structures", force: :cascade do |t|
     t.string "name"
     t.string "code"
     t.integer "company_id"
@@ -367,8 +367,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.integer "employee_type_id"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "social_security_allowed", default: false
     t.string "social_security_eligibility"
     t.float "social_security_joining_salary", default: 0.0
@@ -437,15 +437,15 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["location_id"], name: "index_benefit_structures_on_location_id"
   end
 
-  create_table "branches", id: :serial, force: :cascade do |t|
+  create_table "branches", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.string "name"
     t.string "code"
     t.text "description"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "country_id"
     t.integer "state_id"
     t.integer "city_id"
@@ -455,50 +455,50 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["location_id"], name: "index_branches_on_location_id"
   end
 
-  create_table "break_times", id: :serial, force: :cascade do |t|
+  create_table "break_times", force: :cascade do |t|
     t.integer "time_slot_id"
     t.string "name"
     t.string "code"
     t.string "actual_start_time"
     t.string "actual_end_time"
-    t.datetime "start_time", precision: nil
-    t.datetime "end_time", precision: nil
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.boolean "excluded", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["time_slot_id"], name: "index_break_times_on_time_slot_id"
   end
 
-  create_table "certification_types", id: :serial, force: :cascade do |t|
+  create_table "certification_types", force: :cascade do |t|
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "cities", id: :serial, force: :cascade do |t|
+  create_table "cities", force: :cascade do |t|
     t.string "name"
     t.integer "state_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["state_id"], name: "index_cities_on_state_id"
   end
 
-  create_table "companies", id: :serial, force: :cascade do |t|
+  create_table "companies", force: :cascade do |t|
     t.string "name"
     t.string "code"
     t.string "short_name"
     t.text "address"
     t.text "description"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "employee_code_prefix", default: 0.0
     t.string "avatar_file_name"
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at", precision: nil
+    t.datetime "avatar_updated_at"
     t.boolean "effective_gross"
     t.text "ntn_number"
   end
@@ -511,188 +511,184 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "composite_leave_types", id: :serial, force: :cascade do |t|
+  create_table "composite_leave_types", force: :cascade do |t|
     t.integer "leave_type_id"
     t.integer "merge_leave_type_id"
     t.string "status"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "cost_centers", id: :serial, force: :cascade do |t|
+  create_table "cost_centers", force: :cascade do |t|
     t.integer "company_id"
     t.integer "salary_unit_id"
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_cost_centers_on_company_id"
     t.index ["salary_unit_id"], name: "index_cost_centers_on_salary_unit_id"
   end
 
-  create_table "countries", id: :serial, force: :cascade do |t|
+  create_table "countries", force: :cascade do |t|
     t.string "name"
     t.string "sortname"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "cpl_earnings", id: :serial, force: :cascade do |t|
-    t.integer "employee_id"
-    t.integer "employee_attendance_id"
+  create_table "cpl_earnings", force: :cascade do |t|
+    t.bigint "employee_id"
+    t.bigint "employee_attendance_id"
     t.integer "status", default: 0
     t.string "approval_name", default: "-"
     t.text "reason"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["employee_attendance_id"], name: "index_cpl_earnings_on_employee_attendance_id"
     t.index ["employee_id"], name: "index_cpl_earnings_on_employee_id"
   end
 
-  create_table "custom_tax_slab_details", id: :serial, force: :cascade do |t|
+  create_table "custom_tax_slab_details", force: :cascade do |t|
     t.integer "custom_tax_slab_id"
     t.float "lower_limit", default: 0.0
     t.float "upper_limit", default: 0.0
     t.float "tax_percentage", default: 0.0
     t.float "fixed_amount", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "custom_tax_slabs", id: :serial, force: :cascade do |t|
+  create_table "custom_tax_slabs", force: :cascade do |t|
     t.integer "company_id"
     t.boolean "is_active", default: false
     t.string "name"
     t.string "code"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "delayed_jobs", id: :serial, force: :cascade do |t|
+  create_table "delayed_jobs", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
     t.text "last_error"
-    t.datetime "run_at", precision: nil
-    t.datetime "locked_at", precision: nil
-    t.datetime "failed_at", precision: nil
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
     t.string "locked_by"
     t.string "queue"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "department_allocation_details", id: :serial, force: :cascade do |t|
+  create_table "department_allocation_details", force: :cascade do |t|
     t.integer "department_allocation_id"
     t.integer "department_id"
     t.boolean "is_selected", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["department_allocation_id"], name: "index_department_allocation_details_on_department_allocation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["department_allocation_id"], name: "idx_on_department_allocation_id_e654cee0ee"
     t.index ["department_id"], name: "index_department_allocation_details_on_department_id"
   end
 
-  create_table "department_allocations", id: :serial, force: :cascade do |t|
+  create_table "department_allocations", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
     t.string "name"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["branch_id"], name: "index_department_allocations_on_branch_id"
     t.index ["company_id"], name: "index_department_allocations_on_company_id"
     t.index ["location_id"], name: "index_department_allocations_on_location_id"
   end
 
-  create_table "departments", id: :serial, force: :cascade do |t|
+  create_table "departments", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "code"
     t.text "description"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_departments_on_company_id"
   end
 
-  create_table "designations", id: :serial, force: :cascade do |t|
+  create_table "designations", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "code"
     t.text "description"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "grade_id"
     t.index ["company_id"], name: "index_designations_on_company_id"
   end
 
-  create_table "districts", id: :serial, force: :cascade do |t|
+  create_table "districts", force: :cascade do |t|
     t.integer "division_id"
     t.integer "country_id"
     t.integer "state_id"
     t.string "name"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_districts_on_country_id"
     t.index ["division_id"], name: "index_districts_on_division_id"
     t.index ["state_id"], name: "index_districts_on_state_id"
   end
 
-  create_table "divisions", id: :serial, force: :cascade do |t|
+  create_table "divisions", force: :cascade do |t|
     t.integer "country_id"
     t.integer "state_id"
     t.string "name"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_divisions_on_country_id"
     t.index ["state_id"], name: "index_divisions_on_state_id"
   end
 
-  create_table "documents", id: :serial, force: :cascade do |t|
+  create_table "documents", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "code"
     t.text "description"
-    t.string "avatar_file_name"
-    t.string "avatar_content_type"
-    t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at", precision: nil
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_documents_on_company_id"
   end
 
-  create_table "early_left_slabs", id: :serial, force: :cascade do |t|
+  create_table "early_left_slabs", force: :cascade do |t|
     t.integer "early_left_id"
     t.integer "attendance_deduction_id"
     t.integer "fallback_id"
     t.float "start_minute", default: 0.0
     t.float "end_minute", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["attendance_deduction_id"], name: "index_early_left_slabs_on_attendance_deduction_id"
     t.index ["early_left_id"], name: "index_early_left_slabs_on_early_left_id"
     t.index ["fallback_id"], name: "index_early_left_slabs_on_fallback_id"
   end
 
-  create_table "early_lefts", id: :serial, force: :cascade do |t|
+  create_table "early_lefts", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "code"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_early_lefts_on_company_id"
   end
 
-  create_table "email_configrations", id: :serial, force: :cascade do |t|
+  create_table "email_configrations", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "user_name"
@@ -702,12 +698,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "outgoing_server_port"
     t.string "domain"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_email_configrations_on_company_id"
   end
 
-  create_table "email_executions", id: :serial, force: :cascade do |t|
+  create_table "email_executions", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
@@ -715,8 +711,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "name"
     t.integer "email_template_id"
     t.string "trigger"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "no_of_days", default: 0.0
     t.index ["branch_id"], name: "index_email_executions_on_branch_id"
     t.index ["company_id"], name: "index_email_executions_on_company_id"
@@ -725,7 +721,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["location_id"], name: "index_email_executions_on_location_id"
   end
 
-  create_table "email_outbounds", id: :serial, force: :cascade do |t|
+  create_table "email_outbounds", force: :cascade do |t|
     t.integer "company_id"
     t.integer "email_configration_id"
     t.integer "email_template_id"
@@ -741,14 +737,14 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "server_domain"
     t.boolean "is_cc", default: false
     t.text "message"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_email_outbounds_on_company_id"
     t.index ["email_configration_id"], name: "index_email_outbounds_on_email_configration_id"
     t.index ["email_template_id"], name: "index_email_outbounds_on_email_template_id"
   end
 
-  create_table "email_templates", id: :serial, force: :cascade do |t|
+  create_table "email_templates", force: :cascade do |t|
     t.integer "company_id"
     t.integer "email_configration_id"
     t.string "name"
@@ -758,41 +754,41 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "is_cc", default: false
     t.text "message"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_exempted", default: false
     t.text "exempted_address", default: ""
     t.index ["company_id"], name: "index_email_templates_on_company_id"
     t.index ["email_configration_id"], name: "index_email_templates_on_email_configration_id"
   end
 
-  create_table "employee_advances", id: :serial, force: :cascade do |t|
+  create_table "employee_advances", force: :cascade do |t|
     t.integer "company_id"
     t.integer "employee_id"
     t.float "gross_salary", default: 0.0
     t.float "advance_amount", default: 0.0
     t.float "advance_percentage", default: 0.0
-    t.datetime "advance_date", precision: nil
-    t.datetime "pay_back_date", precision: nil
+    t.datetime "advance_date"
+    t.datetime "pay_back_date"
     t.string "pay_back_month"
     t.boolean "is_cleared", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_employee_advances_on_company_id"
     t.index ["employee_id"], name: "index_employee_advances_on_employee_id"
   end
 
-  create_table "employee_arrears", id: :serial, force: :cascade do |t|
+  create_table "employee_arrears", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "offical_duty_id"
     t.integer "leave_request_id"
     t.float "arrear_days", default: 0.0
     t.string "arrear_type"
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
-    t.datetime "arrears_month", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "arrears_month"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "status", default: false
     t.integer "company_id"
     t.string "arrear_kind", default: "Other"
@@ -801,7 +797,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["offical_duty_id"], name: "index_employee_arrears_on_offical_duty_id"
   end
 
-  create_table "employee_attendances", id: :serial, force: :cascade do |t|
+  create_table "employee_attendances", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "company_id"
     t.integer "location_id"
@@ -828,15 +824,15 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "cost_center_name"
     t.string "attendance_status"
     t.string "early_left_status"
-    t.datetime "attendance_date", precision: nil
-    t.datetime "office_start_time", precision: nil
-    t.datetime "office_end_time", precision: nil
-    t.datetime "in_time", precision: nil
-    t.datetime "out_time", precision: nil
-    t.datetime "office_in_time", precision: nil
-    t.datetime "office_out_time", precision: nil
-    t.datetime "buffer_office_in_time", precision: nil
-    t.datetime "buffer_office_out_time", precision: nil
+    t.datetime "attendance_date"
+    t.datetime "office_start_time"
+    t.datetime "office_end_time"
+    t.datetime "in_time"
+    t.datetime "out_time"
+    t.datetime "office_in_time"
+    t.datetime "office_out_time"
+    t.datetime "buffer_office_in_time"
+    t.datetime "buffer_office_out_time"
     t.float "checkin_deduction", default: 0.0
     t.float "over_time_seconds", default: 0.0
     t.float "over_time_hours", default: 0.0
@@ -863,8 +859,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "is_cpl", default: false
     t.boolean "attendance_exempted", default: false
     t.text "remarks"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_flexi", default: false
     t.boolean "incentive_verified", default: false
     t.boolean "is_official_duty", default: false
@@ -914,34 +910,34 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["sub_department_id"], name: "index_employee_attendances_on_sub_department_id"
   end
 
-  create_table "employee_certifications", id: :serial, force: :cascade do |t|
+  create_table "employee_certifications", force: :cascade do |t|
     t.integer "employee_id"
     t.string "certification_authority"
     t.string "name"
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.float "percentage", default: 0.0
     t.string "certification_type"
     t.string "avatar_file_name"
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "avatar_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["employee_id"], name: "index_employee_certifications_on_employee_id"
   end
 
-  create_table "employee_deductions", id: :serial, force: :cascade do |t|
+  create_table "employee_deductions", force: :cascade do |t|
     t.integer "employee_id"
     t.float "deduction_days", default: 0.0
     t.string "deduction_type"
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
-    t.datetime "deductions_month", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "deductions_month"
     t.boolean "status", default: false
     t.integer "company_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "employee_documents", force: :cascade do |t|
@@ -956,28 +952,28 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "employee_experiences", id: :serial, force: :cascade do |t|
+  create_table "employee_experiences", force: :cascade do |t|
     t.integer "employee_id"
     t.string "organization"
     t.string "job_title"
     t.string "left_reason"
     t.float "salary", default: 0.0
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.string "avatar_file_name"
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "avatar_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "department"
     t.string "other_benefits"
     t.index ["employee_id"], name: "index_employee_experiences_on_employee_id"
   end
 
-  create_table "employee_loan_details", id: :serial, force: :cascade do |t|
+  create_table "employee_loan_details", force: :cascade do |t|
     t.integer "employee_loan_id"
-    t.datetime "installment_date", precision: nil
+    t.datetime "installment_date"
     t.float "opening_balance", default: 0.0
     t.float "installment_amount", default: 0.0
     t.float "closing_balance", default: 0.0
@@ -986,13 +982,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "is_cleared", default: false
     t.string "status"
     t.text "remarks"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "formated_month"
     t.index ["employee_loan_id"], name: "index_employee_loan_details_on_employee_loan_id"
   end
 
-  create_table "employee_loans", id: :serial, force: :cascade do |t|
+  create_table "employee_loans", force: :cascade do |t|
     t.integer "company_id"
     t.integer "employee_id"
     t.string "loan_type"
@@ -1003,10 +999,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "principle_loan_amount", default: 0.0
     t.float "annual_interest_rate", default: 0.0
     t.boolean "is_taxable", default: false
-    t.datetime "loan_start_date", precision: nil
-    t.datetime "pay_back_date", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "loan_start_date"
+    t.datetime "pay_back_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_cleared", default: false
     t.index ["company_id"], name: "index_employee_loans_on_company_id"
     t.index ["employee_id"], name: "index_employee_loans_on_employee_id"
@@ -1027,36 +1023,36 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "employee_next_of_kins", id: :serial, force: :cascade do |t|
+  create_table "employee_next_of_kins", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "employee_relative_id"
     t.integer "relationship_id"
     t.float "relative_age", default: 0.0
     t.float "percentage", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "guardian_id"
     t.index ["employee_id"], name: "index_employee_next_of_kins_on_employee_id"
     t.index ["employee_relative_id"], name: "index_employee_next_of_kins_on_employee_relative_id"
     t.index ["relationship_id"], name: "index_employee_next_of_kins_on_relationship_id"
   end
 
-  create_table "employee_qualifications", id: :serial, force: :cascade do |t|
+  create_table "employee_qualifications", force: :cascade do |t|
     t.integer "employee_id"
     t.string "institute_name"
     t.string "program_name"
     t.string "specialization_name"
     t.string "status"
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.string "status_text"
     t.float "gpa_or_percentage", default: 0.0
     t.string "avatar_file_name"
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "avatar_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "qualification_level"
     t.integer "qualfication_type_id"
     t.integer "qualification_program_id"
@@ -1064,7 +1060,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["employee_id"], name: "index_employee_qualifications_on_employee_id"
   end
 
-  create_table "employee_references", id: :serial, force: :cascade do |t|
+  create_table "employee_references", force: :cascade do |t|
     t.integer "employee_id"
     t.string "reference_type"
     t.string "name"
@@ -1073,25 +1069,25 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "organization"
     t.string "designation"
     t.text "address"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["employee_id"], name: "index_employee_references_on_employee_id"
   end
 
-  create_table "employee_relatives", id: :serial, force: :cascade do |t|
+  create_table "employee_relatives", force: :cascade do |t|
     t.integer "employee_id"
     t.string "relative_name"
     t.integer "relationship_id"
     t.string "email"
     t.string "contact_number"
-    t.datetime "date_of_birth", precision: nil
+    t.datetime "date_of_birth"
     t.string "gender"
     t.string "cnic_number"
     t.boolean "is_dependent", default: false
     t.text "address"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.datetime "date_of_enrollment", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "date_of_enrollment"
     t.boolean "same_as_employee_address", default: false
     t.boolean "same_as_employee_permanent_address", default: false
     t.boolean "insurance_allowed", default: false
@@ -1102,7 +1098,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["relationship_id"], name: "index_employee_relatives_on_relationship_id"
   end
 
-  create_table "employee_rosters", id: :serial, force: :cascade do |t|
+  create_table "employee_rosters", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "time_slot_id"
     t.integer "company_id"
@@ -1110,10 +1106,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.integer "branch_id"
     t.integer "department_id"
     t.integer "grade_id"
-    t.datetime "joining_date", precision: nil
-    t.datetime "roster_date", precision: nil
-    t.datetime "start_time", precision: nil
-    t.datetime "end_time", precision: nil
+    t.datetime "joining_date"
+    t.datetime "roster_date"
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.string "employee_code"
     t.string "employee_name"
     t.string "location_name"
@@ -1127,13 +1123,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "formated_end_time"
     t.float "start_buffer", default: 0.0
     t.float "end_buffer", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_edited", default: false
     t.integer "sub_department_id"
   end
 
-  create_table "employee_sale_incentives", id: :serial, force: :cascade do |t|
+  create_table "employee_sale_incentives", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
@@ -1151,9 +1147,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "loss_value", default: 0.0
     t.float "profit_value", default: 0.0
     t.float "total_incentive", default: 0.0
-    t.datetime "incentive_date", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "incentive_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "target_value", default: 0.0
     t.float "incentive_percentage", default: 0.0
     t.float "incentive_payable", default: 0.0
@@ -1165,36 +1161,36 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["location_id"], name: "index_employee_sale_incentives_on_location_id"
   end
 
-  create_table "employee_tax_adjustments", id: :serial, force: :cascade do |t|
+  create_table "employee_tax_adjustments", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "company_id"
-    t.datetime "tax_adjustment_month", precision: nil
+    t.datetime "tax_adjustment_month"
     t.string "tax_adjustment_formatted_month"
     t.float "amount", default: 0.0
     t.boolean "is_active", default: false
     t.text "reason"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_employee_tax_adjustments_on_company_id"
     t.index ["employee_id"], name: "index_employee_tax_adjustments_on_employee_id"
   end
 
-  create_table "employee_tax_credits", id: :serial, force: :cascade do |t|
+  create_table "employee_tax_credits", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "company_id"
     t.integer "fiscal_year_id"
-    t.datetime "tax_credit_month", precision: nil
+    t.datetime "tax_credit_month"
     t.string "tax_credit_formatted_month"
     t.float "tax_credit_amount", default: 0.0
     t.string "tax_credit_type"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_employee_tax_credits_on_company_id"
     t.index ["employee_id"], name: "index_employee_tax_credits_on_employee_id"
     t.index ["fiscal_year_id"], name: "index_employee_tax_credits_on_fiscal_year_id"
   end
 
-  create_table "employee_taxable_incomes", id: :serial, force: :cascade do |t|
+  create_table "employee_taxable_incomes", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "company_id"
     t.integer "fiscal_year_id"
@@ -1214,8 +1210,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "total_paid_tax", default: 0.0
     t.float "remaing_tax_to_be_paid", default: 0.0
     t.boolean "status", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "encashable_quota", default: 0.0
     t.float "predition_amount", default: 0.0
     t.text "predition_item_amounts", default: ""
@@ -1233,7 +1229,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "tax_on_tax", default: 0.0
     t.float "total_tax_on_tax", default: 0.0
     t.float "annualize_predicated_taxable_amount", default: 0.0
-    t.datetime "cpr_date", precision: nil
+    t.datetime "cpr_date"
     t.string "cpr_number"
     t.index ["company_id"], name: "index_employee_taxable_incomes_on_company_id"
     t.index ["employee_id"], name: "index_employee_taxable_incomes_on_employee_id"
@@ -1242,24 +1238,24 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["pay_invoice_id"], name: "index_employee_taxable_incomes_on_pay_invoice_id"
   end
 
-  create_table "employee_trainings", id: :serial, force: :cascade do |t|
+  create_table "employee_trainings", force: :cascade do |t|
     t.integer "employee_id"
     t.string "organization"
     t.string "name"
     t.string "training_type"
     t.float "percentage", default: 0.0
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.string "avatar_file_name"
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "avatar_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["employee_id"], name: "index_employee_trainings_on_employee_id"
   end
 
-  create_table "employee_transaction_histories", id: :serial, force: :cascade do |t|
+  create_table "employee_transaction_histories", force: :cascade do |t|
     t.integer "employee_id"
     t.string "transaction_type"
     t.string "old_employee_status", default: ""
@@ -1268,9 +1264,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "new_gross_salary", default: 0.0
     t.string "old_employment_status", default: ""
     t.string "new_employment_status", default: ""
-    t.datetime "transaction_date", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "transaction_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "transfer_type"
     t.integer "old_location_id"
     t.integer "new_location_id"
@@ -1301,10 +1297,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.integer "old_employee_type_id"
     t.integer "new_employee_type_id"
     t.float "probation_extension_days", default: 0.0
-    t.datetime "old_confimration_due_date", precision: nil
-    t.datetime "new_confimration_due_date", precision: nil
-    t.datetime "old_joining_date", precision: nil
-    t.datetime "new_joining_date", precision: nil
+    t.datetime "old_confimration_due_date"
+    t.datetime "new_confimration_due_date"
+    t.datetime "old_joining_date"
+    t.datetime "new_joining_date"
     t.string "action_performed"
     t.boolean "is_struck_off", default: false
     t.integer "old_hod_id"
@@ -1313,22 +1309,22 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["employee_id"], name: "index_employee_transaction_histories_on_employee_id"
   end
 
-  create_table "employee_types", id: :serial, force: :cascade do |t|
+  create_table "employee_types", force: :cascade do |t|
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "employees", id: :serial, force: :cascade do |t|
+  create_table "employees", force: :cascade do |t|
     t.string "salutation"
     t.string "first_name"
     t.string "last_name"
     t.string "father_name"
     t.string "official_email"
     t.string "official_mobile_number"
-    t.datetime "date_of_birth", precision: nil
+    t.datetime "date_of_birth"
     t.string "gender"
     t.string "cnic_number"
     t.string "blood_group"
@@ -1342,7 +1338,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.integer "grade_id"
     t.integer "salary_unit_id"
     t.integer "cost_center_id"
-    t.datetime "joining_date", precision: nil
+    t.datetime "joining_date"
     t.string "employee_code"
     t.string "prev_employee_code"
     t.boolean "on_probation", default: true
@@ -1351,7 +1347,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "create_login", default: false
     t.integer "relationship_id"
     t.integer "user_id"
-    t.string "emergency_contact_name"
     t.string "payment_method"
     t.boolean "tax_exempted", default: false
     t.boolean "salary_exempted", default: false
@@ -1370,19 +1365,20 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "is_department_head", default: false
     t.string "user_account_email"
     t.string "user_account_password"
+    t.string "emergency_contact_name"
     t.string "emergency_contact_email"
     t.string "emergency_contact_phone"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "avatar_file_name"
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at", precision: nil
+    t.datetime "avatar_updated_at"
     t.text "current_address"
     t.integer "current_country_id"
     t.integer "current_state_id"
     t.integer "current_city_id"
-    t.datetime "confirmation_date", precision: nil
+    t.datetime "confirmation_date"
     t.integer "line_manager_id"
     t.boolean "hold_salary", default: false
     t.string "left_type"
@@ -1451,7 +1447,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "maintenance_impact_allowed", default: false
     t.boolean "travel_allowance_impact_allowed", default: false
     t.boolean "attendance_impact_allowed", default: false
-    t.datetime "vehicle_assignment_date", precision: nil
+    t.datetime "vehicle_assignment_date"
     t.float "vehicle_value", default: 0.0
     t.boolean "bonus1_impact_allowed", default: false
     t.boolean "bonus1_allowed", default: false
@@ -1473,42 +1469,42 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "health_insurance_eligibility"
     t.string "laptop_category"
     t.float "actual_laptop_value", default: 0.0
-    t.datetime "confimration_due_date", precision: nil
-    t.datetime "social_security_other_date", precision: nil
-    t.datetime "life_insurance_other_date", precision: nil
-    t.datetime "cell_phone_bill_other_date", precision: nil
-    t.datetime "fuel_other_date", precision: nil
-    t.datetime "cell_phone_other_date", precision: nil
-    t.datetime "laptop_other_date", precision: nil
-    t.datetime "velicle_other_date", precision: nil
-    t.datetime "provident_fund_other_date", precision: nil
-    t.datetime "eobi_other_date", precision: nil
-    t.datetime "incentive_other_date", precision: nil
-    t.datetime "vehicle_allowance_other_date", precision: nil
-    t.datetime "maintenance_other_date", precision: nil
-    t.datetime "travel_allowance_other_date", precision: nil
-    t.datetime "bonus1_other_date", precision: nil
-    t.datetime "bonus2_other_date", precision: nil
-    t.datetime "bonus3_other_date", precision: nil
-    t.datetime "health_insurance_other_date", precision: nil
+    t.datetime "confimration_due_date"
+    t.datetime "social_security_other_date"
+    t.datetime "life_insurance_other_date"
+    t.datetime "cell_phone_bill_other_date"
+    t.datetime "fuel_other_date"
+    t.datetime "cell_phone_other_date"
+    t.datetime "laptop_other_date"
+    t.datetime "velicle_other_date"
+    t.datetime "provident_fund_other_date"
+    t.datetime "eobi_other_date"
+    t.datetime "incentive_other_date"
+    t.datetime "vehicle_allowance_other_date"
+    t.datetime "maintenance_other_date"
+    t.datetime "travel_allowance_other_date"
+    t.datetime "bonus1_other_date"
+    t.datetime "bonus2_other_date"
+    t.datetime "bonus3_other_date"
+    t.datetime "health_insurance_other_date"
     t.boolean "gratuity_impact_allowed", default: false
     t.boolean "gratuity_allowed", default: false
     t.string "gratuity_eligibility"
-    t.datetime "gratuity_other_date", precision: nil
+    t.datetime "gratuity_other_date"
     t.boolean "lfa_impact_allowed", default: false
     t.boolean "lfa_allowed", default: false
     t.string "lfa_eligibility"
-    t.datetime "lfa_other_date", precision: nil
+    t.datetime "lfa_other_date"
     t.boolean "house_allowance_impact_allowed", default: false
     t.boolean "house_allowance_allowed", default: false
     t.string "house_allowance_eligibility"
-    t.datetime "house_allowance_other_date", precision: nil
+    t.datetime "house_allowance_other_date"
     t.text "permanent_address"
     t.string "file_number"
     t.string "family_number"
     t.boolean "is_contractual", default: false
-    t.datetime "contract_start_date", precision: nil
-    t.datetime "contract_end_date", precision: nil
+    t.datetime "contract_start_date"
+    t.datetime "contract_end_date"
     t.boolean "late_exempted", default: false
     t.boolean "is_sub_department_head", default: false
     t.boolean "regular_quota_encashment", default: false
@@ -1518,15 +1514,15 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "is_holiday_overtime", default: false
     t.string "eobi_number", default: ""
     t.string "nationality"
-    t.datetime "cnic_expiry_date", precision: nil
+    t.datetime "cnic_expiry_date"
     t.string "vehicle_name"
     t.string "vehicle_model"
     t.string "laptop_name"
     t.string "laptop_model"
     t.string "cell_phone_name"
     t.string "cell_phone_model"
-    t.datetime "laptop_assignment_date", precision: nil
-    t.datetime "cell_assignment_date", precision: nil
+    t.datetime "laptop_assignment_date"
+    t.datetime "cell_assignment_date"
     t.string "ntn_number"
     t.boolean "customize_tax", default: false
     t.string "tax_criteria", default: "Custom Tax Slab"
@@ -1534,12 +1530,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "excluded_from_reports", default: false
     t.boolean "approval_base_overtime", default: false
     t.boolean "is_medical_allowance", default: false
-    t.datetime "old_joining_date", precision: nil
+    t.datetime "old_joining_date"
     t.text "fuel_card_number", default: ""
     t.boolean "velicle_two_allowed", default: false
     t.string "velicle_two_eligibility", default: "Date of Joining"
-    t.datetime "velicle_two_other_date", precision: nil
-    t.datetime "vehicle_two_assignment_date", precision: nil
+    t.datetime "velicle_two_other_date"
+    t.datetime "vehicle_two_assignment_date"
     t.string "vehicle_two_name", default: ""
     t.string "vehicle_two_model", default: ""
     t.float "vehicle_two_value", default: 0.0
@@ -1598,10 +1594,11 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["relationship_id"], name: "index_employees_on_relationship_id"
     t.index ["role_id"], name: "index_employees_on_role_id"
     t.index ["salary_unit_id"], name: "index_employees_on_salary_unit_id"
+    t.index ["sub_department_id"], name: "index_employees_on_sub_department_id"
     t.index ["user_id"], name: "index_employees_on_user_id"
   end
 
-  create_table "eobis", id: :serial, force: :cascade do |t|
+  create_table "eobis", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.boolean "is_active", default: true
@@ -1611,19 +1608,19 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "employer_percentage", default: 0.0
     t.float "employee_wage_rate", default: 0.0
     t.float "employee_percentage", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_eobis_on_company_id"
   end
 
-  create_table "finalize_attendances", id: :serial, force: :cascade do |t|
+  create_table "finalize_attendances", force: :cascade do |t|
     t.integer "employee_attendance_id"
     t.integer "attendance_cutoff_id"
     t.integer "employee_id"
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
-    t.datetime "attendance_date", precision: nil
+    t.datetime "attendance_date"
     t.float "arrear_days", default: 0.0
     t.float "pay_deduction", default: 0.0
     t.float "over_time_hours", default: 0.0
@@ -1631,8 +1628,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "over_time_seconds", default: 0.0
     t.float "off_day_payment", default: 0.0
     t.boolean "is_finalize", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "encashable_quota", default: 0.0
     t.integer "salary_unit_id"
     t.index ["attendance_cutoff_id"], name: "index_finalize_attendances_on_attendance_cutoff_id"
@@ -1643,28 +1640,28 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["location_id"], name: "index_finalize_attendances_on_location_id"
   end
 
-  create_table "fiscal_years", id: :serial, force: :cascade do |t|
+  create_table "fiscal_years", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.boolean "is_active", default: false
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_fiscal_years_on_company_id"
   end
 
-  create_table "fixed_pay_items", id: :serial, force: :cascade do |t|
+  create_table "fixed_pay_items", force: :cascade do |t|
     t.integer "company_id"
     t.integer "employee_id"
     t.integer "pay_item_id"
     t.float "item_amount", default: 0.0
     t.boolean "is_active", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "item_type", default: "Recurring"
-    t.datetime "pay_month", precision: nil
+    t.datetime "pay_month"
     t.string "formated_pay_month"
     t.text "description"
     t.index ["company_id"], name: "index_fixed_pay_items_on_company_id"
@@ -1672,12 +1669,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["pay_item_id"], name: "index_fixed_pay_items_on_pay_item_id"
   end
 
-  create_table "flexi_logs", id: :serial, force: :cascade do |t|
+  create_table "flexi_logs", force: :cascade do |t|
     t.string "employee_full_name"
     t.string "employee_code"
     t.string "machine_name"
-    t.datetime "attendance_datetime", precision: nil
-    t.datetime "attendance_date", precision: nil
+    t.datetime "attendance_datetime"
+    t.datetime "attendance_date"
     t.string "actual_attendance_date"
     t.integer "formatted_hour"
     t.integer "formatted_minute"
@@ -1685,11 +1682,11 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "log_id"
     t.integer "company_id"
     t.integer "employee_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "fuel_card_details", id: :serial, force: :cascade do |t|
+  create_table "fuel_card_details", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "company_id"
     t.string "card_no"
@@ -1700,67 +1697,67 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "amount_consumed", default: 0.0
     t.float "last_km", default: 0.0
     t.float "consumption", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "general_types", id: :serial, force: :cascade do |t|
+  create_table "general_types", force: :cascade do |t|
     t.string "name"
     t.integer "company_id"
     t.text "description"
     t.string "type_name"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "grade_allocation_details", id: :serial, force: :cascade do |t|
+  create_table "grade_allocation_details", force: :cascade do |t|
     t.integer "grade_allocation_id"
     t.integer "grade_id"
     t.boolean "is_selected", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["grade_allocation_id"], name: "index_grade_allocation_details_on_grade_allocation_id"
     t.index ["grade_id"], name: "index_grade_allocation_details_on_grade_id"
   end
 
-  create_table "grade_allocations", id: :serial, force: :cascade do |t|
+  create_table "grade_allocations", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
     t.string "name"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["branch_id"], name: "index_grade_allocations_on_branch_id"
     t.index ["company_id"], name: "index_grade_allocations_on_company_id"
     t.index ["location_id"], name: "index_grade_allocations_on_location_id"
   end
 
-  create_table "grades", id: :serial, force: :cascade do |t|
+  create_table "grades", force: :cascade do |t|
     t.string "name"
     t.string "code"
     t.integer "company_id"
     t.string "currency_title"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "sort_order", default: 0
     t.string "management_type"
     t.string "management_tier"
     t.index ["company_id"], name: "index_grades_on_company_id"
   end
 
-  create_table "holidays", id: :serial, force: :cascade do |t|
+  create_table "holidays", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "code"
     t.text "description"
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "religion_id"
     t.boolean "specific_religion", default: false
     t.integer "location_id"
@@ -1769,27 +1766,27 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["company_id"], name: "index_holidays_on_company_id"
   end
 
-  create_table "incentive_policies", id: :serial, force: :cascade do |t|
+  create_table "incentive_policies", force: :cascade do |t|
     t.integer "company_id"
     t.boolean "is_active", default: false
     t.string "name"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_incentive_policies_on_company_id"
   end
 
-  create_table "incentive_slabs", id: :serial, force: :cascade do |t|
+  create_table "incentive_slabs", force: :cascade do |t|
     t.integer "incentive_policy_id"
     t.float "min_target_sale_percentage", default: 0.0
     t.float "max_target_sale_percentage", default: 0.0
     t.float "sale_incentive_percentage", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["incentive_policy_id"], name: "index_incentive_slabs_on_incentive_policy_id"
   end
 
-  create_table "internees", id: :serial, force: :cascade do |t|
+  create_table "internees", force: :cascade do |t|
     t.string "salutation"
     t.string "first_name"
     t.string "last_name"
@@ -1798,13 +1795,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "official_mobile_number"
     t.string "personal_email"
     t.string "personal_number"
-    t.datetime "date_of_birth", precision: nil
+    t.datetime "date_of_birth"
     t.string "gender"
     t.string "cnic_number"
     t.string "blood_group"
     t.string "martial_status"
     t.float "gross_salary", default: 0.0
-    t.text "current_address"
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
@@ -1814,47 +1810,49 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.integer "job_title_id"
     t.integer "salary_unit_id"
     t.integer "cost_center_id"
-    t.datetime "joining_date", precision: nil
+    t.datetime "joining_date"
     t.string "internee_code"
     t.boolean "is_active", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.text "current_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_converted", default: false
     t.integer "sub_department_id"
+    t.index ["sub_department_id"], name: "index_internees_on_sub_department_id"
   end
 
-  create_table "item_execution_details", id: :serial, force: :cascade do |t|
+  create_table "item_execution_details", force: :cascade do |t|
     t.integer "pay_execution_id"
     t.integer "pay_item_id"
     t.string "status"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["pay_execution_id"], name: "index_item_execution_details_on_pay_execution_id"
     t.index ["pay_item_id"], name: "index_item_execution_details_on_pay_item_id"
   end
 
-  create_table "job_titles", id: :serial, force: :cascade do |t|
+  create_table "job_titles", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_job_titles_on_company_id"
   end
 
-  create_table "leave_allocations", id: :serial, force: :cascade do |t|
+  create_table "leave_allocations", force: :cascade do |t|
     t.integer "company_id"
     t.integer "employee_id"
     t.integer "leave_type_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "allocated_quota", default: 0.0
     t.float "remaining_quota", default: 0.0
     t.float "used_quota", default: 0.0
     t.integer "leave_year_id"
-    t.datetime "leave_year_start_date", precision: nil
-    t.datetime "leave_year_end_date", precision: nil
+    t.datetime "leave_year_start_date"
+    t.datetime "leave_year_end_date"
     t.boolean "is_active", default: false
     t.integer "location_id"
     t.index ["company_id"], name: "index_leave_allocations_on_company_id"
@@ -1862,18 +1860,18 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["leave_type_id"], name: "index_leave_allocations_on_leave_type_id"
   end
 
-  create_table "leave_request_details", id: :serial, force: :cascade do |t|
+  create_table "leave_request_details", force: :cascade do |t|
     t.integer "leave_request_id"
     t.integer "leave_type_id"
     t.float "allocated_quota", default: 0.0
     t.float "used_quota", default: 0.0
     t.float "remaining_quota", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.float "quota_transaction"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float "quota_transaction", default: 0.0
   end
 
-  create_table "leave_requests", id: :serial, force: :cascade do |t|
+  create_table "leave_requests", force: :cascade do |t|
     t.integer "company_id"
     t.integer "employee_id"
     t.integer "leave_type_id"
@@ -1882,26 +1880,26 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "remaining_quota", default: 0.0
     t.float "request_count", default: 0.0
     t.float "sandwich_count", default: 0.0
-    t.datetime "min_apply_date", precision: nil
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "min_apply_date"
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.string "request_status"
     t.string "apply_status"
     t.boolean "is_cancelled", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "reason"
     t.string "leave_category", default: "Full Day"
     t.boolean "is_composite", default: false
     t.string "request_sender_name", default: ""
     t.string "approval_name", default: "-"
-    t.datetime "approval_datetime", precision: nil
+    t.datetime "approval_datetime"
     t.index ["company_id"], name: "index_leave_requests_on_company_id"
     t.index ["employee_id"], name: "index_leave_requests_on_employee_id"
     t.index ["leave_type_id"], name: "index_leave_requests_on_leave_type_id"
   end
 
-  create_table "leave_transaction_histories", id: :serial, force: :cascade do |t|
+  create_table "leave_transaction_histories", force: :cascade do |t|
     t.integer "company_id"
     t.integer "employee_id"
     t.integer "leave_type_id"
@@ -1912,11 +1910,11 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "quota_transaction"
     t.string "transaction_type"
     t.text "remarks"
-    t.datetime "transaction_date", precision: nil
-    t.datetime "leave_year_start_date", precision: nil
-    t.datetime "leave_year_end_date", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "transaction_date"
+    t.datetime "leave_year_start_date"
+    t.datetime "leave_year_end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "leave_allocation_id"
     t.index ["company_id"], name: "index_leave_transaction_histories_on_company_id"
     t.index ["employee_id"], name: "index_leave_transaction_histories_on_employee_id"
@@ -1924,7 +1922,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["leave_type_id"], name: "index_leave_transaction_histories_on_leave_type_id"
   end
 
-  create_table "leave_types", id: :serial, force: :cascade do |t|
+  create_table "leave_types", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "short_name"
@@ -1954,8 +1952,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "carry_forward_min_limit", default: 0.0
     t.float "carry_forward_max_limit", default: 0.0
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "quota_allocation", default: false
     t.boolean "earned_quota", default: false
     t.integer "sort_order", default: 0
@@ -1980,39 +1978,39 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["company_id"], name: "index_leave_types_on_company_id"
   end
 
-  create_table "leave_years", id: :serial, force: :cascade do |t|
+  create_table "leave_years", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.boolean "is_active", default: false
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_leave_years_on_company_id"
   end
 
-  create_table "left_reasons", id: :serial, force: :cascade do |t|
+  create_table "left_reasons", force: :cascade do |t|
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "locations", id: :serial, force: :cascade do |t|
+  create_table "locations", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "code"
     t.text "description"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "employee_code_prefix", default: 0.0
     t.index ["company_id"], name: "index_locations_on_company_id"
   end
 
-  create_table "missing_punches", id: :serial, force: :cascade do |t|
+  create_table "missing_punches", force: :cascade do |t|
     t.integer "company_id"
     t.integer "attendance_deduction_id"
     t.integer "fallback_id"
@@ -2020,34 +2018,34 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "code"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["attendance_deduction_id"], name: "index_missing_punches_on_attendance_deduction_id"
     t.index ["company_id"], name: "index_missing_punches_on_company_id"
     t.index ["fallback_id"], name: "index_missing_punches_on_fallback_id"
   end
 
-  create_table "notification_recipients", id: :serial, force: :cascade do |t|
+  create_table "notification_recipients", force: :cascade do |t|
     t.integer "recievable_id"
     t.string "recievable_type"
     t.boolean "did_read", default: false
     t.boolean "archived", default: false
     t.string "content"
-    t.integer "notification_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.bigint "notification_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["notification_id"], name: "index_notification_recipients_on_notification_id"
   end
 
-  create_table "notifications", id: :serial, force: :cascade do |t|
+  create_table "notifications", force: :cascade do |t|
     t.string "notifiable_type"
-    t.integer "notifiable_id"
+    t.bigint "notifiable_id"
     t.string "sendable_type"
-    t.integer "sendable_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
-    t.index ["sendable_type", "sendable_id"], name: "index_notifications_on_sendable_type_and_sendable_id"
+    t.bigint "sendable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+    t.index ["sendable_type", "sendable_id"], name: "index_notifications_on_sendable"
   end
 
   create_table "objective_comments", force: :cascade do |t|
@@ -2084,48 +2082,49 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["employee_id"], name: "index_objective_settings_on_employee_id"
   end
 
-  create_table "official_duties", id: :serial, force: :cascade do |t|
+  create_table "official_duties", force: :cascade do |t|
     t.integer "company_id"
     t.integer "employee_id"
     t.float "request_count", default: 0.0
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
-    t.datetime "start_time", precision: nil
-    t.datetime "end_time", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.string "request_status"
     t.string "apply_status"
     t.boolean "is_cancelled", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "reason"
     t.boolean "is_full_day", default: false
     t.string "request_sender_name", default: ""
     t.string "approval_name", default: "-"
-    t.datetime "approval_datetime", precision: nil
+    t.datetime "approval_datetime"
+    t.string "official_duty_mode", default: "Office Duty"
     t.index ["company_id"], name: "index_official_duties_on_company_id"
     t.index ["employee_id"], name: "index_official_duties_on_employee_id"
   end
 
-  create_table "over_strength_requests", id: :serial, force: :cascade do |t|
+  create_table "over_strength_requests", force: :cascade do |t|
     t.integer "company_id"
     t.integer "employee_id"
     t.integer "department_id"
     t.float "request_count", default: 0.0
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.string "request_status"
     t.string "apply_status"
     t.boolean "is_cancelled", default: false
     t.text "reason"
     t.string "request_sender_name", default: ""
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_over_strength_requests_on_company_id"
     t.index ["department_id"], name: "index_over_strength_requests_on_department_id"
     t.index ["employee_id"], name: "index_over_strength_requests_on_employee_id"
   end
 
-  create_table "pay_executions", id: :serial, force: :cascade do |t|
+  create_table "pay_executions", force: :cascade do |t|
     t.string "name"
     t.integer "company_id"
     t.integer "location_id"
@@ -2133,20 +2132,20 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.integer "eobi_id"
     t.integer "tax_slab_id"
     t.integer "fiscal_year_id"
-    t.datetime "pay_month", precision: nil
+    t.datetime "pay_month"
     t.string "formated_pay_month"
     t.boolean "tax_applicable", default: false
     t.boolean "is_executed", default: false
     t.float "no_of_pay_days", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_generated", default: false
     t.float "per_litre_rate", default: 0.0
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.boolean "is_locked", default: false
     t.boolean "incentive_impact_on_tax", default: false
-    t.datetime "incentive_month", precision: nil
+    t.datetime "incentive_month"
     t.boolean "prediction_tax_impact", default: false
     t.boolean "opd_impact_on_arrear", default: false
     t.boolean "vehicle_impact_on_tax", default: false
@@ -2156,7 +2155,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "exclude_sunday", default: false
     t.float "joining_exception_pay_days", default: 0.0
     t.string "joining_exception_formated_month"
-    t.datetime "joining_exception_month", precision: nil
+    t.datetime "joining_exception_month"
     t.boolean "joining_exception", default: false
     t.boolean "vehicle_monthly_prorated", default: false
     t.boolean "allowed_extra_days", default: false
@@ -2169,7 +2168,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["tax_slab_id"], name: "index_pay_executions_on_tax_slab_id"
   end
 
-  create_table "pay_invoice_details", id: :serial, force: :cascade do |t|
+  create_table "pay_invoice_details", force: :cascade do |t|
     t.integer "item_id"
     t.integer "pay_invoice_id"
     t.integer "sort_order", default: 0
@@ -2180,13 +2179,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "show_in_slip", default: false
     t.boolean "part_of_other", default: false
     t.boolean "part_of_gross_salary", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_pay_invoice_details_on_item_id"
     t.index ["pay_invoice_id"], name: "index_pay_invoice_details_on_pay_invoice_id"
   end
 
-  create_table "pay_invoices", id: :serial, force: :cascade do |t|
+  create_table "pay_invoices", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "pay_execution_id"
     t.integer "fiscal_year_id"
@@ -2213,13 +2212,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "over_time_hours", default: 0.0
     t.float "off_day_payment", default: 0.0
     t.float "arrears_days", default: 0.0
-    t.datetime "joining_date", precision: nil
-    t.datetime "confirmation_date", precision: nil
+    t.datetime "joining_date"
+    t.datetime "confirmation_date"
     t.boolean "on_probation", default: false
     t.boolean "status", default: true
     t.boolean "is_locked", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "short_joining_days", default: 0.0
     t.float "short_confirmation_days", default: 0.0
     t.float "vehicle_months", default: 0.0
@@ -2230,7 +2229,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "monthly_tax", default: 0.0
     t.float "total_pf_months", default: 0.0
     t.float "no_of_days_till_joining", default: 0.0
-    t.datetime "actual_pay_month", precision: nil
+    t.datetime "actual_pay_month"
     t.float "encashable_quota", default: 0.0
     t.float "eobi_short_joining_days", default: 0.0
     t.float "eobi_no_of_days_till_joining", default: 0.0
@@ -2260,7 +2259,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["tax_slab_id"], name: "index_pay_invoices_on_tax_slab_id"
   end
 
-  create_table "pay_items", id: :serial, force: :cascade do |t|
+  create_table "pay_items", force: :cascade do |t|
     t.integer "company_id"
     t.string "eligible_from"
     t.string "name"
@@ -2274,12 +2273,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "exempted_tax_percentage", default: 0.0
     t.string "formula"
     t.boolean "is_bonus", default: false
-    t.datetime "bonus_date", precision: nil
+    t.datetime "bonus_date"
     t.string "bonus_month"
     t.text "formula_with_code"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "sort_order", default: 0.0
     t.boolean "part_of_gross_salary", default: false
     t.string "bonus_type"
@@ -2291,13 +2290,13 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["company_id"], name: "index_pay_items_on_company_id"
   end
 
-  create_table "payitem_expressions", id: :serial, force: :cascade do |t|
+  create_table "payitem_expressions", force: :cascade do |t|
     t.string "name"
     t.float "expression_value", default: 0.0
     t.boolean "is_active", default: false
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "piece_slab_details", force: :cascade do |t|
@@ -2332,7 +2331,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.integer "category_id"
   end
 
-  create_table "provident_funds", id: :serial, force: :cascade do |t|
+  create_table "provident_funds", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.boolean "is_active", default: false
@@ -2347,55 +2346,55 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "employer_taxable", default: false
     t.float "employer_amount_exceed", default: 0.0
     t.float "employer_tax_percentage", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_provident_funds_on_company_id"
     t.index ["employee_pay_item_id"], name: "index_provident_funds_on_employee_pay_item_id"
     t.index ["employer_pay_item_id"], name: "index_provident_funds_on_employer_pay_item_id"
   end
 
-  create_table "qualfication_types", id: :serial, force: :cascade do |t|
+  create_table "qualfication_types", force: :cascade do |t|
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "qualification_programs", id: :serial, force: :cascade do |t|
+  create_table "qualification_programs", force: :cascade do |t|
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "relationships", id: :serial, force: :cascade do |t|
+  create_table "relationships", force: :cascade do |t|
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "relaxation_requests", id: :serial, force: :cascade do |t|
+  create_table "relaxation_requests", force: :cascade do |t|
     t.integer "company_id"
     t.integer "employee_id"
     t.integer "attendance_type_id"
     t.float "request_count", default: 0.0
-    t.datetime "start_date", precision: nil
-    t.datetime "end_date", precision: nil
-    t.datetime "start_time", precision: nil
-    t.datetime "end_time", precision: nil
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.string "request_status"
     t.string "apply_status"
     t.boolean "is_cancelled", default: false
     t.text "reason"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "request_sender_name", default: ""
     t.string "approval_name", default: "-"
-    t.datetime "approval_datetime", precision: nil
+    t.datetime "approval_datetime"
     t.float "criteria", default: 0.0
     t.datetime "relaxation_start_date"
     t.datetime "relaxation_end_date"
@@ -2404,26 +2403,26 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["employee_id"], name: "index_relaxation_requests_on_employee_id"
   end
 
-  create_table "religion_sects", id: :serial, force: :cascade do |t|
+  create_table "religion_sects", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "religions", id: :serial, force: :cascade do |t|
+  create_table "religions", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "request_flow_details", id: :serial, force: :cascade do |t|
+  create_table "request_flow_details", force: :cascade do |t|
     t.integer "request_flow_id"
     t.integer "department_id"
     t.integer "employee_id"
     t.string "request_node"
     t.boolean "specific_condition", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "branch_id"
     t.float "criteria"
     t.index ["branch_id"], name: "index_request_flow_details_on_branch_id"
@@ -2432,25 +2431,25 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["request_flow_id"], name: "index_request_flow_details_on_request_flow_id"
   end
 
-  create_table "request_flows", id: :serial, force: :cascade do |t|
+  create_table "request_flows", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "request_flow_type"
     t.string "request_node"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "criteria"
     t.float "back_date_limit", default: 0.0
     t.boolean "back_date_apply", default: false
     t.index ["company_id"], name: "index_request_flows_on_company_id"
   end
 
-  create_table "restrict_leaves", id: :serial, force: :cascade do |t|
+  create_table "restrict_leaves", force: :cascade do |t|
     t.integer "leave_days"
     t.integer "approval_days"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "notification"
     t.string "receiver_email"
     t.integer "company_id"
@@ -2458,7 +2457,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.text "user_ids"
   end
 
-  create_table "role_permissions", id: :serial, force: :cascade do |t|
+  create_table "role_permissions", force: :cascade do |t|
     t.string "display_name"
     t.string "module_name"
     t.boolean "index_access", default: false
@@ -2466,48 +2465,48 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "view_access", default: false
     t.boolean "update_access", default: false
     t.boolean "delete_access", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "main_module"
     t.integer "role_id"
   end
 
-  create_table "roles", id: :serial, force: :cascade do |t|
+  create_table "roles", force: :cascade do |t|
     t.string "name"
     t.integer "company_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_active", default: true
     t.index ["company_id"], name: "index_roles_on_company_id"
   end
 
-  create_table "salary_units", id: :serial, force: :cascade do |t|
+  create_table "salary_units", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_salary_units_on_company_id"
   end
 
-  create_table "sale_entries", id: :serial, force: :cascade do |t|
+  create_table "sale_entries", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
     t.string "name"
-    t.datetime "sale_month", precision: nil
+    t.datetime "sale_month"
     t.string "formated_month"
     t.integer "sale_value", default: 0
     t.integer "profit_value", default: 0
     t.integer "loss_value", default: 0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.float "target_value", default: 0.0
     t.float "incentive_payable", default: 0.0
   end
 
-  create_table "sms_configrations", id: :serial, force: :cascade do |t|
+  create_table "sms_configrations", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "url"
@@ -2516,12 +2515,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "show_password"
     t.string "masking"
     t.boolean "is_active", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_sms_configrations_on_company_id"
   end
 
-  create_table "sms_executions", id: :serial, force: :cascade do |t|
+  create_table "sms_executions", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
@@ -2529,8 +2528,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "name"
     t.integer "sms_template_id"
     t.string "trigger"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["branch_id"], name: "index_sms_executions_on_branch_id"
     t.index ["company_id"], name: "index_sms_executions_on_company_id"
     t.index ["grade_id"], name: "index_sms_executions_on_grade_id"
@@ -2538,7 +2537,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["sms_template_id"], name: "index_sms_executions_on_sms_template_id"
   end
 
-  create_table "sms_templates", id: :serial, force: :cascade do |t|
+  create_table "sms_templates", force: :cascade do |t|
     t.integer "company_id"
     t.integer "sms_configration_id"
     t.string "name"
@@ -2547,37 +2546,37 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "exempted_numbers"
     t.string "trigger"
     t.text "message"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_sms_templates_on_company_id"
     t.index ["sms_configration_id"], name: "index_sms_templates_on_sms_configration_id"
   end
 
-  create_table "specializations", id: :serial, force: :cascade do |t|
+  create_table "specializations", force: :cascade do |t|
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "states", id: :serial, force: :cascade do |t|
+  create_table "states", force: :cascade do |t|
     t.string "name"
     t.integer "country_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_states_on_country_id"
   end
 
-  create_table "sub_departments", id: :serial, force: :cascade do |t|
+  create_table "sub_departments", force: :cascade do |t|
     t.integer "company_id"
     t.integer "department_id"
     t.string "name"
     t.string "code"
     t.text "description"
     t.boolean "is_active", default: true
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_sub_departments_on_company_id"
     t.index ["department_id"], name: "index_sub_departments_on_department_id"
   end
@@ -2590,7 +2589,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 
-  create_table "sub_time_slots", id: :serial, force: :cascade do |t|
+  create_table "sub_time_slots", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
@@ -2599,27 +2598,27 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "code"
     t.string "actual_start_time"
     t.string "actual_end_time"
-    t.datetime "start_time", precision: nil
-    t.datetime "end_time", precision: nil
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.float "start_buffer", default: 0.0
     t.float "end_buffer", default: 0.0
     t.boolean "is_active", default: false
     t.text "description"
     t.float "total_working_minutes", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["branch_id"], name: "index_sub_time_slots_on_branch_id"
     t.index ["company_id"], name: "index_sub_time_slots_on_company_id"
     t.index ["location_id"], name: "index_sub_time_slots_on_location_id"
     t.index ["time_slot_id"], name: "index_sub_time_slots_on_time_slot_id"
   end
 
-  create_table "system_settings", id: :serial, force: :cascade do |t|
+  create_table "system_settings", force: :cascade do |t|
     t.integer "company_id"
     t.string "name"
     t.string "employee_prefix_code_usage"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_employee_code_changeable", default: false
     t.boolean "live_leave_earning", default: false
     t.boolean "live_leave_deduction", default: false
@@ -2651,8 +2650,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "arrear_off_day_payment", default: false
     t.boolean "od_restriction", default: false
     t.text "od_message", default: ""
-    t.datetime "od_start_date", precision: nil
-    t.datetime "od_end_date", precision: nil
+    t.datetime "od_start_date"
+    t.datetime "od_end_date"
     t.boolean "hide_religion", default: false
     t.boolean "hide_religion_sect", default: false
     t.boolean "leverage_minutes", default: false
@@ -2676,65 +2675,65 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.date "start_date"
   end
 
-  create_table "tax_certificates", id: :serial, force: :cascade do |t|
+  create_table "tax_certificates", force: :cascade do |t|
     t.string "sr_number"
     t.string "date_of_issue"
     t.integer "employee_id"
     t.integer "fiscal_year_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "tax_slab_details", id: :serial, force: :cascade do |t|
+  create_table "tax_slab_details", force: :cascade do |t|
     t.integer "tax_slab_id"
     t.float "lower_limit", default: 0.0
     t.float "upper_limit", default: 0.0
     t.float "tax_percentage", default: 0.0
     t.float "fixed_amount", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["tax_slab_id"], name: "index_tax_slab_details_on_tax_slab_id"
   end
 
-  create_table "tax_slabs", id: :serial, force: :cascade do |t|
+  create_table "tax_slabs", force: :cascade do |t|
     t.integer "company_id"
     t.boolean "is_active", default: false
     t.string "name"
     t.string "code"
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_tax_slabs_on_company_id"
   end
 
-  create_table "tehsils", id: :serial, force: :cascade do |t|
+  create_table "tehsils", force: :cascade do |t|
     t.integer "division_id"
     t.integer "district_id"
     t.integer "country_id"
     t.integer "state_id"
     t.string "name"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_tehsils_on_country_id"
     t.index ["district_id"], name: "index_tehsils_on_district_id"
     t.index ["division_id"], name: "index_tehsils_on_division_id"
     t.index ["state_id"], name: "index_tehsils_on_state_id"
   end
 
-  create_table "temp_staff_attendances", id: :serial, force: :cascade do |t|
+  create_table "temp_staff_attendances", force: :cascade do |t|
     t.integer "company_id"
     t.integer "temporary_staff_id"
     t.string "attendance_status"
-    t.datetime "in_time", precision: nil
-    t.datetime "out_time", precision: nil
-    t.datetime "attendance_date", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "in_time"
+    t.datetime "out_time"
+    t.datetime "attendance_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_temp_staff_attendances_on_company_id"
     t.index ["temporary_staff_id"], name: "index_temp_staff_attendances_on_temporary_staff_id"
   end
 
-  create_table "temp_tbl_bonus", id: :serial, force: :cascade do |t|
+  create_table "temp_tbl_bonus", force: :cascade do |t|
     t.string "emp_code"
     t.float "jan", default: 0.0
     t.float "feb", default: 0.0
@@ -2750,11 +2749,11 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.float "dec", default: 0.0
     t.float "total", default: 0.0
     t.float "bonus", default: 0.0
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "temporary_staffs", id: :serial, force: :cascade do |t|
+  create_table "temporary_staffs", force: :cascade do |t|
     t.string "salutation"
     t.string "first_name"
     t.string "last_name"
@@ -2763,13 +2762,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.string "official_mobile_number"
     t.string "personal_email"
     t.string "personal_number"
-    t.datetime "date_of_birth", precision: nil
+    t.datetime "date_of_birth"
     t.string "gender"
     t.string "cnic_number"
     t.string "blood_group"
     t.string "martial_status"
     t.string "gross_salary", default: "0.0"
-    t.text "current_address"
     t.integer "company_id"
     t.integer "location_id"
     t.integer "branch_id"
@@ -2779,73 +2777,76 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.integer "job_title_id"
     t.integer "salary_unit_id"
     t.integer "cost_center_id"
-    t.datetime "joining_date", precision: nil
+    t.datetime "joining_date"
     t.string "temporary_staff_code"
     t.boolean "is_active", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.text "current_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_converted", default: false
     t.integer "sub_department_id"
+    t.index ["sub_department_id"], name: "index_temporary_staffs_on_sub_department_id"
   end
 
-  create_table "time_slots", id: :serial, force: :cascade do |t|
+  create_table "time_slots", force: :cascade do |t|
     t.integer "company_id"
     t.integer "location_id"
     t.string "name"
     t.string "code"
     t.string "actual_start_time"
     t.string "actual_end_time"
-    t.datetime "start_time", precision: nil
-    t.datetime "end_time", precision: nil
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.float "start_buffer", default: 0.0
     t.float "end_buffer", default: 0.0
     t.boolean "is_active", default: false
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "branch_id"
     t.boolean "is_flexi", default: false
     t.float "total_working_minutes", default: 0.0
+    t.index ["branch_id"], name: "index_time_slots_on_branch_id"
     t.index ["company_id"], name: "index_time_slots_on_company_id"
     t.index ["location_id"], name: "index_time_slots_on_location_id"
   end
 
-  create_table "training_types", id: :serial, force: :cascade do |t|
+  create_table "training_types", force: :cascade do |t|
     t.string "name"
     t.boolean "is_active", default: true
     t.text "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "user_activities", id: :serial, force: :cascade do |t|
+  create_table "user_activities", force: :cascade do |t|
     t.string "full_name", default: ""
     t.string "email", default: ""
     t.string "action_performed", default: ""
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "ip_address"
     t.string "role_name"
     t.integer "company_id"
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at", precision: nil
-    t.datetime "remember_created_at", precision: nil
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at", precision: nil
-    t.datetime "deleted_at", precision: nil
-    t.datetime "last_sign_in_at", precision: nil
+    t.datetime "current_sign_in_at"
+    t.datetime "deleted_at"
+    t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.string "authentication_token"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "is_confirmed", default: false
     t.boolean "is_active", default: true
     t.boolean "is_admin", default: true
@@ -2872,16 +2873,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_02_121623) do
     t.boolean "is_line_manager", default: false
     t.index ["email"], name: "index_users_on_email"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token"
-  end
-
-  create_table "versions", id: :serial, force: :cascade do |t|
-    t.string "item_type", null: false
-    t.integer "item_id", null: false
-    t.string "event", null: false
-    t.string "whodunnit"
-    t.text "object"
-    t.datetime "created_at", precision: nil
-    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   add_foreign_key "cpl_earnings", "employee_attendances"

@@ -14,13 +14,18 @@ module TAKBackEnd
     config.generators.javascripts = false
     config.eager_load_paths << "#{Rails.root}/lib/concerns"
     config.active_job.queue_adapter = :delayed_job
+    config.eager_load_paths << Rails.root.join('lib/modules')
+    config.eager_load_paths << Rails.root.join('app/services')
 
     require 'rack/cors'
     config.before_configuration do
-      env_file = File.join(Rails.root, 'config', 'local_env.yml')
-      YAML.load(File.open(env_file)).each do |key, value|
-        ENV[key.to_s] = value
-      end if File.exist?(env_file)
+      env_file = Rails.root.join("config", "local_env.yml")
+      next unless File.exist?(env_file)
+
+      local_env = YAML.safe_load(File.read(env_file), aliases: true) || {}
+      local_env.each do |key, value|
+        ENV[key.to_s] = value.to_s
+      end
     end
     config.middleware.use Rack::Cors do
       allow do

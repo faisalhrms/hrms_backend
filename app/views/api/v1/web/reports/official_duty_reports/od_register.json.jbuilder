@@ -9,6 +9,7 @@ json.od_list @official_duties.each do |official_duty|
 	json.designation_name				official_duty.designation_name
 	json.request_count					official_duty.request_count
 	json.request_status					official_duty.request_status
+	json.official_duty_mode		official_duty.normalized_official_duty_mode
 	json.apply_date							ReportFormat.date_format(official_duty.created_at)
 	json.start_date							ReportFormat.date_format(official_duty.start_date)
 	json.end_date								ReportFormat.date_format(official_duty.end_date)

@@ -1,9 +1,9 @@
 source "https://rubygems.org"
 
-ruby "3.0.0"
+ruby "3.3.10"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.3", ">= 7.1.3.4"
+gem "rails", "~> 7.2.0"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
@@ -107,12 +107,12 @@ gem 'delayed_job_active_record'
 gem 'daemons'
 #
 gem 'acts_as_tenant'
-gem 'uri', '0.10.1'
 
 gem 'bcrypt'
 gem 'dropbox_api'
 
 # CSV File Reading
+gem 'csv'
 gem 'smarter_csv'
 #
 gem 'apidoco', '1.5.0'
@@ -124,7 +124,7 @@ gem 'wkhtmltopdf-binary'
 gem 'zip-zip', '~> 0.3'
 gem 'time_difference'
 #
-gem 'axlsx'
+gem 'caxlsx'
 #
 gem 'week_of_month'
 #
@@ -136,6 +136,7 @@ gem "unirest"
 gem 'dentaku'
 #
 gem 'spreadsheet'
+gem 'roo'
 #
 # # Cron jobs
 gem 'whenever'

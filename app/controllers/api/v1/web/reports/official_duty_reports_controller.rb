@@ -128,7 +128,7 @@ class Api::V1::Web::Reports::OfficialDutyReportsController < ApplicationControll
         old_row_format = wb.styles.add_style(:bg_color => "ffffff", :fg_color=> "000000", :sz => 8,  :border=> {:style => :thin, :color => "000000"}, :alignment => { :horizontal => :center, :vertical => :center})
         even_row_format = wb.styles.add_style(:bg_color => "ffffff", :fg_color=> "000000", :sz => 8,  :border=> {:style => :thin, :color => "000000"}, :alignment => { :horizontal => :center, :vertical => :center})
         row_count = 0
-        sheet.add_row ["Sr #", "Emp Code", "NAME", "Grade", "Designation", "Department", "Job Title", "Apply Date", "From Date", "To Date", "No of ODS", "Status", "Location", "Branch"], :style => header_style
+        sheet.add_row ["Sr #", "Emp Code", "NAME", "Grade", "Designation", "Department", "Job Title", "Apply Date", "From Date", "To Date", "No of ODS", "Status", "Official Duty Mode", "Location", "Branch"], :style => header_style
 
         count = 0
 
@@ -185,6 +185,10 @@ class Api::V1::Web::Reports::OfficialDutyReportsController < ApplicationControll
           current_row_type << :float
 
           current_row_value << official_duty.request_status
+          current_row_style << row_format
+          current_row_type << :string
+
+          current_row_value << official_duty.normalized_official_duty_mode
           current_row_style << row_format
           current_row_type << :string
 

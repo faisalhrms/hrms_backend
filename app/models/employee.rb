@@ -20,6 +20,7 @@ class Employee < ApplicationRecord
 
   ########## Validation ############
 	validates :employee_code, 			:uniqueness => { scope: :company_id }
+  before_validation :normalize_employee_codes
 
   ########## Validation ############
   # validate   :validate_cnic_number
@@ -64,6 +65,11 @@ class Employee < ApplicationRecord
     if count >= 1
       self.errors.add(:base, "CNIC Number Already Exist!")  
     end
+  end
+
+  def normalize_employee_codes
+    self.employee_code = employee_code.to_s.strip if employee_code.present?
+    self.prev_employee_code = prev_employee_code.to_s.strip if prev_employee_code.present?
   end
 
 	####### Relation Ship #########

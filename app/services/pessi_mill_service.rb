@@ -1,4 +1,4 @@
-class PESSIMillService
+class PessiMillService
   def initialize(params)
     @pay_invoices = params[:pay_invoices]
   end

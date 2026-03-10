@@ -23,6 +23,10 @@ class EmployeeAttendance < ApplicationRecord
 	scope :get_by_remarks, -> (remarks){where(remarks: remarks)}
 	scope :get_by_in_over_strength, -> (in_strength, over_strength, gazetted) {where(in_strength: in_strength, over_strength: over_strength, gazetted: gazetted)}
 
+	def self.official_duty_attendance_statuses
+		OfficialDuty.attendance_statuses_with_legacy
+	end
+
 	def restrict_back_dates
 		allowed_days = RestrictLeave.allowed_leave_days
 

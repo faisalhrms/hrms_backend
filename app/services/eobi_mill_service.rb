@@ -1,4 +1,4 @@
-class EOBIMillService
+class EobiMillService
   def initialize(params)
     @pay_invoices = params[:pay_invoices]
   end

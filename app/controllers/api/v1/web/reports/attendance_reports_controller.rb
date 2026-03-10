@@ -899,7 +899,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 								rest_day = rest_day + 1
 								total_over_time = total_over_time + attnd.over_time_hours
 
-							elsif (attnd.attendance_status == "Present" or attnd.attendance_status == "Late" or attnd.attendance_status == "Half Day" or attnd.attendance_status == "On Official Duty") and attnd.over_time_hours > 0.0
+							elsif (attnd.attendance_status == "Present" or attnd.attendance_status == "Late" or attnd.attendance_status == "Half Day" or EmployeeAttendance.official_duty_attendance_statuses.include?(attnd.attendance_status)) and attnd.over_time_hours > 0.0
 								normal_days = normal_days + 1
 								normal_days_ot = normal_days_ot + attnd.over_time_hours
 							end
@@ -4002,7 +4002,7 @@ class Api::V1::Web::Reports::AttendanceReportsController < ApplicationController
 							current_row_style << row_format
 							current_row_type << :float
 						else
-							current_row_value << @employee_attendances.where(:employee_id => employee.id, attendance_status: ["Present", "Late", "Half Day"], roster_exist: true).count + @employee_attendances.where(:employee_id => employee.id, is_on_leave: true, is_leave_without_pay: false, roster_exist: true).count + @employee_attendances.where(:employee_id => employee.id, is_public_holiday: true, roster_exist: true, attendance_status: 'Public Holiday').count + @employee_attendances.where(:employee_id => employee.id, is_official_duty: true, roster_exist: true, attendance_status: 'On Official Duty').count + @employee_attendances.where(:employee_id => employee.id, is_cpl: true, roster_exist: true).count
+								current_row_value << @employee_attendances.where(:employee_id => employee.id, attendance_status: ["Present", "Late", "Half Day"], roster_exist: true).count + @employee_attendances.where(:employee_id => employee.id, is_on_leave: true, is_leave_without_pay: false, roster_exist: true).count + @employee_attendances.where(:employee_id => employee.id, is_public_holiday: true, roster_exist: true, attendance_status: 'Public Holiday').count + @employee_attendances.where(:employee_id => employee.id, is_official_duty: true, roster_exist: true, attendance_status: EmployeeAttendance.official_duty_attendance_statuses).count + @employee_attendances.where(:employee_id => employee.id, is_cpl: true, roster_exist: true).count
 							current_row_style << row_format
 							current_row_type << :float
 						end

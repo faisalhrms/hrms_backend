@@ -233,10 +233,16 @@
                     <% total = total + no_of_leaves %>
                   </tr>
                   <tr style="border-bottom:2px solid #ececec;">
-                    <td><span class="clr-purple">OD</span></td>
-                    <% no_of_offical_duty = @employee_attendances.where(:is_official_duty => true).count %>
-                    <td style="text-align:right"><%= no_of_offical_duty %></td>
-                    <% total = total + no_of_offical_duty %>
+                    <td><span class="clr-purple">Office Duty</span></td>
+                    <% no_of_office_duty = @employee_attendances.where(:is_official_duty => true, :attendance_status => [OfficialDuty::OFFICE_DUTY_MODE, OfficialDuty::LEGACY_ON_OFFICIAL_DUTY_STATUS]).count %>
+                    <td style="text-align:right"><%= no_of_office_duty %></td>
+                    <% total = total + no_of_office_duty %>
+                  </tr>
+                  <tr style="border-bottom:2px solid #ececec;">
+                    <td><span class="clr-purple">WFH</span></td>
+                    <% no_of_wfh_duty = @employee_attendances.where(:is_official_duty => true, :attendance_status => OfficialDuty::WORK_FROM_HOME_MODE).count %>
+                    <td style="text-align:right"><%= no_of_wfh_duty %></td>
+                    <% total = total + no_of_wfh_duty %>
                   </tr>
                   <tr style="border-bottom:2px solid #ececec;">
                     <td><span class="clr-purple">Relaxation</span></td>

@@ -7,6 +7,7 @@ json.official_duty do
 	json.end_date 						ReportFormat.date_format(@official_duty.end_date)
 	json.apply_date 					ReportFormat.date_format(@official_duty.created_at)
 	json.request_status 			@official_duty.request_status
+	json.official_duty_mode		@official_duty.normalized_official_duty_mode
 	json.apply_status 				@official_duty.apply_status
 	json.is_full_day 					@official_duty.is_full_day
 	if @official_duty.start_time.nil?

@@ -7,7 +7,7 @@ set :deploy_user, 'alche'
 set :assets_roles, [:app]
 # setup repo details
 # set :scm, :git
-set :repo_url, 'ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/hrms_backend'
+set :repo_url, 'git@github.com:faisalhrms/hrms_backend.git'
 
 set :rbenv_path, "/home/#{fetch(:deploy_user)}/.rbenv"
 set :rbenv_type, :user

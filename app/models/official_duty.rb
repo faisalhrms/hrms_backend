@@ -1,5 +1,11 @@
 class OfficialDuty < ApplicationRecord
 	include RestrictRequest
+
+	OFFICE_DUTY_MODE = "Office Duty".freeze
+	WORK_FROM_HOME_MODE = "Work From Home (WFH)".freeze
+	LEGACY_ON_OFFICIAL_DUTY_STATUS = "On Official Duty".freeze
+	OFFICIAL_DUTY_MODES = [OFFICE_DUTY_MODE, WORK_FROM_HOME_MODE].freeze
+
 	####### Relation Ship #########
 	belongs_to 	:company
 	belongs_to 	:employee
@@ -7,6 +13,7 @@ class OfficialDuty < ApplicationRecord
 	has_one    	:approval_request, class_name: 'ApprovalRequest', as: :requestable
 
 	########## Validation ############
+  before_validation :set_default_official_duty_mode
   validate 		:validate_the_apply_date
 
   ########## Call Back ############
@@ -338,7 +345,7 @@ class OfficialDuty < ApplicationRecord
 	########## Official Duty Impact on Employee Attendance ##########
 	def self.employee_wise_official_duty_impact(employee_attendance)
 		OfficialDuty.where(:employee_id => employee_attendance.employee_id, :request_status => "Availed").where("Date(start_date) <= ? AND Date(end_date) >= ?", employee_attendance.attendance_date.to_date, employee_attendance.attendance_date.to_date).each do |official_duty|
-			employee_attendance.attendance_status = "On Official Duty"	    
+			employee_attendance.attendance_status = official_duty.attendance_status_label
 	    employee_attendance.early_left_status = ""
 	    employee_attendance.other_remarks			= ""
 	    employee_attendance.encashable_quota 					= 0.0
@@ -388,9 +395,9 @@ class OfficialDuty < ApplicationRecord
 				end
 			end
 			if official_duty.is_full_day == true
-				employee_attendance.remarks		= "Full Day Official Duty"
+				employee_attendance.remarks		= "Full Day #{official_duty.normalized_official_duty_mode}"
 			else
-				employee_attendance.remarks		= "#{official_duty.start_time.to_datetime.strftime("%-l:%M %P")} - #{official_duty.end_time.to_datetime.strftime("%-l:%M %P")} Official Duty"
+				employee_attendance.remarks		= "#{official_duty.start_time.to_datetime.strftime("%-l:%M %P")} - #{official_duty.end_time.to_datetime.strftime("%-l:%M %P")} #{official_duty.normalized_official_duty_mode}"
 	    end
 	    employee_attendance.save
 		end
@@ -508,12 +515,36 @@ class OfficialDuty < ApplicationRecord
   	end
 	end
 		
-  def designation_name
-  	if self.employee.nil?
-  		return "-"
-  	else
-  		return self.employee.designation_name
-  	end
-  end
+	def designation_name
+	  	if self.employee.nil?
+	  		return "-"
+	  	else
+	  		return self.employee.designation_name
+	  	end
+	  end
+
+	def self.attendance_statuses
+		OFFICIAL_DUTY_MODES
+	end
+
+	def self.attendance_statuses_with_legacy
+		[LEGACY_ON_OFFICIAL_DUTY_STATUS] + OFFICIAL_DUTY_MODES
+	end
+
+	def normalized_official_duty_mode
+		if OFFICIAL_DUTY_MODES.include?(self.official_duty_mode)
+			self.official_duty_mode
+		else
+			OFFICE_DUTY_MODE
+		end
+	end
+
+	def attendance_status_label
+		normalized_official_duty_mode
+	end
+
+	def set_default_official_duty_mode
+		self.official_duty_mode = normalized_official_duty_mode
+	end
 
 end

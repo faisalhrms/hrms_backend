@@ -865,7 +865,8 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 						current_row_style << row_format
 						current_row_type << :float
 
-						current_row_value << pay_invoice.pay_invoice_details.where(:item_name => "Attendance Deduction").sum(:amount).round
+						attendance_deduction = pay_invoice.pay_invoice_details.where(:item_name => "Attendance Deduction").sum(:amount).round
+						current_row_value << attendance_deduction
 						current_row_style << row_format
 						current_row_type << :float
 
@@ -877,11 +878,12 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 						current_row_style << row_format
 						current_row_type << :float
 
-						current_row_value << (pay_invoice.total_deduction.round + pay_invoice.monthly_tax.round)
+						total_deduction = pay_invoice.total_deduction.round + pay_invoice.monthly_tax.round + attendance_deduction
+						current_row_value << total_deduction
 						current_row_style << row_format
 						current_row_type << :float
 
-						current_row_value << (pay_invoice.total_earning - (pay_invoice.total_deduction.round + pay_invoice.monthly_tax.round)).round
+						current_row_value << (pay_invoice.total_earning - total_deduction).round
 						current_row_style << row_format
 						current_row_type << :float
 					else
@@ -13624,5 +13626,4 @@ class Api::V1::Web::Reports::PayrollReportsController < ApplicationController
 		end
 	end
 end
-
 
