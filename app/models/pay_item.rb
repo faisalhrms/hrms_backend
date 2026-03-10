@@ -1,7 +1,7 @@
 class PayItem < ApplicationRecord
 
 	####### Array Serializion #########
-  serialize :formula_with_code, Array
+  serialize :formula_with_code, type: Array
 
   ####### Validations #########
   validates :name, :uniqueness => { scope: :company_id }
